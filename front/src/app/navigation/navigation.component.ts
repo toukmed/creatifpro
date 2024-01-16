@@ -15,7 +15,7 @@ export class NavigationComponent {
 
 export const navLinks = [
   {
-    link: 'pointage',
+    link: 'pointages',
     icon: 'edit_calendar',
     libelle: 'Pointage',
     desc: 'Géstion du Pointage',
@@ -29,14 +29,14 @@ export const navLinks = [
     condition: true,
   },
   {
-    link: 'admin/values',
+    link: 'consommations',
     icon: 'shelves',
     libelle: 'Consommation',
     desc: 'Géstion de la Consommation',
     condition: true,
   },
   {
-    link: 'activites',
+    link: 'projets',
     icon: 'apartment',
     libelle: 'Projets',
     desc: 'Géstion des Projets',
@@ -50,7 +50,7 @@ export const navLinks = [
     condition: true,
   },
   {
-    link: 'caisse',
+    link: 'caisses',
     icon: 'payments',
     libelle: 'Caisse',
     desc: 'Géstion de la Caisse',
@@ -64,7 +64,7 @@ export const navLinks = [
     condition: true,
   },
   {
-    link: 'facturation',
+    link: 'facturations',
     icon: 'feed',
     libelle: 'Facturation',
     desc: 'Géstion de la Facturation',

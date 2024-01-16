@@ -54,6 +54,7 @@ function slideTo(direction: any) {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  animations: [slider],
 })
 export class AppComponent {
   sidenavOpened = true;
@@ -68,6 +69,11 @@ export class AppComponent {
     this.overlayContainer.getContainerElement().classList.add('dark');
     this.overlayContainer.getContainerElement().classList.add('pink_bluegrey');
   }
+
+  slider = trigger('routeAnimations', [
+    transition('root => edit', slideTo('left')),
+    transition('edit => root', slideTo('right')),
+  ]);
 
   prepareRoute(outlet: RouterOutlet) {
     return (

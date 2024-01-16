@@ -1,0 +1,177 @@
+<div class="generic-table">
+  <div class="search-table" *ngIf="addable || searchable">
+    <button
+      (click)="add_clicked()"
+      *ngIf="addable"
+      matTooltip="Ajouter"
+      mat-fab
+      color="primary"
+      aria-label="Ajouter"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+
+    <mat-slide-toggle
+      *ngIf="enabled"
+      class="mat-slide-toggle"
+      [matTooltip]="active ? 'Afficher les inactifs' : 'Cacher les inactifs'"
+      [checked]="false"
+      [disabled]="false"
+      (change)="filter_clicked()"
+      [(ngModel)]="active"
+    >
+    </mat-slide-toggle>
+
+    <mat-form-field
+      color="accent"
+      subscriptSizing="dynamic"
+      *ngIf="searchable"
+      appearance="outline"
+      class="full-width"
+    >
+      <mat-label>Recherche par libelle</mat-label>
+      <mat-icon color="accent" matPrefix>search</mat-icon>
+      <input
+        (keyup)="input_searched($event)"
+        [(ngModel)]="searchedValue"
+        matInput
+      />
+    </mat-form-field>
+  </div>
+  <mat-table
+    [dataSource]="dataSource"
+    matSort
+    class="mat-elevation-z0 table"
+    [class.placeholder]="loading"
+  >
+    <ng-container
+      *ngFor="let def of columnsAll; trackBy: trackBy"
+      [matColumnDef]="def.path"
+    >
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ def.libelle }}</mat-header-cell
+      >
+      <mat-cell *matCellDef="let element">
+        @if (loading) { @if (def.path === 'urlsSize' || def.path === 'linked') {
+        <mat-icon class="blank" style="color: var(--placeholder-color)"
+          >lens</mat-icon
+        >
+        } @else {
+        <span class="blank"></span>
+        } } @else if (def.path === 'localisations.length') {
+        <mat-icon
+          aria-hidden="false"
+          style="margin-top: 10px"
+          [matBadge]="element.localisations?.length || 0"
+          matBadgeSize="small"
+          >location_on
+        </mat-icon>
+        } @else {
+        <mat-icon
+          [matTooltip]="
+            element.activite ? 'Lié à ' + element.activite.libelle : 'Non lié'
+          "
+          [ngClass]="{ primary: element.activite, basic: !element.activite }"
+          *ngIf="def.path === 'linked'"
+        >
+          device_hub
+        </mat-icon>
+        <mat-icon
+          aria-hidden="false"
+          *ngIf="def.path === 'urlsSize'"
+          [matBadge]="resolve(def.path, element)"
+          matBadgeSize="small"
+          >code
+        </mat-icon>
+        <ng-container *ngIf="def.path === 'auiPrincipalActivite.code'">
+          {{ resolve(def.path, element) }}
+          {{
+            resolve(def.path, element) &&
+              "(" + resolve("auiPrincipalActivite.libelle", element) + ")"
+          }}
+        </ng-container>
+        <ng-container
+          *ngIf="
+            def.path !== 'urlsSize' &&
+            def.path !== 'linked' &&
+            def.path !== 'auiPrincipalActivite.code'
+          "
+        >
+          {{ resolve(def.path, element) }}
+        </ng-container>
+        }
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <mat-header-cell class="actions" *matHeaderCellDef></mat-header-cell>
+      <mat-cell class="actions" *matCellDef="let row">
+        <button
+          (click)="remove_clicked(row)"
+          mat-icon-button
+          aria-label="Example icon button with a menu icon"
+        >
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <ng-container
+      *ngIf="isEditable || hasDetails || hasHistory"
+      matColumnDef="actions"
+    >
+      <mat-header-cell class="actions" *matHeaderCellDef></mat-header-cell>
+      <mat-cell class="actions" *matCellDef="let row">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          aria-label="Example icon-button with a menu"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button
+            (click)="showDetails_clicked(row)"
+            mat-menu-item
+            *ngIf="hasDetails"
+          >
+            <mat-icon>remove_red_eye</mat-icon>
+            <span>Visualiser</span>
+          </button>
+          <button
+            (click)="hierarchy_clicked(row)"
+            mat-menu-item
+            *ngIf="hierarchy"
+          >
+            <mat-icon>account_tree</mat-icon>
+            <span>Hiérarchie</span>
+          </button>
+          <button mat-menu-item (click)="edit_clicked(row)" *ngIf="isEditable">
+            <mat-icon>edit</mat-icon>
+            <span>Editer</span>
+          </button>
+          <button mat-menu-item (click)="open_history(row)" *ngIf="hasHistory">
+            <mat-icon>restore</mat-icon>
+            <span>Historique</span>
+          </button>
+        </mat-menu>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnsPath"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: columnsPath"
+      (click)="clickableRow ? row_clicked(row) : ''"
+      [class.clicked-row]="clickedRow?.id === row?.id"
+      [class.clickable-row]="clickableRow"
+    ></mat-row>
+  </mat-table>
+  <mat-paginator
+    *ngIf="showPagination"
+    [pageSizeOptions]="[10, 25, 100]"
+    (page)="page_changed($event)"
+    [length]="total"
+    [pageIndex]="currentPage"
+    class="paginator"
+    aria-label="Taille de la page"
+  ></mat-paginator>
+</div>
