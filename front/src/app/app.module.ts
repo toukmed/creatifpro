@@ -13,6 +13,23 @@ import { MatCardModule } from '@angular/material/card';
 import { NavigationComponent } from './navigation/navigation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
+import { PointageComponent } from './components/pointage/pointage.component';
+import { PersonnelComponent } from './components/personnel/personnel.component';
+import { ConsommationComponent } from './components/consommation/consommation.component';
+import { ProjetComponent } from './components/projet/projet.component';
+import { PaiementComponent } from './components/paiement/paiement.component';
+import { CaisseComponent } from './components/caisse/caisse.component';
+import { FacturationComponent } from './components/facturation/facturation.component';
+import { DevisComponent } from './components/devis/devis.component';
+import { GenericTableComponent } from './generic-table/generic-table.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
 
 const materialModules = [
   MatToolbarModule,
@@ -21,6 +38,13 @@ const materialModules = [
   MatCardModule,
   MatTooltipModule,
   MatButtonModule,
+  MatPaginatorModule,
+  MatTableModule,
+  MatFormFieldModule,
+  MatSlideToggleModule,
+  MatInputModule,
+  MatBadgeModule,
+  MatMenuModule,
 ];
 
 @NgModule({
@@ -29,12 +53,22 @@ const materialModules = [
     HeaderComponent,
     HomeComponent,
     NavigationComponent,
+    PointageComponent,
+    PersonnelComponent,
+    ConsommationComponent,
+    ProjetComponent,
+    PaiementComponent,
+    CaisseComponent,
+    FacturationComponent,
+    DevisComponent,
+    GenericTableComponent,
   ],
   imports: [
     ...materialModules,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
