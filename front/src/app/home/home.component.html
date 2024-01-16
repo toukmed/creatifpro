@@ -1,0 +1,7 @@
+<h2>Accueil</h2>
+<div id="home">
+  <mat-card *ngFor="let item of navLinks; trackBy: trackBy">
+    <mat-icon class="big" color="primary">{{ item.icon }}</mat-icon>
+    <h3>{{ item.desc }}</h3>
+  </mat-card>
+</div>

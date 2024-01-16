@@ -1,0 +1,11 @@
+#menu-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  align-items: center;
+}
+
+a.link-active {
+  color: var(--mdc-fab-container-color);
+  background-color: var(--mat-fab-foreground-color);
+}

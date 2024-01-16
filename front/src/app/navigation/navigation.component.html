@@ -1,0 +1,13 @@
+<div id="menu-wrapper">
+  <div *ngFor="let item of navLinks; trackBy: trackBy">
+    <a
+      routerLinkActive="link-active"
+      [routerLink]="item.link"
+      mat-mini-fab
+      [matTooltip]="item.libelle"
+      color="basic"
+    >
+      <mat-icon>{{ item.icon }}</mat-icon>
+    </a>
+  </div>
+</div>
