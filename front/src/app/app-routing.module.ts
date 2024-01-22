@@ -9,13 +9,22 @@ import { PaiementComponent } from './components/paiement/paiement.component';
 import { CaisseComponent } from './components/caisse/caisse.component';
 import { DevisComponent } from './components/devis/devis.component';
 import { FacturationComponent } from './components/facturation/facturation.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {
+    path: 'login',
+    component: LoginComponent,
+  },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
     path: '',
     children: [
-      { path: '', redirectTo: '/accueil', pathMatch: 'full' },
       { path: 'accueil', component: HomeComponent },
+      {
+        path: '**',
+        component: LoginComponent,
+      },
       {
         path: 'pointages',
         component: PointageComponent,
