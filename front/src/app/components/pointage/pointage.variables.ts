@@ -12,6 +12,10 @@ export const columns = [
     path: 'typeContrat',
   },
   {
+    libelle: 'Projet',
+    path: 'projet',
+  },
+  {
     libelle: 'Total jrs travaillés',
     path: 'totalJrsTravailles',
   },
