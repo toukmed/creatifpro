@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { token } from '../utils/session';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-header',
@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   readonly login = 'login';
   readonly tooltipMessage = 'Se déconnecter';
+
+  showHeader = false;
 
   constructor(private router: Router) {}
 

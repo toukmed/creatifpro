@@ -5,7 +5,7 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { inject } from '@angular/core';
-import { session } from '../../utils/session';
+import { jwtDecode } from 'jwt-decode';
 
 export const authGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
@@ -13,17 +13,29 @@ export const authGuard: CanActivateFn = (
 ) => {
   const router: Router = inject(Router);
   const protectedRoutes: string[] = [
-    'home',
-    'pointages',
-    'personnels',
-    'consommations',
-    'projets',
-    'paiements',
-    'caisses',
-    'devis',
-    'facturations',
+    '/accueil',
+    '/pointages',
+    '/personnels',
+    '/consommations',
+    '/projets',
+    '/paiements',
+    '/caisses',
+    '/devis',
+    '/facturations',
   ];
-  return protectedRoutes.includes(state.url) && !session
-    ? router.navigate(['/login'])
-    : true;
+  let token = localStorage.getItem('auth_token');
+  if (token !== null) {
+    let decodedToken = jwtDecode(token);
+    const isExpired =
+      decodedToken && decodedToken.exp
+        ? decodedToken.exp < Date.now() / 1000
+        : false;
+    if (isExpired) {
+      router.navigate(['login']);
+    }
+    return protectedRoutes.includes(state.url) && !isExpired;
+  } else {
+    router.navigate(['login']);
+    return false;
+  }
 };

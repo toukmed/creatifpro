@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Resource } from '../models/resource';
-import { token, session } from '../utils/session';
 
 @Injectable({
   providedIn: 'root',
@@ -34,11 +33,11 @@ export class ResourceService<T extends Resource> {
 
   list(queryOptions: any, endpoint: string): Observable<any> {
     return this.httpClient.get(
-      `${this.url}/${endpoint}?${queryOptions.toQueryString()}`);
+      `${this.url}/${endpoint}?${queryOptions.toQueryString()}`
+    );
   }
 
   delete(id: number, endpoint: string) {
     return this.httpClient.delete(`${this.url}/${endpoint}/${id}`);
   }
-
 }
