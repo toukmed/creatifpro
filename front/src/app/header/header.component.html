@@ -6,4 +6,13 @@
     <small>0.0.1</small>
   </span>
   <app-navigation></app-navigation>
+  <a
+    routerLinkActive="link-active"
+    (click)="onLogout()"
+    mat-mini-fab
+    [matTooltip]="tooltipMessage"
+    color="basic"
+  >
+    <mat-icon>logout</mat-icon>
+  </a>
 </mat-toolbar>

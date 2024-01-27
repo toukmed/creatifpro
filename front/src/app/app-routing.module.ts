@@ -10,63 +10,67 @@ import { CaisseComponent } from './components/caisse/caisse.component';
 import { DevisComponent } from './components/devis/devis.component';
 import { FacturationComponent } from './components/facturation/facturation.component';
 import { LoginComponent } from './login/login.component';
+import { authGuard } from './services/guards/auth.guard';
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
-    path: '',
-    children: [
-      { path: 'accueil', component: HomeComponent },
-      {
-        path: '**',
-        component: LoginComponent,
-      },
-      {
-        path: 'pointages',
-        component: PointageComponent,
-        data: { animation: 'root' },
-      },
-      {
-        path: 'personnels',
-        component: PersonnelComponent,
-        data: { animation: 'root' },
-      },
-      {
-        path: 'consommations',
-        component: ConsommationComponent,
-        data: { animation: 'root' },
-      },
-      {
-        path: 'projets',
-        component: ProjetComponent,
-        data: { animation: 'root' },
-      },
-      {
-        path: 'paiements',
-        component: PaiementComponent,
-        data: { animation: 'root' },
-      },
-      {
-        path: 'caisses',
-        component: CaisseComponent,
-        data: { animation: 'root' },
-      },
-      {
-        path: 'devis',
-        component: DevisComponent,
-        data: { animation: 'root' },
-      },
-      {
-        path: 'facturations',
-        component: FacturationComponent,
-        data: { animation: 'root' },
-      },
-    ],
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [authGuard],
   },
+  {
+    path: 'pointages',
+    component: PointageComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  {
+    path: 'personnels',
+    component: PersonnelComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  {
+    path: 'consommations',
+    component: ConsommationComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  {
+    path: 'projets',
+    component: ProjetComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  {
+    path: 'paiements',
+    component: PaiementComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  {
+    path: 'caisses',
+    component: CaisseComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  {
+    path: 'devis',
+    component: DevisComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  {
+    path: 'facturations',
+    component: FacturationComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({

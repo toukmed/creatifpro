@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { columns } from './pointage.variables';
+import { SecurityService } from '../../services/guards/security.service';
 
 @Component({
   selector: 'app-pointage',
@@ -8,6 +9,8 @@ import { columns } from './pointage.variables';
 })
 export class PointageComponent {
   readonly columns = columns;
+
+  constructor(private service: SecurityService){}
 
   pointages: any = {
     content: [
@@ -70,4 +73,5 @@ export class PointageComponent {
     total: 5,
     number: 0,
   };
+  
 }
