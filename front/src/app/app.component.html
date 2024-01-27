@@ -1,4 +1,7 @@
+@if(showHeader()){
 <app-header></app-header>
+}
+
 <mat-drawer-container [@routeAnimations]="prepareRoute(outlet)">
   <mat-drawer-content>
     <router-outlet #outlet="outlet"></router-outlet>

@@ -9,6 +9,7 @@ import {
 import { Component, HostBinding } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { jwtDecode } from 'jwt-decode';
 
 export const slider = trigger('routeAnimations', [
   transition('root => edit', slideTo('left')),
@@ -68,6 +69,24 @@ export class AppComponent {
   constructor(private overlayContainer: OverlayContainer) {
     this.overlayContainer.getContainerElement().classList.add('dark');
     this.overlayContainer.getContainerElement().classList.add('pink_bluegrey');
+  }
+
+  showHeader() {
+    let token = localStorage.getItem('auth_token');
+    if (token !== null) {
+      let decodedToken = jwtDecode(token);
+      const isExpired =
+        decodedToken && decodedToken.exp
+          ? decodedToken.exp < Date.now() / 1000
+          : false;
+      if (isExpired) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
   }
 
   slider = trigger('routeAnimations', [

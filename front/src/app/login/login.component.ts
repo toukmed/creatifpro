@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     this.service.login(this.loginForm.getRawValue(), 'login').subscribe(
       (response) => {
         this.securityService.setAuthToken(response.token);
-        this.router.navigate(['home']);
+        this.router.navigate(['accueil']);
       },
       (err) => {
         console.log(err);
