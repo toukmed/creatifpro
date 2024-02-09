@@ -1,0 +1,114 @@
+package com.management.creatifpro.service;
+
+import com.management.creatifpro.dto.EmployeDto;
+import com.management.creatifpro.dto.SearchDto;
+import com.management.creatifpro.entity.EmployeEntity;
+import com.management.creatifpro.exception.AppException;
+import com.management.creatifpro.mapper.EmployeMapper;
+import com.management.creatifpro.repository.EmployeRepository;
+import com.management.creatifpro.specification.SpecificationsUtils;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.stream.Stream;
+
+@Service
+@RequiredArgsConstructor
+public class EmployeService {
+
+    private final EmployeRepository employeRepository;
+    private final EmployeMapper employeMapper;
+
+    public Page<EmployeDto> findAll(SearchDto searchDto) {
+        Pageable pageable = PageRequest
+                .of(searchDto.page().orElse(0), searchDto.size().orElse(10))
+                .withSort(searchDto.sort().orElse(Sort.by(Sort.Direction.ASC, "nom")));
+
+        Optional<Specification<EmployeEntity>> nomSpec = searchDto.libelle()
+                .map(value -> SpecificationsUtils.likeValue("nom", value));
+        Optional<Specification<EmployeEntity>> prenomSpec = searchDto.libelle()
+                .map(value -> SpecificationsUtils.likeValue("prenom", value));
+        Optional<Specification<EmployeEntity>> cinSpec = searchDto.libelle()
+                .map(value -> SpecificationsUtils.likeValue("cin", value));
+
+        return Stream.of(nomSpec, prenomSpec, cinSpec)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .reduce(Specification::or)
+                .map(specs -> employeMapper.toDtoPage(employeRepository.findAll(specs, pageable), pageable))
+                .orElseGet(() -> employeMapper.toDtoPage(employeRepository.findAll(pageable), pageable));
+    }
+
+    @Transactional
+    public EmployeDto create(EmployeDto employeDto) {
+        validateContratEmploye(employeDto);
+        validateEmployeExistance(employeDto.cin());
+        return employeMapper
+                .toDto(employeRepository
+                        .save(employeMapper
+                                .toEntity(employeDto)));
+    }
+
+    @Transactional
+    public EmployeDto update(EmployeDto employeDto) {
+
+        validateEmploye(employeDto);
+
+        EmployeEntity existingEmploye = employeRepository
+                .findById(employeDto.id())
+                .orElseThrow(() -> new AppException("Employe with id: " + employeDto.id() + " not found", HttpStatus.NOT_FOUND));
+
+        EmployeEntity newEmploye = employeMapper.toEntity(employeDto);
+
+        return employeMapper
+                .toDto(employeRepository
+                        .save(employeMapper.copyContent(newEmploye, existingEmploye)));
+    }
+
+    public EmployeDto findById(Long id) {
+        return employeMapper.toDto(employeRepository
+                .findById(id)
+                .orElseThrow(() -> new AppException("Employe with id: " + id + " not found", HttpStatus.NOT_FOUND)));
+    }
+
+    private void validateEmploye(EmployeDto employeDto){
+        if(employeDto.id() == null) {
+            throw new AppException("L'id de l'employé est obligatoire'", HttpStatus.BAD_REQUEST);
+        }
+        if (employeRepository.existsByCinAndNotTheSameEmploye(employeDto.cin(), employeDto.id())) {
+            throw new AppException("L'employé ayant le CIN:" + employeDto.cin() + " existe déjà", HttpStatus.BAD_REQUEST);
+        }
+        validateContratEmploye(employeDto);
+    }
+
+    private void validateContratEmploye(EmployeDto employeDto) {
+        switch (employeDto.typeContrat()) {
+            case HORAIRE -> {
+                if (employeDto.tarifJournalier() == null)
+                    throw new AppException("Le tarif journalier est obligatoire", HttpStatus.BAD_REQUEST);
+                if (employeDto.salaireMensuel() != null)
+                    throw new AppException("Le salaire mensuel ne peux pas s'affecter au employés horaires", HttpStatus.BAD_REQUEST);
+            }
+            case CDD, CDI -> {
+                if (employeDto.tarifJournalier() != null)
+                    throw new AppException("Le tarif journalier ne peux pas s'affecter au employés CDD/CDI", HttpStatus.BAD_REQUEST);
+                if (employeDto.salaireMensuel() == null)
+                    throw new AppException("Le salaire mensuel est obligatoire", HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
+
+    private void validateEmployeExistance(String cin) {
+        if (employeRepository.existsByCin(cin)) {
+            throw new AppException("L'employé ayant le CIN:" + cin + " existe déjà", HttpStatus.BAD_REQUEST);
+        }
+    }
+}

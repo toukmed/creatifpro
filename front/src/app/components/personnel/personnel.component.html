@@ -1,1 +1,14 @@
-<p>personnel works!</p>
+<h2>Personnel</h2>
+<mat-card>
+  <app-generic-table
+    [columns]="columns"
+    [data]="personnels"
+    [showPlaceholder]="false"
+    [enabled]="false"
+    [addable]="true"
+    [searchable]="true"
+    [isEditable]="true"
+    [hasDetails]="true"
+  >
+  </app-generic-table>
+</mat-card>

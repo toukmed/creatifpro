@@ -1,6 +1,6 @@
-package com.management.creatifpro.repository;
+package com.management.creatifpro.repository.security;
 
-import com.management.creatifpro.entity.UserEntity;
+import com.management.creatifpro.entity.security.UserEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

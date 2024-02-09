@@ -4,10 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.management.creatifpro.dto.UserDto;
-import com.management.creatifpro.entity.UserEntity;
+import com.management.creatifpro.dto.security.UserDto;
+import com.management.creatifpro.entity.security.UserEntity;
 import com.management.creatifpro.exception.AppException;
-import com.management.creatifpro.repository.UserRepository;
+import com.management.creatifpro.repository.security.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
@@ -68,7 +67,7 @@ public class UserAuthProvider {
         DecodedJWT decoded = verifier.verify(token);
 
         UserEntity user = userRepository.findByLogin(decoded.getIssuer())
-                .orElseThrow(() -> new AppException("UNKNOWN_USER", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException("User with login: " + decoded.getIssuer() + " not found", HttpStatus.NOT_FOUND));
 
         return new UsernamePasswordAuthenticationToken(user,null, Collections.emptyList());
     }

@@ -1,10 +1,10 @@
 package com.management.creatifpro.controller;
 
 import com.management.creatifpro.configuration.security.UserAuthProvider;
-import com.management.creatifpro.dto.CredentialDto;
-import com.management.creatifpro.dto.RegistrationDto;
-import com.management.creatifpro.dto.UserDto;
-import com.management.creatifpro.service.UserService;
+import com.management.creatifpro.dto.security.CredentialDto;
+import com.management.creatifpro.dto.security.RegistrationDto;
+import com.management.creatifpro.dto.security.UserDto;
+import com.management.creatifpro.service.security.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,38 +1,34 @@
 export const columns = [
   {
     libelle: 'Nom',
-    path: 'nom',
+    path: 'employe.nom',
   },
   {
     libelle: 'Prénom',
-    path: 'prenom',
+    path: 'employe.prenom',
   },
   {
     libelle: 'Type contrat',
-    path: 'typeContrat',
+    path: 'employe.typeContrat',
   },
   {
     libelle: 'Projet',
-    path: 'projet',
+    path: 'employe.projet.nom',
   },
   {
-    libelle: 'Total jrs travaillés',
-    path: 'totalJrsTravailles',
+    libelle: 'Jours travailles',
+    path: 'totalJoursTravailles',
+  },
+  {
+    libelle: 'Jours sup travailles',
+    path: 'totalJoursSupTravailles',
   },
   {
     libelle: 'Tarif journalier',
-    path: 'tarifJournaliere',
+    path: 'employe.tarifJournalier',
   },
   {
-    libelle: 'Tarif horaire',
-    path: 'tarifHoraire',
-  },
-  {
-    libelle: 'Periode',
-    path: 'periode',
-  },
-  {
-    libelle: 'Total',
-    path: 'total',
+    libelle: 'Salaire mensuel',
+    path: 'employe.salaireMensuel',
   },
 ];

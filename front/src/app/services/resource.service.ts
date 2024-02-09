@@ -31,10 +31,8 @@ export class ResourceService<T extends Resource> {
     return this.httpClient.get(`${this.url}/${endpoint}/${id}`);
   }
 
-  list(queryOptions: any, endpoint: string): Observable<any> {
-    return this.httpClient.get(
-      `${this.url}/${endpoint}?${queryOptions.toQueryString()}`
-    );
+  list(body: any, endpoint: string): Observable<any> {
+    return this.httpClient.post(`${this.url}/${endpoint}`, body);
   }
 
   delete(id: number, endpoint: string) {

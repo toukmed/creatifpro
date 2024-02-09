@@ -1,4 +1,4 @@
-package com.management.creatifpro.dto;
+package com.management.creatifpro.dto.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

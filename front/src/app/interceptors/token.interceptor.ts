@@ -23,7 +23,7 @@ export class tokenInterceptor implements HttpInterceptor {
           : false;
       if (!isExpired) {
         request = request.clone({
-          headers: request.headers.set('Authorization', 'bearer ' + token),
+          headers: request.headers.set('Authorization', 'Bearer ' + token),
         });
       } else {
         localStorage.removeItem('auth-token');
