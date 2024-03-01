@@ -22,7 +22,7 @@ export const navLinks = [
     condition: true,
   },
   {
-    link: 'personnels',
+    link: 'employes',
     icon: 'group',
     libelle: 'Personels',
     desc: 'Géstion du Personel',

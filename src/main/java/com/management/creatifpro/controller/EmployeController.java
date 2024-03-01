@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/employees")
+@RequestMapping("/employes")
 public class EmployeController {
 
     private final EmployeService employeService;
@@ -32,7 +32,7 @@ public class EmployeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeDto> update(@PathVariable Long id){
+    public ResponseEntity<EmployeDto> findById(@PathVariable Long id){
         return ResponseEntity.ok(employeService.findById(id));
     }
 

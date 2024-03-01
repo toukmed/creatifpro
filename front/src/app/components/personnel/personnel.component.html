@@ -2,13 +2,17 @@
 <mat-card>
   <app-generic-table
     [columns]="columns"
-    [data]="personnels"
+    [data]="employes"
     [showPlaceholder]="false"
     [enabled]="false"
     [addable]="true"
     [searchable]="true"
     [isEditable]="true"
     [hasDetails]="true"
+    (edit)="edit($event, false)"
+    (showDetails)="edit($event, true)"
+    (searched)="searchPersonnels($event)"
+    (addClicked)="add()"
   >
   </app-generic-table>
 </mat-card>

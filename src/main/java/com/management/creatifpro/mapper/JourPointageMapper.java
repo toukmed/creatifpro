@@ -1,28 +1,21 @@
 package com.management.creatifpro.mapper;
 
 import com.management.creatifpro.dto.JourPointageDto;
-import com.management.creatifpro.entity.EmployeEntity;
 import com.management.creatifpro.entity.JourPointageEntity;
 import com.management.creatifpro.exception.AppException;
 import com.management.creatifpro.mapper.generic.GenericMapper;
-import com.management.creatifpro.repository.EmployeRepository;
-import com.management.creatifpro.repository.PointageRepository;
 import com.management.creatifpro.repository.ProjetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 @Component
 @RequiredArgsConstructor
 public class JourPointageMapper extends GenericMapper<JourPointageDto, JourPointageEntity> {
 
     private final ProjetMapper projetMapper;
-    private final EmployeMapper employeMapper;
-    private final EmployeRepository employeRepository;
     private final ProjetRepository projetRepository;
 
     @Override
@@ -30,7 +23,7 @@ public class JourPointageMapper extends GenericMapper<JourPointageDto, JourPoint
         return JourPointageDto
                 .builder()
                 .id(entity.getId())
-                .jourPointage(entity.getJourPointage().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .jourPointage(entity.getJourPointage().format(DATE_FORMATTER))
                 .pointage(entity.getPointage())
                 .pointageSupplementaire(entity.getPointageSupplementaire())
                 .projet(projetMapper
@@ -46,7 +39,7 @@ public class JourPointageMapper extends GenericMapper<JourPointageDto, JourPoint
             if (projetRepository.existsById(entityDto.projet().id())) {
                 return JourPointageEntity
                         .builder()
-                        .jourPointage(LocalDate.ofInstant(Instant.ofEpochMilli(entityDto.jourPointage()), ZoneId.systemDefault()))
+                        .jourPointage(LocalDate.parse(entityDto.jourPointage(), DATE_FORMATTER))
                         .pointage(entityDto.pointage())
                         .pointageSupplementaire(entityDto.pointageSupplementaire())
                         .projetId(entityDto.projet().id())
@@ -56,5 +49,10 @@ public class JourPointageMapper extends GenericMapper<JourPointageDto, JourPoint
             }
         }
         throw new AppException("Projet is mandatory: ", HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public JourPointageEntity toMinimalEntity(JourPointageDto entityDto) {
+        return toEntity(entityDto);
     }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { columns } from './pointage.variables';
 import { ResourceService } from '../../services/resource.service';
 import { Pointage } from '../../models/pointage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pointage',
@@ -13,12 +14,39 @@ export class PointageComponent implements OnInit {
 
   pointages: Pointage[];
 
-  constructor(private service: ResourceService<Pointage>) {}
+  constructor(
+    private service: ResourceService<Pointage>,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.service.list({ libelle: '' }, 'pointages').subscribe((resp) => {
-      console.log(resp.content);
       this.pointages = resp.content;
     });
+  }
+
+  searchPointages(args: any) {
+    this.service.list(args, 'pointages').subscribe((resp) => {
+      this.pointages = resp.content;
+    });
+  }
+  edit(configuration: any, details: boolean) {
+    let array = ['pointages', configuration.id];
+    if (details) array.push('visu');
+    this.router.navigate(array);
+  }
+
+  add() {
+    const fieldsToFilter = ['niveau', 'pilote', 'technologie', 'pole'];
+    /* activiteEditFields
+      .filter((ef) => fieldsToFilter.includes(ef.name))
+      .forEach(
+        (ef) =>
+          (ef.staticRequestParam = {
+            serviceMetierId: this.credentials.selectedServiceMetier?.id,
+          })
+      ); */
+
+    this.router.navigate(['pointages', 'new']);
   }
 }

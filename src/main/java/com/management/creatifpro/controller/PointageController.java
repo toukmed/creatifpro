@@ -32,7 +32,7 @@ public class PointageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PointageDto> update(@PathVariable Long id){
+    public ResponseEntity<PointageDto> findById(@PathVariable Long id){
         return ResponseEntity.ok(pointageService.findById(id));
     }
 

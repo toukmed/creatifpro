@@ -52,7 +52,8 @@
         {{ def.libelle }}</mat-header-cell
       >
       <mat-cell *matCellDef="let element">
-        @if (loading) { @if (def.path === 'urlsSize' || def.path === 'linked') {
+        @if (loading) { @if (def.path === 'dateIntegration' || def.path
+        ==='linked') {
         <mat-icon class="blank" style="color: var(--placeholder-color)"
           >lens</mat-icon
         >
@@ -67,36 +68,10 @@
           >location_on
         </mat-icon>
         } @else {
-        <mat-icon
-          [matTooltip]="
-            element.activite ? 'Lié à ' + element.activite.libelle : 'Non lié'
-          "
-          [ngClass]="{ primary: element.activite, basic: !element.activite }"
-          *ngIf="def.path === 'linked'"
-        >
-          device_hub
+        <mat-icon class="mr-10" aria-hidden="false" *ngIf="def.path === 'dateIntegration'"
+          >event
         </mat-icon>
-        <mat-icon
-          aria-hidden="false"
-          *ngIf="def.path === 'urlsSize'"
-          [matBadge]="resolve(def.path, element)"
-          matBadgeSize="small"
-          >code
-        </mat-icon>
-        <ng-container *ngIf="def.path === 'auiPrincipalActivite.code'">
-          {{ resolve(def.path, element) }}
-          {{
-            resolve(def.path, element) &&
-              "(" + resolve("auiPrincipalActivite.libelle", element) + ")"
-          }}
-        </ng-container>
-        <ng-container
-          *ngIf="
-            def.path !== 'urlsSize' &&
-            def.path !== 'linked' &&
-            def.path !== 'auiPrincipalActivite.code'
-          "
-        >
+        <ng-container>
           {{ resolve(def.path, element) }}
         </ng-container>
         }
@@ -137,21 +112,9 @@
             <mat-icon>remove_red_eye</mat-icon>
             <span>Visualiser</span>
           </button>
-          <button
-            (click)="hierarchy_clicked(row)"
-            mat-menu-item
-            *ngIf="hierarchy"
-          >
-            <mat-icon>account_tree</mat-icon>
-            <span>Hiérarchie</span>
-          </button>
           <button mat-menu-item (click)="edit_clicked(row)" *ngIf="isEditable">
             <mat-icon>edit</mat-icon>
             <span>Editer</span>
-          </button>
-          <button mat-menu-item (click)="open_history(row)" *ngIf="hasHistory">
-            <mat-icon>restore</mat-icon>
-            <span>Historique</span>
           </button>
         </mat-menu>
       </mat-cell>

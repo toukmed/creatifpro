@@ -8,6 +8,10 @@ export const columns = [
     path: 'employe.prenom',
   },
   {
+    libelle: 'CIN',
+    path: 'employe.cin',
+  },
+  {
     libelle: 'Type contrat',
     path: 'employe.typeContrat',
   },
@@ -30,5 +34,24 @@ export const columns = [
   {
     libelle: 'Salaire mensuel',
     path: 'employe.salaireMensuel',
+  },
+];
+
+export const detailcolumns = [
+  {
+    libelle: 'Jour pointage',
+    path: 'jourPointage',
+  },
+  {
+    libelle: 'Pointage',
+    path: 'pointage',
+  },
+  {
+    libelle: 'Poinatge supplémentaire',
+    path: 'pointageSupplementaire',
+  },
+  {
+    libelle: 'Projet',
+    path: 'projet.nom',
   },
 ];

@@ -20,11 +20,11 @@ export class ResourceService<T extends Resource> {
   }
 
   public create(item: T, endpoint: string): Observable<T> {
-    return this.httpClient.post<T>(`${this.url}/${endpoint}`, item);
+    return this.httpClient.post<T>(`${this.url}/${endpoint}/create`, item);
   }
 
   public update(item: T, endpoint: string): Observable<T> {
-    return this.httpClient.put<T>(`${this.url}/${endpoint}/${item.id}`, item);
+    return this.httpClient.put<T>(`${this.url}/${endpoint}/update`, item);
   }
 
   getById(id: number, endpoint: string): Observable<any> {

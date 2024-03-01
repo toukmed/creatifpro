@@ -3,6 +3,7 @@ package com.management.creatifpro.mapper;
 import com.management.creatifpro.dto.PointageDto;
 import com.management.creatifpro.entity.JourPointageEntity;
 import com.management.creatifpro.entity.PointageEntity;
+import com.management.creatifpro.entity.SemainePointageEntity;
 import com.management.creatifpro.exception.AppException;
 import com.management.creatifpro.mapper.generic.GenericMapper;
 import com.management.creatifpro.repository.EmployeRepository;
@@ -18,14 +19,16 @@ public class PointageMapper extends GenericMapper<PointageDto, PointageEntity> {
 
     private final EmployeMapper employeMapper;
     private final JourPointageMapper jourPointageMapper;
+    private final SemainePointageMapper semainePointageMapper;
     private final EmployeRepository employeRepository;
 
     @Override
     public PointageDto toDto(PointageEntity entity) {
         return PointageDto
                 .builder()
+                .id(entity.getId())
                 .employe(employeMapper.toDto(entity.getEmploye()))
-                .pointages(jourPointageMapper.toDtoList(entity.getPointages()))
+                .pointages(semainePointageMapper.toDtoList(entity.getPointages()))
                 .totalJoursTravailles(totalJoursTravailles(entity.getPointages()))
                 .totalJoursSupTravailles(totalJoursSupTravailles(entity.getPointages()))
                 .build();
@@ -38,22 +41,37 @@ public class PointageMapper extends GenericMapper<PointageDto, PointageEntity> {
                 .employe(employeRepository
                         .findById(entityDto.employe().id())
                         .orElseThrow(() -> new AppException("Employe with id: " + entityDto.employe().id() + " not found", HttpStatus.NOT_FOUND)))
-                .pointages(jourPointageMapper.toEntityList(entityDto.pointages()))
+                .pointages(semainePointageMapper.toEntityList(entityDto.pointages()))
                 .build();
     }
 
-    private Float totalJoursTravailles(List<JourPointageEntity> pointages){
+    @Override
+    public PointageEntity toMinimalEntity(PointageDto entityDto) {
+        return PointageEntity
+                .builder()
+                .employe(employeRepository
+                        .findById(entityDto.employe().id())
+                        .orElseThrow(() -> new AppException("Employe with id: " + entityDto.employe().id() + " not found", HttpStatus.NOT_FOUND)))
+                .build();
+    }
+
+    private Float totalJoursTravailles(List<SemainePointageEntity> semainePointages) {
         Float joursTravailles = 0f;
-        for (JourPointageEntity pointage: pointages){
-            joursTravailles += pointage.getPointage();
+        for (SemainePointageEntity semainePointage : semainePointages) {
+            for (JourPointageEntity pointage : semainePointage.getPointages()) {
+                joursTravailles += pointage.getPointage();
+            }
         }
         return joursTravailles;
     }
 
-    private Float totalJoursSupTravailles(List<JourPointageEntity> pointages){
+    private Float totalJoursSupTravailles(List<SemainePointageEntity> semainePointages) {
         Float joursTravailles = 0f;
-        for (JourPointageEntity pointage: pointages){
-            joursTravailles += pointage.getPointageSupplementaire();
+        for (SemainePointageEntity semainePointage : semainePointages) {
+            for (JourPointageEntity pointage : semainePointage.getPointages()) {
+                joursTravailles += pointage.getPointageSupplementaire() != null
+                        ? pointage.getPointageSupplementaire() : 0;
+            }
         }
         return joursTravailles;
     }

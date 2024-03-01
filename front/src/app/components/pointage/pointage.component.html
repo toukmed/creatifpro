@@ -9,6 +9,10 @@
     [searchable]="true"
     [isEditable]="true"
     [hasDetails]="true"
+    (searched)="searchPointages($event)"
+    (edit)="edit($event, false)"
+    (showDetails)="edit($event, true)"
+    (addClicked)="add()"
   >
   </app-generic-table>
 </mat-card>

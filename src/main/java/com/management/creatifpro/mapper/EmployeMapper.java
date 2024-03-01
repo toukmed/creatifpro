@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class EmployeMapper extends GenericMapper<EmployeDto, EmployeEntity> {
                 .prenom(entity.getPrenom())
                 .cin(entity.getCin())
                 .numeroTelephone(entity.getNumeroTelephone())
-                .dateIntegration(entity.getDateIntegration().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .dateIntegration(entity.getDateIntegration().format(DATE_FORMATTER))
                 .tarifJournalier(entity.getTarifJournalier())
                 .poste(entity.getPoste())
                 .salaireMensuel(entity.getSalaireMensuel())
@@ -46,7 +44,7 @@ public class EmployeMapper extends GenericMapper<EmployeDto, EmployeEntity> {
                 .prenom(entityDto.prenom())
                 .cin(entityDto.cin())
                 .numeroTelephone(entityDto.numeroTelephone())
-                .dateIntegration(LocalDate.ofInstant(Instant.ofEpochMilli(entityDto.dateIntegration()), ZoneId.systemDefault()))
+                .dateIntegration(LocalDate.parse(entityDto.dateIntegration(), DATE_FORMATTER))
                 .tarifJournalier(entityDto.tarifJournalier())
                 .salaireMensuel(entityDto.salaireMensuel())
                 .poste(entityDto.poste())
@@ -56,6 +54,11 @@ public class EmployeMapper extends GenericMapper<EmployeDto, EmployeEntity> {
                         .orElseThrow(() -> new AppException("Projet with id: " + entityDto.projet().id() + " not found", HttpStatus.NOT_FOUND))
                         : null)
                 .build();
+    }
+
+    @Override
+    public EmployeEntity toMinimalEntity(EmployeDto entityDto) {
+        return toEntity(entityDto);
     }
 
     public EmployeEntity copyContent(EmployeEntity source, EmployeEntity target){

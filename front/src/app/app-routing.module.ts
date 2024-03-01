@@ -11,6 +11,8 @@ import { DevisComponent } from './components/devis/devis.component';
 import { FacturationComponent } from './components/facturation/facturation.component';
 import { LoginComponent } from './login/login.component';
 import { authGuard } from './services/guards/auth.guard';
+import { EditPageComponent } from './edit-page/edit-page.component';
+import { VisuPageComponent } from './edit-page/visu-page/visu-page.component';
 
 const routes: Routes = [
   {
@@ -29,10 +31,30 @@ const routes: Routes = [
     data: { animation: 'root' },
   },
   {
-    path: 'personnels',
+    path: 'pointages/:id',
+    component: EditPageComponent,
+    data: { animation: 'edit' },
+  },
+  {
+    path: 'pointages/:id/visu',
+    data: { animation: 'edit' },
+    component: VisuPageComponent,
+  },
+  {
+    path: 'employes',
     component: PersonnelComponent,
     canActivate: [authGuard],
     data: { animation: 'root' },
+  },
+  {
+    path: 'employes/:id',
+    component: EditPageComponent,
+    data: { animation: 'edit' },
+  },
+  {
+    path: 'employes/:id/visu',
+    data: { animation: 'edit' },
+    component: VisuPageComponent,
   },
   {
     path: 'consommations',
@@ -45,6 +67,16 @@ const routes: Routes = [
     component: ProjetComponent,
     canActivate: [authGuard],
     data: { animation: 'root' },
+  },
+  {
+    path: 'projets/:id',
+    component: EditPageComponent,
+    data: { animation: 'edit' },
+  },
+  {
+    path: 'projets/:id/visu',
+    data: { animation: 'edit' },
+    component: VisuPageComponent,
   },
   {
     path: 'paiements',

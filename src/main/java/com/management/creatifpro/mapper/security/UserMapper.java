@@ -1,8 +1,6 @@
 package com.management.creatifpro.mapper.security;
 
-import com.management.creatifpro.dto.ProjetDto;
 import com.management.creatifpro.dto.security.UserDto;
-import com.management.creatifpro.entity.ProjetEntity;
 import com.management.creatifpro.entity.security.UserEntity;
 import com.management.creatifpro.mapper.generic.GenericMapper;
 import org.springframework.stereotype.Component;
@@ -24,6 +22,11 @@ public class UserMapper extends GenericMapper<UserDto, UserEntity> {
 
     @Override
     public UserEntity toEntity(UserDto entityDto) {
+        return null;
+    }
+
+    @Override
+    public UserEntity toMinimalEntity(UserDto entityDto) {
         return null;
     }
 }

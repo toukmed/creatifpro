@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,5 +23,5 @@ public class PointageEntity extends BaseEntity{
     @JoinColumn(name = "employe_id")
     private EmployeEntity employe;
     @OneToMany(mappedBy = "pointageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JourPointageEntity> pointages;
+    private List<SemainePointageEntity> pointages;
 }

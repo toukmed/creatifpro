@@ -1,16 +1,19 @@
 package com.management.creatifpro.service;
 
 import com.management.creatifpro.dto.EmployeDto;
-import com.management.creatifpro.dto.JourPointageDto;
 import com.management.creatifpro.dto.PointageDto;
 import com.management.creatifpro.dto.SearchDto;
+import com.management.creatifpro.dto.SemainePointageDto;
 import com.management.creatifpro.entity.JourPointageEntity;
 import com.management.creatifpro.entity.PointageEntity;
+import com.management.creatifpro.entity.SemainePointageEntity;
 import com.management.creatifpro.exception.AppException;
 import com.management.creatifpro.mapper.JourPointageMapper;
 import com.management.creatifpro.mapper.PointageMapper;
+import com.management.creatifpro.mapper.SemainePointageMapper;
 import com.management.creatifpro.repository.JourPointageRepository;
 import com.management.creatifpro.repository.PointageRepository;
+import com.management.creatifpro.repository.SemainePointageRepository;
 import com.management.creatifpro.specification.SpecificationsUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +36,10 @@ public class PointageService {
 
     private final PointageRepository pointageRepository;
     private final JourPointageRepository jourPointageRepository;
+    private final SemainePointageRepository semainePointageRepository;
     private final PointageMapper pointageMapper;
     private final JourPointageMapper jourPointageMapper;
+    private final SemainePointageMapper semainePointageMapper;
 
     public Page<PointageDto> findAll(SearchDto searchDto) {
         Pageable pageable = PageRequest
@@ -60,23 +65,32 @@ public class PointageService {
 
         validateEmploye(pointageDto.employe());
 
-        PointageEntity pointage = pointageRepository.save(pointageMapper.toEntity(pointageDto));
+        PointageEntity pointage = pointageRepository.save(pointageMapper.toMinimalEntity(pointageDto));
 
+        List<SemainePointageEntity> semainePointages = new ArrayList<>();
         List<JourPointageEntity> jourPointages = new ArrayList<>();
 
         if (pointageDto.pointages() != null && !pointageDto.pointages().isEmpty()) {
 
-            validateJoursPointage(pointageDto.pointages());
+            validateSemainePointage(pointageDto.pointages());
 
-            List<JourPointageEntity> jourPointageEntities = jourPointageMapper.toEntityList(pointageDto.pointages());
+            for (SemainePointageDto semainePointageDto : pointageDto.pointages()) {
+                SemainePointageEntity semainePointageEntity = semainePointageMapper.toMinimalEntity(semainePointageDto);
+                semainePointageEntity.setPointageEntity(pointage);
+                SemainePointageEntity semainePointage = semainePointageRepository.save(semainePointageEntity);
 
-            for (JourPointageEntity jourPointageEntity : jourPointageEntities) {
-                jourPointageEntity.setPointageEntity(pointage);
-                jourPointages.add(jourPointageRepository.save(jourPointageEntity));
+                List<JourPointageEntity> jourPointageEntities = jourPointageMapper.toMinimalEntityList(semainePointageDto.jourPointages());
+
+                for (JourPointageEntity jourPointageEntity: jourPointageEntities){
+                    jourPointageEntity.setSemainePointageEntity(semainePointage);
+                    JourPointageEntity jourPointage = jourPointageRepository.save(jourPointageEntity);
+                    jourPointages.add(jourPointage);
+                }
+                semainePointage.setPointages(jourPointages);
+                semainePointages.add(semainePointage);
             }
-            pointage.setPointages(jourPointages);
+            pointage.setPointages(semainePointages);
         }
-
         return pointageMapper.toDto(pointage);
     }
 
@@ -105,8 +119,8 @@ public class PointageService {
         }
     }
 
-    private void validateJoursPointage(List<JourPointageDto> jourPointages){
-        for (JourPointageDto jourPointage: jourPointages){
+    private void validateSemainePointage(List<SemainePointageDto> semainePointages){
+        for (SemainePointageDto semainePointage: semainePointages){
 
         }
     }

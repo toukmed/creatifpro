@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -119,7 +126,6 @@ export class GenericTableComponent implements AfterViewInit {
   input_searched(value: any) {
     this.currentPage = 0;
     this.searched.emit({
-      active: this.active,
       size: this.pageSize,
       page: this.currentPage,
       libelle: value.target.value,
@@ -130,7 +136,6 @@ export class GenericTableComponent implements AfterViewInit {
     this.pageSize = event.pageSize;
     this.currentPage = event.pageIndex;
     this.pageChanged.emit({
-      active: this.active,
       size: this.pageSize,
       page: this.currentPage,
       libelle: this.searchedValue,
@@ -154,17 +159,8 @@ export class GenericTableComponent implements AfterViewInit {
     this.showDetails.emit(row);
   }
 
-  open_history(row: any) {
-    this.openHistory.emit(row);
-  }
-
-  hierarchy_clicked(row: any) {
-    this.router.navigate(['/hierarchy', row.id]);
-  }
-
   filter_clicked() {
     this.filterClicked.emit({
-      active: this.active,
       size: this.pageSize,
       page: this.currentPage,
       libelle: this.searchedValue,

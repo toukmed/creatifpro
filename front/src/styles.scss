@@ -1,3 +1,4 @@
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
 html,
 body {
   height: 100%;
@@ -43,4 +44,28 @@ h2:after {
 
 .full-width {
   width: 100%;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+#edit-tab {
+  mat-tab-header {
+    .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+      color: var(--edit-tabs-header-color);
+    }
+
+    .mdc-tab--active {
+      background: var(--color-primary);
+    }
+  }
+}
+
+.p-25 {
+  padding: 25px;
 }

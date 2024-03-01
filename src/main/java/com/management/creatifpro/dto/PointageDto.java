@@ -11,9 +11,8 @@ public record PointageDto(
         Long id,
         @NotNull(message = "Employé auquel le pointage sera affecté est obligatoire")
         EmployeDto employe,
-        Long datePointage,
         Float totalJoursTravailles,
         Float totalJoursSupTravailles,
         @Valid
-        List<JourPointageDto> pointages
+        List<SemainePointageDto> pointages
 ) { }

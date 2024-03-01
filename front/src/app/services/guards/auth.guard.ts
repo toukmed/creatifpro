@@ -15,7 +15,7 @@ export const authGuard: CanActivateFn = (
   const protectedRoutes: string[] = [
     '/accueil',
     '/pointages',
-    '/personnels',
+    '/employes',
     '/consommations',
     '/projets',
     '/paiements',

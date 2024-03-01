@@ -32,7 +32,7 @@ public class JourPointageEntity extends BaseEntity{
     @JoinColumn(name = "employe_id")
     private EmployeEntity employe;
     @ManyToOne
-    @JoinColumn(name = "pointage_id")
-    private PointageEntity pointageEntity;
+    @JoinColumn(name = "semaine_pointage_id")
+    private SemainePointageEntity semainePointageEntity;
 
 }

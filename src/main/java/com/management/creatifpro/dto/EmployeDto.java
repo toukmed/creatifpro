@@ -15,7 +15,7 @@ public record EmployeDto(
         @NotBlank(message = "Le cin de l'employé est obligatoire")
         String cin,
         String numeroTelephone,
-        Long dateIntegration,
+        String dateIntegration,
         @NotNull
         ContratEmploye typeContrat,
         String poste,

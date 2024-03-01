@@ -54,10 +54,13 @@ public class ProjetService {
 
     @Transactional
     public ProjetDto update(ProjetDto projetDto){
+        ProjetEntity projetEntity = projetRepository
+                .findById(projetDto.id()).orElseThrow(() -> new AppException("Projet with id: " + projetDto.id() + " not found", HttpStatus.NOT_FOUND));
+        ProjetEntity newEntity = projetMapper.toEntity(projetDto);
         return projetMapper
                 .toDto(projetRepository
                         .save(projetMapper
-                                .toEntity(projetDto)));
+                                .copyContent(newEntity, projetEntity)));
     }
 
     public ProjetDto findById(Long id){

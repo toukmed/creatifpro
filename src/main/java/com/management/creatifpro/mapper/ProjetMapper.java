@@ -1,8 +1,6 @@
 package com.management.creatifpro.mapper;
 
-import com.management.creatifpro.dto.PointageDto;
 import com.management.creatifpro.dto.ProjetDto;
-import com.management.creatifpro.entity.PointageEntity;
 import com.management.creatifpro.entity.ProjetEntity;
 import com.management.creatifpro.mapper.generic.GenericMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +26,16 @@ public class ProjetMapper extends GenericMapper<ProjetDto, ProjetEntity> {
                 .nom(entityDto.nom())
                 .reference(entityDto.reference())
                 .build();
+    }
+
+    @Override
+    public ProjetEntity toMinimalEntity(ProjetDto entityDto) {
+        return toEntity(entityDto);
+    }
+
+    public ProjetEntity copyContent(ProjetEntity source, ProjetEntity target){
+        target.setNom(source.getNom());
+        target.setReference(source.getReference());
+        return target;
     }
 }
