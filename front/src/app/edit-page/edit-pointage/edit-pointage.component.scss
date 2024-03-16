@@ -1,0 +1,39 @@
+:host::ng-deep .cal-month-view .cal-cell-row .cal-cell:hover,
+.cal-month-view .cal-cell.cal-has-events.cal-open {
+  background-color: #c2185b;
+}
+
+:host::ng-deep .cal-week-view .cal-day-headers .cal-header:hover,
+.cal-week-view .cal-day-headers .cal-drag-over {
+  background-color: #c2185b;
+}
+
+:host::ng-deep .cal-month-view .cal-cell-row .cal-cell,
+.cal-month-view .cal-cell.cal-has-events.cal-open {
+  background-color: #303030;
+}
+
+:host::ng-deep .cal-month-view .cal-day-cell.cal-weekend .cal-day-number {
+  color: #e1e1e1;
+}
+
+:host::ng-deep .cal-day-number {
+  color: #fff;
+}
+
+:host::ng-deep .cal-month-view .cal-day-cell.cal-today {
+  background-color: #c2185b;
+}
+
+:host::ng-deep .cal-week-view .cal-day-headers .cal-header:first-child {
+  border-left-color: #303030;
+}
+
+:host::ng-deep .cal-days {
+  color: white;
+  background-color: #303030;
+}
+
+:host::ng-deep .cal-cell-row:hover {
+  background-color: #303030;
+}

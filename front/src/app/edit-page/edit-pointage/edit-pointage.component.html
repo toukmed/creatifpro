@@ -1,0 +1,44 @@
+<div class="row text-center">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <mat-button-toggle
+      value="bold"
+      mwlCalendarPreviousView
+      [view]="view"
+      [(viewDate)]="viewDate"
+      >Précédant</mat-button-toggle
+    >
+    <mat-button-toggle value="italic" mwlCalendarToday [(viewDate)]="viewDate"
+      >Aujourd'hui</mat-button-toggle
+    >
+    <mat-button-toggle
+      value="underline"
+      mwlCalendarNextView
+      [view]="view"
+      [(viewDate)]="viewDate"
+      (viewDateChange)="closeOpenMonthViewDay()"
+      >Suivant</mat-button-toggle
+    >
+  </mat-button-toggle-group>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate : view + "ViewTitle" : "en" }}</h3>
+  </div>
+</div>
+<br />
+
+<div [ngSwitch]="view">
+  <mwl-calendar-month-view
+    *ngSwitchCase="CalendarView.Month"
+    [viewDate]="viewDate"
+    [weekStartsOn]="1"
+    [refresh]="refresh"
+    [activeDayIsOpen]="activeDayIsOpen"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-month-view>
+
+  <ng-template #calendarTemplate>
+    <div>{{ CalendarView.Day }}</div>
+  </ng-template>
+</div>

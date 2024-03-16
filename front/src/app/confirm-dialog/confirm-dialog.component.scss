@@ -1,0 +1,27 @@
+.header {
+    display: flex;
+    margin-bottom: 20px;
+
+    &:before {
+        background: var(--color-primary);
+        content: "";
+        display: block;
+        width: 20px;
+        height: 40px;
+        left: 0;
+        top: 0;
+        border-radius: 4px;
+        flex: 0 1 auto;
+        margin-right: 10px;
+    }
+
+    font-family: "SFR Bold", "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: bold;
+    padding: 5px;
+    margin-left: 10px;
+    font-size: 1.25em;
+    line-height: 32px;
+    flex: 1 1 auto;
+    text-transform: uppercase;
+    align-items: flex-end;
+}

@@ -1,0 +1,46 @@
+#entity-parameters {
+  margin-top: 40px;
+}
+
+.actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.tab-icon {
+  margin-right: 8px;
+}
+
+.parameter-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+
+  h3 {
+    display: flex;
+  }
+
+  h3:before,
+  h3:after {
+    content: "";
+    flex: 1 1;
+    border-bottom: 1px solid var(--color-primary);
+    margin: auto;
+  }
+
+  h3:before {
+    margin-right: 20px;
+  }
+
+  h3:after {
+    margin-left: 20px;
+  }
+}
+
+.parameters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}

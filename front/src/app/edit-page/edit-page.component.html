@@ -1,0 +1,139 @@
+<app-edit-header
+  [isAddition]="isAddition"
+  [isReadOnly]="isReadOnly"
+  [isValidateDisabled]="formGroup.invalid || isTheSame"
+  [title]="displayHeaderTitle()"
+  (backClicked)="manageBack()"
+  (validateClicked)="validate()"
+/>
+
+@if(entityName === 'pointages'){
+<app-edit-pointage
+  [formGroup]="formGroup"
+  [pointages]="entity.pointages"
+  [isAddition]="isAddition"
+></app-edit-pointage>
+}@else {
+<form [formGroup]="formGroup" id="entity-parameters">
+  <mat-tab-group #tabs id="edit-tab">
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">assignment</mat-icon>
+      Paramètres
+    </ng-template>
+    <mat-tab>
+      <div class="parameter-container">
+        <div class="parameters p-25" style="flex: 1">
+          @for (field of fields; track $index) {
+          <ng-template
+            *ngTemplateOutlet="
+              editFields;
+              context: {
+                $implicit: {
+                  field: field,
+                  ctrl: null,
+                  formGroup: formGroup
+                }
+              }
+            "
+          >
+          </ng-template>
+          }
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</form>
+}
+
+<div class="actions">
+  <button
+    id="cancel-bottom"
+    mat-raised-button
+    [routerLink]="'/' + entityName"
+    *ngIf="!isReadOnly"
+  >
+    Annuler
+  </button>
+  <button
+    id="save-bottom"
+    mat-raised-button
+    color="primary"
+    [disabled]="formGroup.invalid || isTheSame"
+    *ngIf="!isReadOnly"
+    (click)="validate()"
+  >
+    Enregistrer
+  </button>
+</div>
+
+<ng-template #editFields let-params>
+  @switch (params.field.type) { @case (FieldType.string) { @if(params.field.name
+  === 'typeContrat'){
+  <mat-form-field
+    [formGroup]="formGroup"
+    color="accent"
+    class="full-width"
+    subscriptSizing="dynamic"
+    appearance="outline"
+  >
+    <mat-label>{{ params.field.displayName }}</mat-label>
+    <mat-select [formControlName]="params.field.name">
+      <mat-option
+        *ngFor="let value of params.field.staticValues"
+        [value]="value"
+      >
+        {{ value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  } @else{
+  <mat-form-field
+    [formGroup]="formGroup"
+    color="accent"
+    class="full-width"
+    subscriptSizing="dynamic"
+    appearance="outline"
+  >
+    <mat-label>{{ params.field.displayName }}</mat-label>
+    <input
+      [id]="
+        'edit-field-' + entityName + '-' + params.field.name + '-' + entity.id
+      "
+      [formControlName]="params.field.name"
+      matInput
+    />
+  </mat-form-field>
+  } }@case (FieldType.date || params.field.name === 'dateIntegration') {
+  <mat-form-field
+    [formGroup]="formGroup"
+    class="full-width"
+    appearance="outline"
+  >
+    <mat-label>{{ params.field.displayName }}</mat-label>
+    <input
+      [id]="
+        'edit-field-' + entityName + '-' + params.field.name + '-' + entity.id
+      "
+      [formControlName]="params.field.name"
+      matInput
+      [matDatepicker]="datePicker"
+      [formControlName]="params.field.name"
+      (click)="datePicker.open()"
+    />
+    <mat-datepicker-toggle
+      matIconSuffix
+      [for]="datePicker"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
+  </mat-form-field>
+  }@case (FieldType.entity){
+  <app-entity-field
+    [formGroup]="params.formGroup"
+    [field]="params.field"
+    (entitySelected)="entitySelected($event)"
+    [isReadOnly]="isReadOnly"
+  ></app-entity-field>
+  } @default {
+  <div></div>
+  } }
+</ng-template>
