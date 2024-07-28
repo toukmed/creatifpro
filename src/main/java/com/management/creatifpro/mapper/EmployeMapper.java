@@ -1,6 +1,7 @@
 package com.management.creatifpro.mapper;
 
 import com.management.creatifpro.dto.EmployeDto;
+import com.management.creatifpro.dto.EmployeMinimalDto;
 import com.management.creatifpro.entity.EmployeEntity;
 import com.management.creatifpro.exception.AppException;
 import com.management.creatifpro.mapper.generic.GenericMapper;
@@ -33,6 +34,15 @@ public class EmployeMapper extends GenericMapper<EmployeDto, EmployeEntity> {
                 .salaireMensuel(entity.getSalaireMensuel())
                 .typeContrat(entity.getTypeContrat())
                 .projet(projetMapper.toDto(entity.getProjet()))
+                .build();
+    }
+
+    public EmployeMinimalDto toMinimalDto(EmployeEntity entity) {
+        return EmployeMinimalDto
+                .builder()
+                .id(entity.getId())
+                .nom(entity.getNom())
+                .prenom(entity.getPrenom())
                 .build();
     }
 

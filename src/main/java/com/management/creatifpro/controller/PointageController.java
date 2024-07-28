@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pointages")
@@ -22,8 +24,8 @@ public class PointageController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<PointageDto> create(@RequestBody @Valid PointageDto pointageDto){
-        return ResponseEntity.ok(pointageService.create(pointageDto));
+    public ResponseEntity<List<PointageDto>> create(@RequestBody @Valid List<PointageDto> pointageDtos){
+        return ResponseEntity.ok(pointageService.create(pointageDtos));
     }
 
     @PutMapping("/update")

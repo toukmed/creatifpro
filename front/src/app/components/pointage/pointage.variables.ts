@@ -8,32 +8,32 @@ export const columns = [
     path: 'employe.prenom',
   },
   {
-    libelle: 'CIN',
-    path: 'employe.cin',
+    libelle: 'Lundi',
+    path: 'lundi.pointage',
   },
   {
-    libelle: 'Type contrat',
-    path: 'employe.typeContrat',
+    libelle: 'Mardi',
+    path: 'mardi.pointage',
   },
   {
-    libelle: 'Projet',
-    path: 'employe.projet.nom',
+    libelle: 'Mercredi',
+    path: 'mercredi.pointage',
   },
   {
-    libelle: 'Jours travailles',
-    path: 'totalJoursTravailles',
+    libelle: 'Jeudi',
+    path: 'jeudi.pointage',
   },
   {
-    libelle: 'Jours sup travailles',
-    path: 'totalJoursSupTravailles',
+    libelle: 'Vendredi',
+    path: 'vendredi.pointage',
   },
   {
-    libelle: 'Tarif journalier',
-    path: 'employe.tarifJournalier',
+    libelle: 'Samedi',
+    path: 'samedi.pointage',
   },
   {
-    libelle: 'Salaire mensuel',
-    path: 'employe.salaireMensuel',
+    libelle: 'Dimanche',
+    path: 'dimanche.pointage',
   },
 ];
 

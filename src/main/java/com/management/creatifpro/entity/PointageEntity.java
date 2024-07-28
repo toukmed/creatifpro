@@ -1,10 +1,7 @@
 package com.management.creatifpro.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "pointages")
+@ToString
 public class PointageEntity extends BaseEntity{
 
     @Id
@@ -22,6 +20,6 @@ public class PointageEntity extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "employe_id")
     private EmployeEntity employe;
-    @OneToMany(mappedBy = "pointageEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SemainePointageEntity> pointages;
+    @OneToMany(mappedBy = "pointageEntity", cascade = CascadeType.ALL)
+    private List<JourPointageEntity> pointages;
 }

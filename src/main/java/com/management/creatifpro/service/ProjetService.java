@@ -22,21 +22,19 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class ProjetService {
+public class ProjetService implements GenericService<ProjetEntity, SearchDto, ProjetDto>{
 
     private final ProjetRepository projetRepository;
     private final ProjetMapper projetMapper;
 
+    @Override
     public Page<ProjetDto> findAll(SearchDto searchDto){
         Pageable pageable = PageRequest
                 .of(searchDto.page().orElse(0), searchDto.size().orElse(10))
                 .withSort(searchDto.sort().orElse(Sort.by(Sort.Direction.ASC, "nom")));
-        Optional<Specification<ProjetEntity>> nomSpec = searchDto.libelle()
-                .map(value -> SpecificationsUtils.likeValue("nom", value));
-        Optional<Specification<ProjetEntity>> prenomSpec = searchDto.libelle()
-                .map(value -> SpecificationsUtils.likeValue("reference", value));
 
-        return Stream.of(nomSpec, prenomSpec)
+
+        return buildFilterStream(searchDto)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .reduce(Specification::or)
@@ -53,6 +51,7 @@ public class ProjetService {
     }
 
     @Transactional
+    @Override
     public ProjetDto update(ProjetDto projetDto){
         ProjetEntity projetEntity = projetRepository
                 .findById(projetDto.id()).orElseThrow(() -> new AppException("Projet with id: " + projetDto.id() + " not found", HttpStatus.NOT_FOUND));
@@ -63,9 +62,19 @@ public class ProjetService {
                                 .copyContent(newEntity, projetEntity)));
     }
 
+    @Override
     public ProjetDto findById(Long id){
         return projetMapper.toDto(projetRepository
                 .findById(id)
                 .orElseThrow(() -> new AppException("Projet with id: " + id + " not found", HttpStatus.NOT_FOUND)));
+    }
+
+    @Override
+    public Stream<Optional<Specification<ProjetEntity>>> buildFilterStream(SearchDto searchDto) {
+        Optional<Specification<ProjetEntity>> nomSpec = searchDto.libelle()
+                .map(value -> SpecificationsUtils.likeValue("nom", value));
+        Optional<Specification<ProjetEntity>> prenomSpec = searchDto.libelle()
+                .map(value -> SpecificationsUtils.likeValue("reference", value));
+        return Stream.of(nomSpec, prenomSpec);
     }
 }

@@ -24,15 +24,8 @@ public class JourPointageEntity extends BaseEntity{
     private LocalDate jourPointage;
     @Column(nullable = false)
     private Float pointage;
-    @Column(name = "pointage_supplementaire")
-    private Float pointageSupplementaire;
-    @Column(name = "projet_id", nullable = false)
-    private Long projetId;
     @ManyToOne
-    @JoinColumn(name = "employe_id")
-    private EmployeEntity employe;
-    @ManyToOne
-    @JoinColumn(name = "semaine_pointage_id")
-    private SemainePointageEntity semainePointageEntity;
+    @JoinColumn(name = "pointage_id")
+    private PointageEntity pointageEntity;
 
 }

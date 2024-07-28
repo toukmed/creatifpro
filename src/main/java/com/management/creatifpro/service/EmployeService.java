@@ -3,9 +3,11 @@ package com.management.creatifpro.service;
 import com.management.creatifpro.dto.EmployeDto;
 import com.management.creatifpro.dto.SearchDto;
 import com.management.creatifpro.entity.EmployeEntity;
+import com.management.creatifpro.entity.PointageEntity;
 import com.management.creatifpro.exception.AppException;
 import com.management.creatifpro.mapper.EmployeMapper;
 import com.management.creatifpro.repository.EmployeRepository;
+import com.management.creatifpro.repository.PointageRepository;
 import com.management.creatifpro.specification.SpecificationsUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,24 +24,19 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeService {
+public class EmployeService implements GenericService<EmployeEntity, SearchDto, EmployeDto>{
 
     private final EmployeRepository employeRepository;
+    private final PointageRepository pointageRepository;
     private final EmployeMapper employeMapper;
 
+    @Override
     public Page<EmployeDto> findAll(SearchDto searchDto) {
         Pageable pageable = PageRequest
                 .of(searchDto.page().orElse(0), searchDto.size().orElse(10))
                 .withSort(searchDto.sort().orElse(Sort.by(Sort.Direction.ASC, "nom")));
 
-        Optional<Specification<EmployeEntity>> nomSpec = searchDto.libelle()
-                .map(value -> SpecificationsUtils.likeValue("nom", value));
-        Optional<Specification<EmployeEntity>> prenomSpec = searchDto.libelle()
-                .map(value -> SpecificationsUtils.likeValue("prenom", value));
-        Optional<Specification<EmployeEntity>> cinSpec = searchDto.libelle()
-                .map(value -> SpecificationsUtils.likeValue("cin", value));
-
-        return Stream.of(nomSpec, prenomSpec, cinSpec)
+        return buildFilterStream(searchDto)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .reduce(Specification::or)
@@ -51,13 +48,16 @@ public class EmployeService {
     public EmployeDto create(EmployeDto employeDto) {
         validateContratEmploye(employeDto);
         validateEmployeExistance(employeDto.cin());
-        return employeMapper
-                .toDto(employeRepository
-                        .save(employeMapper
-                                .toEntity(employeDto)));
+        EmployeEntity savedEmploye = employeRepository.save(employeMapper.toEntity(employeDto));
+        pointageRepository.save(PointageEntity
+                .builder()
+                .employe(savedEmploye)
+                .build());
+        return employeMapper.toDto(savedEmploye);
     }
 
     @Transactional
+    @Override
     public EmployeDto update(EmployeDto employeDto) {
 
         validateEmploye(employeDto);
@@ -73,10 +73,22 @@ public class EmployeService {
                         .save(employeMapper.copyContent(newEmploye, existingEmploye)));
     }
 
+    @Override
     public EmployeDto findById(Long id) {
         return employeMapper.toDto(employeRepository
                 .findById(id)
                 .orElseThrow(() -> new AppException("Employe with id: " + id + " not found", HttpStatus.NOT_FOUND)));
+    }
+
+    @Override
+    public Stream<Optional<Specification<EmployeEntity>>> buildFilterStream(SearchDto searchDto) {
+        Optional<Specification<EmployeEntity>> nomSpec = searchDto.libelle()
+                .map(value -> SpecificationsUtils.likeValue("nom", value));
+        Optional<Specification<EmployeEntity>> prenomSpec = searchDto.libelle()
+                .map(value -> SpecificationsUtils.likeValue("prenom", value));
+        Optional<Specification<EmployeEntity>> cinSpec = searchDto.libelle()
+                .map(value -> SpecificationsUtils.likeValue("cin", value));
+        return Stream.of(nomSpec,prenomSpec, cinSpec);
     }
 
     private void validateEmploye(EmployeDto employeDto){

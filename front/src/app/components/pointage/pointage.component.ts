@@ -3,6 +3,9 @@ import { columns } from './pointage.variables';
 import { ResourceService } from '../../services/resource.service';
 import { Pointage } from '../../models/pointage';
 import { Router } from '@angular/router';
+import { getStartAndEndOfWeek } from '../../utils/utils';
+
+const { weekStart, weekEnd } = getStartAndEndOfWeek(new Date());
 
 @Component({
   selector: 'app-pointage',
@@ -20,9 +23,14 @@ export class PointageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.service.list({ libelle: '' }, 'pointages').subscribe((resp) => {
-      this.pointages = resp.content;
-    });
+    this.service
+      .list(
+        { libelle: '', weekStartDate: weekStart, weekEndDate: weekEnd },
+        'pointages'
+      )
+      .subscribe((resp) => {
+        this.pointages = resp.content;
+      });
   }
 
   searchPointages(args: any) {

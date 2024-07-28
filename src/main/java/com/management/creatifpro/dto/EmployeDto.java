@@ -22,4 +22,4 @@ public record EmployeDto(
         Long tarifJournalier,
         Long salaireMensuel,
         ProjetDto projet
-        ) { }
+        ) implements GenericDto { }

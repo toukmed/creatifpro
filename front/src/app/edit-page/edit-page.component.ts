@@ -104,11 +104,11 @@ export class EditPageComponent implements OnInit {
 
     const id = this.route.snapshot.paramMap.get('id');
     const entityRequest = this.conf.requests.get[this.entityName];
+    console.log(entityRequest);
     this.isAddition = id === 'new';
     if (!this.isAddition) {
       this.service.getById(parseInt(id ?? ''), entityRequest).subscribe(
         (res) => {
-          console.log(res);
           this.entity = res;
           this.initFieldsAndEntity();
           this.loading = false;
@@ -124,7 +124,6 @@ export class EditPageComponent implements OnInit {
 
   initFieldsAndEntity() {
     this.fields = this.conf.fields[this.entityName];
-    console.log(this.fields);
     this.initForm();
   }
 

@@ -66,3 +66,38 @@ mat-table.placeholder mat-cell span.blank {
 .mat-slide-toggle {
   margin-top: 1rem;
 }
+
+/* Container for aligning elements horizontally */
+.align-elements {
+  display: flex; /* Use flexbox layout */
+  align-items: center; /* Vertically center items */
+  gap: 16px; /* Space between items, adjust as needed */
+  flex-wrap: wrap; /* Allows wrapping if there's not enough space */
+}
+
+/* Style for mat-form-field to adjust width as needed */
+.search-field {
+  flex: 1; /* Allows form fields to grow and take available space */
+  min-width: 800px; /* Minimum width for form fields */
+}
+
+/* Style for mat-icon to adjust size and spacing */
+mat-icon {
+  font-size: 24px; /* Adjust size of icons */
+}
+
+/* Additional styling for better spacing and alignment */
+mat-form-field.full-width {
+  flex: 2; /* Increase space for full-width form field */
+}
+
+.mt-10 {
+  margin-top: 17px;
+}
+
+.green {
+  color: greenyellow;
+}
+.red {
+  color: red;
+}

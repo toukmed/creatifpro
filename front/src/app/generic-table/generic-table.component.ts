@@ -45,11 +45,9 @@ export class GenericTableComponent implements AfterViewInit {
   @Input()
   clickableRow = false;
   @Input()
-  hasHistory = false;
-  @Input()
   deletable = false;
   @Input()
-  hierarchy = false;
+  entity = '';
   @Output()
   addClicked = new EventEmitter<any>();
   @Output()
@@ -98,11 +96,8 @@ export class GenericTableComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
-    this.nbActions = [this.isEditable, this.hasDetails, this.hasHistory].filter(
-      (v) => v
-    ).length;
-    if (this.isEditable || this.hasDetails || this.hasHistory)
-      this.columnsPath.push('actions');
+    this.nbActions = [this.isEditable, this.hasDetails].filter((v) => v).length;
+    if (this.isEditable || this.hasDetails) this.columnsPath.push('actions');
     if (this.deletable) this.columnsPath.push('delete');
   }
 

@@ -13,11 +13,5 @@ public record JourPointageDto(
 
         @Max(value = 1, message = "Le pointage ne peux pas depassé 8H, equivalente à 1")
         @Min(value = 0, message = "La valeur minimale du pointage est 0")
-        Float pointage,
-        @Max(value = 1, message = "Le pointage supplementaire ne peux pas depassé 8H, equivalente à 1")
-        @Min(value = 0, message = "La valeur minimale du pointage supplementaire est 0")
-        Float pointageSupplementaire,
-        @NotNull
-        ProjetDto projet
-) {
-}
+        Float pointage
+) implements GenericDto { }

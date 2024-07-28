@@ -8,11 +8,18 @@ import java.util.List;
 
 @Builder
 public record PointageDto(
+
+        @NotNull(message = "L'id pointage est obligatoire")
         Long id,
-        @NotNull(message = "Employé auquel le pointage sera affecté est obligatoire")
-        EmployeDto employe,
-        Float totalJoursTravailles,
-        Float totalJoursSupTravailles,
+        EmployeMinimalDto employe,
+
+        JourPointageDto lundi,
+        JourPointageDto mardi,
+        JourPointageDto mercredi,
+        JourPointageDto jeudi,
+        JourPointageDto vendredi,
+        JourPointageDto samedi,
+        JourPointageDto dimanche,
         @Valid
-        List<SemainePointageDto> pointages
-) { }
+        List<JourPointageDto> pointages
+) implements GenericDto { }

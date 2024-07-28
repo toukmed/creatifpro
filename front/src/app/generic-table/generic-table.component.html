@@ -14,29 +14,47 @@
     <mat-slide-toggle
       *ngIf="enabled"
       class="mat-slide-toggle"
-      [matTooltip]="active ? 'Afficher les inactifs' : 'Cacher les inactifs'"
       [checked]="false"
       [disabled]="false"
       (change)="filter_clicked()"
       [(ngModel)]="active"
     >
     </mat-slide-toggle>
+    <div class="align-elements">
+      <mat-form-field
+        color="accent"
+        subscriptSizing="dynamic"
+        *ngIf="searchable"
+        appearance="outline"
+        class="full-width search-field"
+      >
+        <mat-label>Recherche par libelle</mat-label>
+        <mat-icon color="accent" matPrefix>search</mat-icon>
+        <input
+          (keyup)="input_searched($event)"
+          [(ngModel)]="searchedValue"
+          matInput
+        />
+      </mat-form-field>
+      @if (entity === 'pointage') {
+      <mat-icon>arrow_back_ios</mat-icon>
 
-    <mat-form-field
-      color="accent"
-      subscriptSizing="dynamic"
-      *ngIf="searchable"
-      appearance="outline"
-      class="full-width"
-    >
-      <mat-label>Recherche par libelle</mat-label>
-      <mat-icon color="accent" matPrefix>search</mat-icon>
-      <input
-        (keyup)="input_searched($event)"
-        [(ngModel)]="searchedValue"
-        matInput
-      />
-    </mat-form-field>
+      <mat-form-field class="mt-10">
+        <mat-label>Saisissez un interval</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Start date" />
+          <input matEndDate placeholder="End date" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+
+      <mat-icon>arrow_forward_ios</mat-icon>
+      }
+    </div>
   </div>
   <mat-table
     [dataSource]="dataSource"
@@ -52,29 +70,26 @@
         {{ def.libelle }}</mat-header-cell
       >
       <mat-cell *matCellDef="let element">
-        @if (loading) { @if (def.path === 'dateIntegration' || def.path
-        ==='linked') {
-        <mat-icon class="blank" style="color: var(--placeholder-color)"
-          >lens</mat-icon
-        >
-        } @else {
-        <span class="blank"></span>
-        } } @else if (def.path === 'localisations.length') {
-        <mat-icon
-          aria-hidden="false"
-          style="margin-top: 10px"
-          [matBadge]="element.localisations?.length || 0"
-          matBadgeSize="small"
-          >location_on
-        </mat-icon>
-        } @else {
-        <mat-icon class="mr-10" aria-hidden="false" *ngIf="def.path === 'dateIntegration'"
-          >event
-        </mat-icon>
         <ng-container>
+          @if (entity === 'pointage' && !def.path.startsWith('employe')) {
+          <mat-icon
+            [ngClass]="{
+              green: resolve(def.path, element) === '1',
+              red: resolve(def.path, element) === '0'
+            }"
+            [fontIcon]="
+              resolve(def.path, element) === '1'
+                ? 'check_circle'
+                : resolve(def.path, element) === '0'
+                ? 'cancel'
+                : ''
+            "
+          >
+          </mat-icon>
+          }
+
           {{ resolve(def.path, element) }}
         </ng-container>
-        }
       </mat-cell>
     </ng-container>
 
@@ -90,10 +105,7 @@
         </button>
       </mat-cell>
     </ng-container>
-    <ng-container
-      *ngIf="isEditable || hasDetails || hasHistory"
-      matColumnDef="actions"
-    >
+    <ng-container *ngIf="isEditable || hasDetails" matColumnDef="actions">
       <mat-header-cell class="actions" *matHeaderCellDef></mat-header-cell>
       <mat-cell class="actions" *matCellDef="let row">
         <button

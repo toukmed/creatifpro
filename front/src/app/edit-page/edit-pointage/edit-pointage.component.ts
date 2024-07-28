@@ -1,84 +1,3 @@
-/* import { Component, Input, OnInit } from '@angular/core';
-import { JourPointage } from '../../models/jourPointage';
-import { Field } from '../edit-page.component';
-import { FormGroup } from '@angular/forms';
-import { filter } from 'rxjs';
-import { pointageEditFields } from '../../models/pointage';
-import { detailcolumns } from '../../components/pointage/pointage.variables';
-
-@Component({
-  selector: 'app-edit-pointage',
-  templateUrl: './edit-pointage.component.html',
-  styleUrl: './edit-pointage.component.scss',
-})
-export class EditPointageComponent {
-  @Input()
-  formGroup: FormGroup;
-  @Input()
-  pointages: JourPointage[] = [];
-  @Input()
-  isAddition = false;
-  headerRowDisplayNames: string[] = [];
-  headerRowNames: string[] = [];
-  detailcolumns = detailcolumns;
-
-  add() {}
-  searchPointages(event: any) {}
-  edit(event: any, readOnly: boolean) {}
-
-  dataSource: JourPointage[] = [
-    {
-      id: 1,
-      jourPointage: '01/01/2024',
-      pointage: 1,
-      pointageSupplementaire: 0.125,
-      projet: { id: 1, nom: 'HALASSA1', reference: 'REF_HALLASA1' },
-    },
-    {
-      id: 2,
-      jourPointage: '02/01/2024',
-      pointage: 0.75,
-      pointageSupplementaire: 0.25,
-      projet: { id: 2, nom: 'HALASSA2', reference: 'REF_HALLASA2' },
-    },
-    {
-      id: 3,
-      jourPointage: '03/01/2024',
-      pointage: 0.25,
-      pointageSupplementaire: 0.125,
-      projet: { id: 3, nom: 'HALASSA3', reference: 'REF_HALLASA3' },
-    },
-    {
-      id: 4,
-      jourPointage: '04/01/2024',
-      pointage: 0.125,
-      pointageSupplementaire: 0.25,
-      projet: { id: 4, nom: 'HALASSA4', reference: 'REF_HALLASA4' },
-    },
-    {
-      id: 5,
-      jourPointage: '05/01/2024',
-      pointage: 0.825,
-      pointageSupplementaire: 0.125,
-      projet: { id: 5, nom: 'HALASSA5', reference: 'REF_HALLASA5' },
-    },
-    {
-      id: 6,
-      jourPointage: '06/01/2024',
-      pointage: 0,
-      pointageSupplementaire: 0,
-      projet: null,
-    },
-    {
-      id: 5,
-      jourPointage: '07/01/2024',
-      pointage: 0,
-      pointageSupplementaire: 0,
-      projet: null,
-    },
-  ];
-}
- */
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { JourPointage } from '../../models/jourPointage';
 import {
@@ -152,13 +71,7 @@ export class EditPointageComponent {
   ];
 
   events: CalendarEvent[] = [
-    {
-      start: new Date(2024, 2, 25),
-      end: new Date(2024, 2, 25),
-      title: 'A 1 day event',
-      color: { ...colors['yellow'] },
-      allDay: true,
-    },
+    
   ];
 
   refresh = new Subject<void>();
