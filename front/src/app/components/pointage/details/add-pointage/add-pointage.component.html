@@ -1,0 +1,83 @@
+<div><h3>Ajouter le pointage en masse</h3></div>
+<div [formGroup]="addPointageForm" class="mg-20 container">
+  <div class="section-1">
+    <mat-form-field>
+      <mat-label>Projet</mat-label>
+      <mat-select formControlName="projet">
+        @for (projet of projects; track projet) {
+        <mat-option [value]="projet.reference">{{ projet.nom }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Type contrat</mat-label>
+      <mat-select formControlName="typeContrat">
+        <mat-option value="cdi">CDI</mat-option>
+        <mat-option value="horaire">HORAIRE</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Nombre d'heures</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0"
+        max="12"
+        placeholder="Nombre d'heures"
+        formControlName="totalHours"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Saisissez la semaine cible</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input
+          matStartDate
+          placeholder="Date debut"
+          formControlName="startDate"
+          [max]="maxDate"
+        />
+        <input
+          matEndDate
+          placeholder="Date fin"
+          formControlName="endDate"
+          [max]="maxDate"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+  <div class="section-2">
+    <mat-card>
+      <app-generic-table
+        [columns]="displayedColumns"
+        [data]="employees"
+        [showPlaceholder]="false"
+        [enabled]="false"
+        [addable]="false"
+        [searchable]="true"
+        [entity]="'pointage'"
+        (searched)="employesByProject($event)"
+        (checkBox)="onCheckboxChange($event)"
+      >
+      </app-generic-table>
+    </mat-card>
+  </div>
+</div>
+<div class="button-row">
+  <button mat-raised-button (click)="close()">Annuler</button>
+  <button
+    [disabled]="!addPointageForm.valid"
+    mat-raised-button
+    color="primary"
+    (click)="save()"
+  >
+    Valider
+  </button>
+</div>

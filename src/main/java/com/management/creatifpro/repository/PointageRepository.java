@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PointageRepository extends JpaRepository<PointageEntity, Long> {
 
@@ -16,4 +18,7 @@ public interface PointageRepository extends JpaRepository<PointageEntity, Long> 
 
     @Query(value = "SELECT EXISTS (SELECT 1 FROM pointages WHERE employe_id = :id)", nativeQuery = true)
     boolean isExistByEmployeId(@Param("id") Long id);
+
+    @Query(value = "SELECT * FROM pointages WHERE employe_id = :id", nativeQuery = true)
+    Optional<PointageEntity> findByEmployeId(@Param("id") Long id);
 }

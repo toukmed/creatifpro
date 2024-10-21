@@ -37,24 +37,14 @@ const routes: Routes = [
   },
   {
     path: 'pointages/:id/visu',
-    data: { animation: 'edit' },
     component: VisuPageComponent,
+    data: { animation: 'edit' },
   },
   {
     path: 'employes',
     component: PersonnelComponent,
     canActivate: [authGuard],
     data: { animation: 'root' },
-  },
-  {
-    path: 'employes/:id',
-    component: EditPageComponent,
-    data: { animation: 'edit' },
-  },
-  {
-    path: 'employes/:id/visu',
-    data: { animation: 'edit' },
-    component: VisuPageComponent,
   },
   {
     path: 'consommations',
@@ -67,16 +57,6 @@ const routes: Routes = [
     component: ProjetComponent,
     canActivate: [authGuard],
     data: { animation: 'root' },
-  },
-  {
-    path: 'projets/:id',
-    component: EditPageComponent,
-    data: { animation: 'edit' },
-  },
-  {
-    path: 'projets/:id/visu',
-    data: { animation: 'edit' },
-    component: VisuPageComponent,
   },
   {
     path: 'paiements',

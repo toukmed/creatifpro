@@ -1,19 +1,26 @@
-<h2>Pointage</h2>
-<mat-card>
-  <app-generic-table
-    [columns]="columns"
-    [data]="pointages"
-    [showPlaceholder]="false"
-    [enabled]="false"
-    [addable]="false"
-    [searchable]="true"
-    [isEditable]="true"
-    [hasDetails]="true"
-    [entity]="'pointage'"
-    (searched)="searchPointages($event)"
-    (edit)="edit($event, false)"
-    (showDetails)="edit($event, true)"
-    (addClicked)="add()"
-  >
-  </app-generic-table>
-</mat-card>
+<h3>Fiche pointages</h3>
+<div class="container">
+  <div class="section">
+    <mat-card>
+      <app-generic-table
+        [columns]="columns"
+        [data]="pointages"
+        [showPlaceholder]="false"
+        [enabled]="false"
+        [addable]="true"
+        [searchable]="true"
+        [isEditable]="true"
+        [hasDetails]="true"
+        [rangeDate]="rangeDate"
+        [entity]="'pointage'"
+        (searched)="searchPointages($event)"
+        (edit)="edit($event, false)"
+        (showDetails)="edit($event, true)"
+        (addClicked)="add()"
+        (nextWeek)="nextWeek()"
+        (previousWeek)="previousWeek()"
+      >
+      </app-generic-table>
+    </mat-card>
+  </div>
+</div>

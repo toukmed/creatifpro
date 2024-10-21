@@ -11,7 +11,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { HomeComponent } from './home/home.component';
 import { MatCardModule } from '@angular/material/card';
 import { NavigationComponent } from './navigation/navigation.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  MatTooltipModule,
+} from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { PointageComponent } from './components/pointage/pointage.component';
 import { PersonnelComponent } from './components/personnel/personnel.component';
@@ -33,27 +35,34 @@ import { MatMenuModule } from '@angular/material/menu';
 import { LoginComponent } from './login/login.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { tokenInterceptor } from './interceptors/token.interceptor';
-import { EditPageComponent } from './edit-page/edit-page.component';
-import { VisuPageComponent } from './edit-page/visu-page/visu-page.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { EditHeaderComponent } from './edit-page/edit-header/edit-header.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ToastrModule } from 'ngx-toastr';
 import { MatSelectModule } from '@angular/material/select';
-import { EntityFieldComponent } from './edit-page/fields/entity-field/entity-field.component';
-import { EditPointageComponent } from './edit-page/edit-pointage/edit-pointage.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import {
   DateAdapter as CoreDateAdapter,
-  MAT_DATE_LOCALE,
   MatNativeDateModule,
 } from '@angular/material/core';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CustomDateAdapter } from './services/custom-date-adapter';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { AddPointageComponent } from './components/pointage/details/add-pointage/add-pointage.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { EditPageComponent } from './edit-page/edit-page.component';
+import { EditHeaderComponent } from './edit-page/edit-header/edit-header.component';
+import { VisuPageComponent } from './edit-page/visu-page/visu-page.component';
+import { AddSinglePointageComponent } from './components/pointage/details/add-single-pointage/add-single-pointage.component';
+import { MatChipsModule } from '@angular/material/chips';
+import localeFr from '@angular/common/locales/fr';
+import { CalendarComponent } from './components/pointage/details/calendar/calendar.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AddWeekPointageComponent } from './components/pointage/details/calendar/add-week-pointage/add-week-pointage.component';
+
+registerLocaleData(localeFr);
 
 const materialModules = [
   MatToolbarModule,
@@ -81,6 +90,10 @@ const materialModules = [
   }),
   MatSelectModule,
   MatButtonToggleModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatCheckboxModule,
+  MatSnackBarModule,
 ];
 
 @NgModule({
@@ -99,10 +112,13 @@ const materialModules = [
     DevisComponent,
     GenericTableComponent,
     LoginComponent,
+    ConfirmDialogComponent,
+    AddPointageComponent,
     EditPageComponent,
     VisuPageComponent,
-    ConfirmDialogComponent,
-    EditPointageComponent,
+    AddSinglePointageComponent,
+    CalendarComponent,
+    AddWeekPointageComponent,
   ],
   imports: [
     ...materialModules,
@@ -112,8 +128,6 @@ const materialModules = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    EditHeaderComponent,
-    EntityFieldComponent,
     CommonModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -121,10 +135,10 @@ const materialModules = [
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    EditHeaderComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: tokenInterceptor, multi: true },
-    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
     { provide: CoreDateAdapter, useClass: CustomDateAdapter },
   ],
   bootstrap: [AppComponent],

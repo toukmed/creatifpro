@@ -1,0 +1,35 @@
+.container {
+  display: inline-flex;
+  gap: 20px;
+}
+
+.section-1 {
+  width: 30%;
+}
+
+.section-2 {
+  width: 65%;
+}
+
+table {
+  width: 100%;
+}
+
+mat-form-field {
+  display: grid;
+}
+
+div > h3,
+h4 {
+  color: white;
+}
+
+h4 {
+  margin: 20px 0px 0px 20px;
+}
+.mg-20 {
+  margin: 0px 0px 20px 20px;
+}
+h3 {
+  margin: 20px 20px 20px 20px;
+}

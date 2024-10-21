@@ -38,11 +38,11 @@ public class PointageMapper extends GenericMapper<PointageDto, PointageEntity> {
     }
 
     private JourPointageEntity filterJourPointage(List<JourPointageEntity> pointages, DayOfWeek day){
-        return pointages.size() > 0 ?
+        List<JourPointageEntity> filteredList = !pointages.isEmpty() ?
                 pointages.stream()
                 .filter(jourPointageEntity -> jourPointageEntity.getJourPointage().getDayOfWeek().equals(day))
-                .toList()
-                .get(0) : null;
+                .toList() : null;
+        return filteredList != null && !filteredList.isEmpty() ? filteredList.get(0) : null;
     }
 
     @Override

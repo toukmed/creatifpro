@@ -8,31 +8,31 @@ export const columns = [
     path: 'employe.prenom',
   },
   {
-    libelle: 'Lundi',
+    libelle: 'Lun',
     path: 'lundi.pointage',
   },
   {
-    libelle: 'Mardi',
+    libelle: 'Mar',
     path: 'mardi.pointage',
   },
   {
-    libelle: 'Mercredi',
+    libelle: 'Mer',
     path: 'mercredi.pointage',
   },
   {
-    libelle: 'Jeudi',
+    libelle: 'Jeu',
     path: 'jeudi.pointage',
   },
   {
-    libelle: 'Vendredi',
+    libelle: 'Ven',
     path: 'vendredi.pointage',
   },
   {
-    libelle: 'Samedi',
+    libelle: 'Sam',
     path: 'samedi.pointage',
   },
   {
-    libelle: 'Dimanche',
+    libelle: 'Dim',
     path: 'dimanche.pointage',
   },
 ];

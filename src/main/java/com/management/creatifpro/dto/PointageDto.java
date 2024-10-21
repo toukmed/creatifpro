@@ -1,15 +1,14 @@
 package com.management.creatifpro.dto;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Builder
 public record PointageDto(
 
-        @NotNull(message = "L'id pointage est obligatoire")
         Long id,
         EmployeMinimalDto employe,
 
@@ -21,5 +20,13 @@ public record PointageDto(
         JourPointageDto samedi,
         JourPointageDto dimanche,
         @Valid
-        List<JourPointageDto> pointages
+        List<JourPointageDto> pointages,
+
+        String referenceProjet,
+        LocalDate startDate,
+        LocalDate endDate,
+        Long totalHours,
+        List<Long> employesIds
+
+
 ) implements GenericDto { }

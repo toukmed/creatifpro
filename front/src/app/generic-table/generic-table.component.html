@@ -10,40 +10,37 @@
     >
       <mat-icon>add</mat-icon>
     </button>
-
-    <mat-slide-toggle
-      *ngIf="enabled"
-      class="mat-slide-toggle"
-      [checked]="false"
-      [disabled]="false"
-      (change)="filter_clicked()"
-      [(ngModel)]="active"
+    <mat-form-field
+      color="accent"
+      subscriptSizing="dynamic"
+      *ngIf="searchable"
+      appearance="outline"
+      class="search-field"
     >
-    </mat-slide-toggle>
-    <div class="align-elements">
-      <mat-form-field
-        color="accent"
-        subscriptSizing="dynamic"
-        *ngIf="searchable"
-        appearance="outline"
-        class="full-width search-field"
-      >
-        <mat-label>Recherche par libelle</mat-label>
-        <mat-icon color="accent" matPrefix>search</mat-icon>
-        <input
-          (keyup)="input_searched($event)"
-          [(ngModel)]="searchedValue"
-          matInput
-        />
-      </mat-form-field>
-      @if (entity === 'pointage') {
-      <mat-icon>arrow_back_ios</mat-icon>
-
-      <mat-form-field class="mt-10">
-        <mat-label>Saisissez un interval</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date" />
-          <input matEndDate placeholder="End date" />
+      <mat-label>Rechercher</mat-label>
+      <mat-icon color="accent" matPrefix>search</mat-icon>
+      <input
+        (keyup)="input_searched($event)"
+        [(ngModel)]="searchedValue"
+        matInput
+      />
+    </mat-form-field>
+    <div *ngIf="entity === 'pointage'" class="justify-content">
+      <button mat-icon-button (click)="previous_week()">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Example home icon"
+          fontIcon="keyboard_arrow_left"
+        ></mat-icon>
+      </button>
+      <mat-form-field>
+        <mat-date-range-input [rangePicker]="picker" [formGroup]="rangeDate">
+          <input
+            matStartDate
+            placeholder="Start date"
+            formControlName="start"
+          />
+          <input matEndDate placeholder="End date" formControlName="end" />
         </mat-date-range-input>
         <mat-datepicker-toggle
           matIconSuffix
@@ -51,9 +48,13 @@
         ></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
-
-      <mat-icon>arrow_forward_ios</mat-icon>
-      }
+      <button mat-icon-button (click)="next_week()">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Example home icon"
+          fontIcon="keyboard_arrow_right"
+        ></mat-icon>
+      </button>
     </div>
   </div>
   <mat-table
@@ -66,31 +67,24 @@
       *ngFor="let def of columnsAll; trackBy: trackBy"
       [matColumnDef]="def.path"
     >
+      @if (def.path === 'id') {
+      <mat-header-cell *matHeaderCellDef mat-sort-header> No.</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-checkbox
+          (change)="onCheckboxChange($event, element.id)"
+        ></mat-checkbox>
+      </mat-cell>
+
+      }@else {
       <mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ def.libelle }}</mat-header-cell
       >
       <mat-cell *matCellDef="let element">
         <ng-container>
-          @if (entity === 'pointage' && !def.path.startsWith('employe')) {
-          <mat-icon
-            [ngClass]="{
-              green: resolve(def.path, element) === '1',
-              red: resolve(def.path, element) === '0'
-            }"
-            [fontIcon]="
-              resolve(def.path, element) === '1'
-                ? 'check_circle'
-                : resolve(def.path, element) === '0'
-                ? 'cancel'
-                : ''
-            "
-          >
-          </mat-icon>
-          }
-
           {{ resolve(def.path, element) }}
         </ng-container>
       </mat-cell>
+      }
     </ng-container>
 
     <ng-container matColumnDef="delete">
@@ -109,26 +103,15 @@
       <mat-header-cell class="actions" *matHeaderCellDef></mat-header-cell>
       <mat-cell class="actions" *matCellDef="let row">
         <button
+          (click)="showDetails_clicked(row)"
           mat-icon-button
-          [matMenuTriggerFor]="menu"
-          aria-label="Example icon-button with a menu"
+          *ngIf="hasDetails"
         >
-          <mat-icon>more_vert</mat-icon>
+          <mat-icon>remove_red_eye</mat-icon>
         </button>
-        <mat-menu #menu="matMenu">
-          <button
-            (click)="showDetails_clicked(row)"
-            mat-menu-item
-            *ngIf="hasDetails"
-          >
-            <mat-icon>remove_red_eye</mat-icon>
-            <span>Visualiser</span>
-          </button>
-          <button mat-menu-item (click)="edit_clicked(row)" *ngIf="isEditable">
-            <mat-icon>edit</mat-icon>
-            <span>Editer</span>
-          </button>
-        </mat-menu>
+        <button mat-icon-button (click)="edit_clicked(row)" *ngIf="isEditable">
+          <mat-icon>edit</mat-icon>
+        </button>
       </mat-cell>
     </ng-container>
 
@@ -141,12 +124,10 @@
     ></mat-row>
   </mat-table>
   <mat-paginator
-    *ngIf="showPagination"
-    [pageSizeOptions]="[10, 25, 100]"
+    [pageSizeOptions]="[5, 10, 25]"
     (page)="page_changed($event)"
     [length]="total"
     [pageIndex]="currentPage"
-    class="paginator"
     aria-label="Taille de la page"
   ></mat-paginator>
 </div>

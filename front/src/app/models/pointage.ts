@@ -1,20 +1,15 @@
 import { Validators } from '@angular/forms';
 import { Employe } from './employe';
 import { JourPointage } from './jourPointage';
-import { FieldType, Resource } from './resource';
-import { Field } from '../edit-page/edit-page.component';
+import { Resource } from './resource';
 
 export class Pointage extends Resource {
   employe: Employe;
   datePointage: Date;
   pointages: JourPointage[];
+  startDate: Date;
+  endDate: Date;
+  projet: string;
+  totalHours: number;
+  employesList: number[];
 }
-
-export const pointageEditFields = [
-  {
-    name: 'employe',
-    displayName: 'Employé',
-    type: FieldType.entity,
-    validators: Validators.required,
-  } as Field,
-];

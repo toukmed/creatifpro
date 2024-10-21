@@ -27,11 +27,32 @@ export class ResourceService<T extends Resource> {
     return this.httpClient.put<T>(`${this.url}/${endpoint}/update`, item);
   }
 
-  getById(id: number, endpoint: string): Observable<any> {
-    return this.httpClient.get(`${this.url}/${endpoint}/${id}`);
+  getById(id: number, endpoint: string, pathParam?: string): Observable<any> {
+    const url = `${this.url}/${endpoint}/${id}`;
+
+    const finalUrl = pathParam ? `${url}?jourPointage=${pathParam}` : url;
+
+    return this.httpClient.get(finalUrl);
+  }
+
+  public isExistBy(
+    endpoint: string,
+    idPointage: string,
+    jourPointage: string
+  ): Observable<any> {
+    const url = `${this.url}/${endpoint}/isExistBy`;
+    const finalUrl =
+      idPointage && jourPointage
+        ? `${url}?idPointage=${idPointage}&jourPointage=${jourPointage}`
+        : url;
+    return this.httpClient.get(finalUrl);
   }
 
   list(body: any, endpoint: string): Observable<any> {
+    return this.httpClient.post(`${this.url}/${endpoint}`, body);
+  }
+
+  addList(body: any, endpoint: string): Observable<any> {
     return this.httpClient.post(`${this.url}/${endpoint}`, body);
   }
 

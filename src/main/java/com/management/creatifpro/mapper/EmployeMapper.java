@@ -43,6 +43,10 @@ public class EmployeMapper extends GenericMapper<EmployeDto, EmployeEntity> {
                 .id(entity.getId())
                 .nom(entity.getNom())
                 .prenom(entity.getPrenom())
+                .projet(projetMapper.toDto(entity.getProjet()))
+                .typeContrat(entity.getTypeContrat())
+                .poste(entity.getPoste())
+                .numeroTelephone(entity.getNumeroTelephone())
                 .build();
     }
 

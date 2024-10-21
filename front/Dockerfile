@@ -1,6 +1,6 @@
-FROM node:alpine
-WORKDIR /src/app
-COPY . /src/app
-RUN npm install -g @angular/cli
+FROM node:18.13.0
+WORKDIR /app
+COPY . /app
+RUN npm install -g @angular/cli@17.0.10
 RUN npm install
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+CMD ["npm", "start"]

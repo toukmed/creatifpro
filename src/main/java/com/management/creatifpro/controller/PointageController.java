@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pointages")
@@ -24,12 +22,12 @@ public class PointageController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<List<PointageDto>> create(@RequestBody @Valid List<PointageDto> pointageDtos){
-        return ResponseEntity.ok(pointageService.create(pointageDtos));
+    public void create(@RequestBody @Valid PointageDto pointageDto){
+        pointageService.create(pointageDto);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<PointageDto> update(@RequestBody  PointageDto pointageDto){
+    public ResponseEntity<PointageDto> update(@RequestBody PointageDto pointageDto){
         return ResponseEntity.ok(pointageService.update(pointageDto));
     }
 

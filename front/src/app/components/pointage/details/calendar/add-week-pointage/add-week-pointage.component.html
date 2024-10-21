@@ -1,0 +1,62 @@
+<div class="bulk-pointage-form">
+  @if (!isReadOnly) {
+  <div class="pointage-form" [formGroup]="addPointageForm">
+    <mat-form-field>
+      <mat-label>Nombre d'heures</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0"
+        max="12"
+        placeholder="Nombre d'heures"
+        formControlName="pointage"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-date-range-input [rangePicker]="picker">
+        <input
+          matStartDate
+          placeholder="Start date"
+          formControlName="startDate"
+        />
+        <input matEndDate placeholder="End date" formControlName="endDate" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <button
+      (click)="addWeeklyPointage()"
+      [disabled]="!addPointageForm.valid"
+      matTooltip="Ajouter"
+      mat-fab
+      color="primary"
+      aria-label="Ajouter"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  }
+  <div class="month-navigation justify-elements">
+    <button mat-icon-button (click)="previousMonth()">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Example home icon"
+        fontIcon="keyboard_arrow_left"
+      ></mat-icon>
+    </button>
+    <div class="bulk-pointage-form">
+      <mat-icon>calendar_month</mat-icon
+      ><span>{{ formatMonthRange(viewDate) }}</span>
+    </div>
+    <button mat-icon-button (click)="nextMonth()">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Example home icon"
+        fontIcon="keyboard_arrow_right"
+      ></mat-icon>
+    </button>
+  </div>
+</div>

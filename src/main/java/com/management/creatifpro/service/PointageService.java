@@ -12,6 +12,7 @@ import com.management.creatifpro.repository.PointageRepository;
 import com.management.creatifpro.specification.SpecificationsUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,8 @@ import static com.management.creatifpro.util.CreatifUtils.DATE_FORMATTER;
 
 @Service
 @RequiredArgsConstructor
-public class PointageService implements GenericService<PointageEntity, SearchDto, PointageDto>{
+@Slf4j
+public class PointageService implements GenericService<PointageEntity, SearchDto, PointageDto> {
 
     private final PointageRepository pointageRepository;
     private final JourPointageRepository jourPointageRepository;
@@ -48,7 +50,7 @@ public class PointageService implements GenericService<PointageEntity, SearchDto
                 .map(specs -> pointageRepository.findAll(specs, pageable))
                 .orElseGet(() -> pointageRepository.findAll(pageable));
 
-        if (searchDto.weekStartDate().isPresent() && searchDto.weekEndDate().isPresent()) {
+        if (searchDto.startDate().isPresent() && searchDto.endDate().isPresent()) {
             List<PointageEntity> updatedPointageEntityList = filterPointageByDates(searchDto, pointageEntityPage);
 
             return pointageMapper.toDtoPage(new PageImpl<>(updatedPointageEntityList), pageable);
@@ -58,23 +60,28 @@ public class PointageService implements GenericService<PointageEntity, SearchDto
     }
 
     @Transactional
-    public List<PointageDto> create(List<PointageDto> pointageDtos) {
+    public void create(PointageDto pointageDto) {
 
-        List<PointageDto> savedPointages = new ArrayList<>();
+        List<JourPointageEntity> pointagesToSave = new ArrayList<>();
 
-        for (PointageDto pointageDto : pointageDtos) {
-            PointageEntity pointage = pointageRepository
-                    .findById(pointageDto.id())
-                    .orElseThrow(() -> new AppException("Pointage with id: " + pointageDto.id() + " not found", HttpStatus.NOT_FOUND));
+        for (Long employeId : pointageDto.employesIds()) {
 
-            List<JourPointageEntity> savedJourPointages = jourPointageRepository.saveAll(filterJourPointages(pointageDto, pointage));
-
-            pointage.setPointages(savedJourPointages);
-
-            savedPointages.add(pointageMapper.toDto(pointage));
+            pointageDto.startDate().datesUntil(pointageDto.endDate()).forEach(date -> {
+                Boolean exist = jourPointageRepository.isExistByEmployeIdAndJourPointage(employeId, date);
+                if (!exist) {
+                    JourPointageEntity jourPointage = JourPointageEntity.builder()
+                            .pointage(Float.valueOf(pointageDto.totalHours()))
+                            .jourPointage(date)
+                            .pointageEntity(pointageRepository
+                                    .findByEmployeId(employeId)
+                                    .orElseThrow(() -> new AppException("Pointage with id: " + pointageDto.id() + " not found", HttpStatus.NOT_FOUND)))
+                            .build();
+                    pointagesToSave.add(jourPointage);
+                }
+            });
+            jourPointageRepository.saveAll(pointagesToSave);
+            log.info("{} jours pointages saved successfully", pointagesToSave.size());
         }
-
-        return savedPointages;
     }
 
     @Transactional
@@ -93,7 +100,6 @@ public class PointageService implements GenericService<PointageEntity, SearchDto
                 .orElseThrow(() -> new AppException("Pointage with id: " + id + " not found", HttpStatus.NOT_FOUND)));
     }
 
-
     private List<JourPointageEntity> filterJourPointages(PointageDto pointageDto, PointageEntity pointage) {
         return pointageDto
                 .pointages()
@@ -108,8 +114,8 @@ public class PointageService implements GenericService<PointageEntity, SearchDto
     }
 
     private static List<PointageEntity> filterPointageByDates(SearchDto searchDto, Page<PointageEntity> pointageEntityPage) {
-        LocalDate startDate = LocalDate.parse(searchDto.weekStartDate().get(), DATE_FORMATTER);
-        LocalDate endDate = LocalDate.parse(searchDto.weekEndDate().get(), DATE_FORMATTER);
+        LocalDate startDate = LocalDate.parse(searchDto.startDate().get(), DATE_FORMATTER);
+        LocalDate endDate = LocalDate.parse(searchDto.endDate().get(), DATE_FORMATTER);
 
         List<PointageEntity> pointageEntityList = pointageEntityPage.getContent();
 
@@ -129,6 +135,8 @@ public class PointageService implements GenericService<PointageEntity, SearchDto
 
     @Override
     public Stream<Optional<Specification<PointageEntity>>> buildFilterStream(SearchDto searchDto) {
+        Optional<Specification<PointageEntity>> idEmployeSpec = searchDto.idPointage()
+                .map(value -> SpecificationsUtils.equals("employe.id", value));
         Optional<Specification<PointageEntity>> nomSpec = searchDto.libelle()
                 .map(value -> SpecificationsUtils.likeValue("employe.nom", value));
         Optional<Specification<PointageEntity>> prenomSpec = searchDto.libelle()
@@ -136,7 +144,7 @@ public class PointageService implements GenericService<PointageEntity, SearchDto
         Optional<Specification<PointageEntity>> cinSpec = searchDto.libelle()
                 .map(value -> SpecificationsUtils.likeValue("employe.cin", value));
 
-        return Stream.of(nomSpec, prenomSpec, cinSpec);
+        return Stream.of(idEmployeSpec, nomSpec, prenomSpec, cinSpec);
     }
 
 }

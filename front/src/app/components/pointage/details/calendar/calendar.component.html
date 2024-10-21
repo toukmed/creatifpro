@@ -1,0 +1,64 @@
+<div class="form-and-calendar-display">
+  <app-add-week-pointage
+    class="form-display"
+    (nextMonthEmiter)="nextMonth()"
+    (previousMonthEmiter)="previousMonth()"
+    [viewDate]="viewDate"
+    (refreshCalendar)="refreshCalendar()"
+    [isReadOnly]="isReadOnly"
+  ></app-add-week-pointage>
+
+  <div class="calendar-display">
+    <mwl-calendar-month-view
+      [viewDate]="viewDate"
+      [cellTemplate]="calendarCell"
+      [weekStartsOn]="1"
+      [locale]="locale"
+    >
+    </mwl-calendar-month-view>
+  </div>
+</div>
+
+<ng-template #calendarCell let-day="day" let-locale="locale">
+  <div class="calendar-cell">
+    <span class="cal-day-number">
+      {{ day.date | calendarDate : "monthViewDayNumber" : locale }}
+    </span>
+
+    <div
+      class="pointage-container"
+      *ngFor="let pointage of getPointageForDay(day)"
+    >
+      <div
+        class="grid-items"
+        [ngClass]="
+          pointage.status
+            ? 'pointage-container-paid-color'
+            : 'pointage-container-unpaid-color'
+        "
+      >
+        <div class="pointage-items">
+          <mat-icon>schedule</mat-icon>
+          <span style="font-size: 14px">{{ pointage.pointage }}H</span>
+        </div>
+        <div>
+          <mat-icon
+            [fontIcon]="pointage.status ? 'paid' : 'error'"
+            [ngClass]="pointage.status ? 'status-paid' : 'status-unpaid'"
+            [matTooltip]="pointage.status ? 'Payé' : 'Non payé'"
+          ></mat-icon>
+        </div>
+      </div>
+      @if (cellContainPointage(day).length > 0 && !isReadOnly) {
+      <div class="action-items">
+        <button mat-icon-button (click)="dayClicked(day)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="dayClicked(day)">
+          <mat-icon style="color: red">delete</mat-icon>
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</ng-template>

@@ -3,23 +3,6 @@
   height: 40px;
 }
 
-.mat-column-id {
-  flex: 0 0 10%;
-}
-
-.mat-column-linked {
-  max-width: 60px;
-}
-
-.mat-column-urlsSize {
-  max-width: 60px;
-}
-
-.mat-column-actions,
-.mat-column-delete {
-  max-width: 65px;
-}
-
 .generic-table {
   display: flex;
   flex-direction: column;
@@ -34,10 +17,6 @@
 
 .table {
   flex-grow: 1;
-}
-
-.paginator {
-  //align-self: flex-end;
 }
 
 .clicked-row {
@@ -67,37 +46,8 @@ mat-table.placeholder mat-cell span.blank {
   margin-top: 1rem;
 }
 
-/* Container for aligning elements horizontally */
-.align-elements {
-  display: flex; /* Use flexbox layout */
-  align-items: center; /* Vertically center items */
-  gap: 16px; /* Space between items, adjust as needed */
-  flex-wrap: wrap; /* Allows wrapping if there's not enough space */
-}
-
-/* Style for mat-form-field to adjust width as needed */
 .search-field {
-  flex: 1; /* Allows form fields to grow and take available space */
-  min-width: 800px; /* Minimum width for form fields */
-}
-
-/* Style for mat-icon to adjust size and spacing */
-mat-icon {
-  font-size: 24px; /* Adjust size of icons */
-}
-
-/* Additional styling for better spacing and alignment */
-mat-form-field.full-width {
-  flex: 2; /* Increase space for full-width form field */
-}
-
-.mt-10 {
-  margin-top: 17px;
-}
-
-.green {
-  color: greenyellow;
-}
-.red {
-  color: red;
+  flex: 1;
+  width: 230%;
+  height: 50px;
 }

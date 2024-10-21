@@ -82,13 +82,15 @@ public class EmployeService implements GenericService<EmployeEntity, SearchDto, 
 
     @Override
     public Stream<Optional<Specification<EmployeEntity>>> buildFilterStream(SearchDto searchDto) {
+        Optional<Specification<EmployeEntity>> projetSpec = searchDto.projet()
+                .map(value -> SpecificationsUtils.likeValue("projet.reference", value));
         Optional<Specification<EmployeEntity>> nomSpec = searchDto.libelle()
                 .map(value -> SpecificationsUtils.likeValue("nom", value));
         Optional<Specification<EmployeEntity>> prenomSpec = searchDto.libelle()
                 .map(value -> SpecificationsUtils.likeValue("prenom", value));
         Optional<Specification<EmployeEntity>> cinSpec = searchDto.libelle()
                 .map(value -> SpecificationsUtils.likeValue("cin", value));
-        return Stream.of(nomSpec,prenomSpec, cinSpec);
+        return Stream.of(nomSpec,prenomSpec, cinSpec, projetSpec);
     }
 
     private void validateEmploye(EmployeDto employeDto){

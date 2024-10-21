@@ -1,6 +1,7 @@
 #home {
   display: grid;
   gap: 20px;
+  margin: 40px;
 }
 
 @media (min-width: 1200px) {
@@ -34,7 +35,7 @@
   font-size: 40px;
 }
 
-h3 {
+h4 {
   letter-spacing: 2px;
   padding-top: 20px;
 }

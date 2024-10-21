@@ -6,7 +6,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-raised-button [mat-dialog-close]="false">Annuler</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="true">
+  <button mat-raised-button color="primary" [mat-dialog-close]="true" (click)="onConfirm()">
     Confirmer
   </button>
 </mat-dialog-actions>

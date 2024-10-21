@@ -1,0 +1,81 @@
+.calendar-cell {
+  padding-left: 10px;
+}
+
+.cal-day-number {
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+.pointage-container {
+  margin-top: 10px;
+  display: flex;
+}
+.pointage-container-paid-color {
+  background-color: aliceblue;
+}
+.pointage-container-unpaid-color {
+  background-color: bisque;
+}
+
+.grid-items {
+  display: grid;
+  width: 50%;
+  border-radius: 10%;
+  align-items: center;
+  margin: 5px 0;
+  padding: 10px;
+}
+
+.pointage-items {
+  display: flex;
+  align-items: start;
+  margin: 5px 0;
+}
+
+.action-items {
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5% 0 0 10%;
+}
+
+.status-paid {
+  color: green; /* Green color for "Payé" status */
+}
+
+.status-unpaid {
+  color: orange; /* Orange color for "Non payé" status */
+}
+
+.circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px; /* Circle width */
+  height: 20px; /* Circle height */
+  border-radius: 50%; /* Makes the div a circle */
+}
+
+mat-icon {
+  font-size: 18px;
+}
+
+.month-navigation {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  gap: 10px;
+  padding-right: 20px;
+}
+.form-and-calendar-display {
+  gap: 10px;
+  padding: 20px;
+}
+
+button {
+  width: 10px;
+  height: 10px;
+}

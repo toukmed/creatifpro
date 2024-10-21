@@ -48,6 +48,8 @@ export class GenericTableComponent implements AfterViewInit {
   deletable = false;
   @Input()
   entity = '';
+  @Input()
+  rangeDate: any;
   @Output()
   addClicked = new EventEmitter<any>();
   @Output()
@@ -64,6 +66,12 @@ export class GenericTableComponent implements AfterViewInit {
   removed = new EventEmitter<any>();
   @Output()
   filterClicked = new EventEmitter<any>();
+  @Output()
+  previousWeek = new EventEmitter<any>();
+  @Output()
+  nextWeek = new EventEmitter<any>();
+  @Output()
+  checkBox = new EventEmitter<any>();
 
   searchedValue = '';
   active = true;
@@ -95,6 +103,7 @@ export class GenericTableComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.nbActions = [this.isEditable, this.hasDetails].filter((v) => v).length;
     if (this.isEditable || this.hasDetails) this.columnsPath.push('actions');
@@ -137,6 +146,13 @@ export class GenericTableComponent implements AfterViewInit {
     });
   }
 
+  onCheckboxChange(event: any, elementId: number) {
+    this.checkBox.emit({
+      event: event,
+      id: elementId,
+    });
+  }
+
   edit_clicked(row: any) {
     this.edit.emit(row);
   }
@@ -160,5 +176,13 @@ export class GenericTableComponent implements AfterViewInit {
       page: this.currentPage,
       libelle: this.searchedValue,
     });
+  }
+
+  previous_week() {
+    this.previousWeek.emit(true);
+  }
+
+  next_week() {
+    this.nextWeek.emit(true);
   }
 }

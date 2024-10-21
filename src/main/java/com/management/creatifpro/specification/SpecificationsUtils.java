@@ -22,6 +22,18 @@ public class SpecificationsUtils {
         };
     }
 
+    public static <T> Specification<T> equals(String path, Long value) {
+        String[] pathArray = path.split("\\.");
+        return (root, query, cb) -> {
+            Path<String> pathT = root.get(pathArray[0]);
+            for (String p : Arrays.stream(pathArray).skip(1).toList()) {
+                pathT = pathT.get(p);
+            }
+
+            return cb.equal(cb.lower(pathT), value);
+        };
+    }
+
     public static <T> Specification<T> betweenValues(LocalDate startDate, LocalDate endDate) {
         return (root, query, cb) -> {
             // Join to JourPointageEntity list
