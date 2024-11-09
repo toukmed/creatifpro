@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Builder
-public record PointageDto(
+public record PointageStatsDto(
 
         Long id,
         EmployeMinimalDto employe,
@@ -18,7 +18,6 @@ public record PointageDto(
         LocalDate endDate,
         Long pointage,
         Boolean status,
-        String commentaire,
         List<Long> employesIds
 
 

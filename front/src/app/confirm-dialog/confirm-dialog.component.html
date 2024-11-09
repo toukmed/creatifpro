@@ -1,12 +1,20 @@
-<h1 mat-dialog-title class="header">Confirmation</h1>
+<div class="container">
+  <mat-icon>notification_important</mat-icon>
+  <h1 mat-dialog-title class="header">CONFIRMATION</h1>
+</div>
+<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
 
-<mat-dialog-content style="padding-top: 10px">
-  {{ data }}
+<mat-dialog-content class="confirmation-content" [innerHTML]="data">
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions align="end" style="margin: 0 10px 10px 0">
   <button mat-raised-button [mat-dialog-close]="false">Annuler</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="true" (click)="onConfirm()">
+  <button
+    mat-raised-button
+    color="primary"
+    [mat-dialog-close]="true"
+    (click)="onConfirm()"
+  >
     Confirmer
   </button>
 </mat-dialog-actions>

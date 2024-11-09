@@ -8,32 +8,16 @@ export const columns = [
     path: 'employe.prenom',
   },
   {
-    libelle: 'Lun',
-    path: 'lundi.pointage',
+    libelle: 'Poste',
+    path: 'employe.poste',
   },
   {
-    libelle: 'Mar',
-    path: 'mardi.pointage',
+    libelle: 'Contrat',
+    path: 'employe.typeContrat',
   },
   {
-    libelle: 'Mer',
-    path: 'mercredi.pointage',
-  },
-  {
-    libelle: 'Jeu',
-    path: 'jeudi.pointage',
-  },
-  {
-    libelle: 'Ven',
-    path: 'vendredi.pointage',
-  },
-  {
-    libelle: 'Sam',
-    path: 'samedi.pointage',
-  },
-  {
-    libelle: 'Dim',
-    path: 'dimanche.pointage',
+    libelle: 'Projet',
+    path: 'employe.projet.nom',
   },
 ];
 

@@ -60,7 +60,6 @@ h3 {
 }
 
 .button-row {
-  position: absolute;
   bottom: 0;
   gap: 10px;
   right: 10px;
@@ -144,4 +143,9 @@ h3:after {
 }
 .success-snackbar {
   background-color: greenyellow;
+}
+
+.button {
+  display: flex;
+  margin-bottom: 20px;
 }

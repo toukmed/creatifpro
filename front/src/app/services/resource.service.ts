@@ -27,7 +27,11 @@ export class ResourceService<T extends Resource> {
     return this.httpClient.put<T>(`${this.url}/${endpoint}/update`, item);
   }
 
-  getById(id: number, endpoint: string, pathParam?: string): Observable<any> {
+  public getById(
+    id: number,
+    endpoint: string,
+    pathParam?: string
+  ): Observable<any> {
     const url = `${this.url}/${endpoint}/${id}`;
 
     const finalUrl = pathParam ? `${url}?jourPointage=${pathParam}` : url;
@@ -48,15 +52,38 @@ export class ResourceService<T extends Resource> {
     return this.httpClient.get(finalUrl);
   }
 
-  list(body: any, endpoint: string): Observable<any> {
+  public list(body: any, endpoint: string): Observable<any> {
     return this.httpClient.post(`${this.url}/${endpoint}`, body);
   }
 
-  addList(body: any, endpoint: string): Observable<any> {
+  public addList(body: any, endpoint: string): Observable<any> {
     return this.httpClient.post(`${this.url}/${endpoint}`, body);
   }
 
-  delete(id: number, endpoint: string) {
-    return this.httpClient.delete(`${this.url}/${endpoint}/${id}`);
+  public delete(id: number, endpoint: string, pathParam?: string) {
+    const url = `${this.url}/${endpoint}/${id}`;
+    const finalUrl = pathParam ? `${url}?jourPointage=${pathParam}` : url;
+    return this.httpClient.delete(finalUrl);
+  }
+
+  public exportToCSV(
+    startDate: string,
+    endDate: string,
+    typeContrat: string,
+    endpoint: string,
+    idPointage?: number
+  ): Observable<Blob> {
+    const url = `${this.url}/${endpoint}/export/csv?typeContrat=${typeContrat}&startDate=${startDate}&endDate=${endDate}`;
+    const finalUrl = idPointage ? `${url}&idPointage=${idPointage}` : url;
+
+    return this.httpClient.get(finalUrl, {
+      responseType: 'blob',
+    });
+  }
+
+  public getStats(id: number, endpoint: string) {
+    return this.httpClient.get(
+      `${this.url}/${endpoint}/stats?pointageId=${id}`
+    );
   }
 }

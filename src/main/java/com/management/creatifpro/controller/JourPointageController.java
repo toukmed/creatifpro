@@ -1,6 +1,7 @@
 package com.management.creatifpro.controller;
 
 import com.management.creatifpro.dto.JourPointageDto;
+import com.management.creatifpro.dto.PointageStatsDto;
 import com.management.creatifpro.dto.SearchDto;
 import com.management.creatifpro.service.JourPointageService;
 import jakarta.validation.Valid;
@@ -38,11 +39,21 @@ public class JourPointageController {
         return jourPointageService.findByIdAndJourPointage(id, jourPointage);
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id, @PathParam("jourPointage") String jourPointage){
+        jourPointageService.delete(id, jourPointage);
+    }
+
     @GetMapping("/isExistBy")
     public ResponseEntity<Boolean> isExistBy(
             @PathParam("idPointage") Long idPointage,
             @PathParam("jourPointage") String jourPointage){
         return ResponseEntity.ok(jourPointageService.isExistByPointageIdAndJourPointage(idPointage, jourPointage));
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<List<PointageStatsDto>> getStats(@PathParam("pointageId") Long pointageId) {
+        return ResponseEntity.ok(jourPointageService.getStatsByPointageId(pointageId));
     }
 
 }

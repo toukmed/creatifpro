@@ -4,7 +4,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResourceService } from '../services/resource.service';
 import { Resource } from '../models/resource';
-import { formatToShortFormatDate } from '../utils/utils';
+import { formatToShortFormatDate } from '../utils/date-utils';
 
 @Component({
   selector: 'app-edit-page',

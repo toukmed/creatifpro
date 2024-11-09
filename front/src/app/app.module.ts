@@ -11,9 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { HomeComponent } from './home/home.component';
 import { MatCardModule } from '@angular/material/card';
 import { NavigationComponent } from './navigation/navigation.component';
-import {
-  MatTooltipModule,
-} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { PointageComponent } from './components/pointage/pointage.component';
 import { PersonnelComponent } from './components/personnel/personnel.component';
@@ -60,7 +58,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import localeFr from '@angular/common/locales/fr';
 import { CalendarComponent } from './components/pointage/details/calendar/calendar.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AddWeekPointageComponent } from './components/pointage/details/calendar/add-week-pointage/add-week-pointage.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 registerLocaleData(localeFr);
 
@@ -94,6 +94,9 @@ const materialModules = [
   MatChipsModule,
   MatCheckboxModule,
   MatSnackBarModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  NgxChartsModule,
 ];
 
 @NgModule({
@@ -118,7 +121,6 @@ const materialModules = [
     VisuPageComponent,
     AddSinglePointageComponent,
     CalendarComponent,
-    AddWeekPointageComponent,
   ],
   imports: [
     ...materialModules,

@@ -6,7 +6,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { formatDateToString, formatToShortDate } from '../../../../utils/utils';
+import {
+  formatDateToString,
+  formatToShortDate,
+  parseDate,
+} from '../../../../utils/date-utils';
 import { ResourceService } from '../../../../services/resource.service';
 import { JourPointage } from '../../../../models/jourPointage';
 import { Employe } from '../../../../models/employe';
@@ -22,7 +26,12 @@ export class AddSinglePointageComponent implements OnInit {
   addPointageForm: FormGroup = new FormGroup({
     id: new FormControl(),
     jourPointage: new FormControl(''),
-    pointage: new FormControl('', Validators.required),
+    pointage: new FormControl(
+      this.data?.entity?.employe?.typeContrat === 'HORAIRE' ? 8 : 1,
+      this.data?.entity?.employe?.typeContrat === 'HORAIRE'
+        ? Validators.required
+        : null
+    ),
     status: new FormControl(false),
     idPointage: new FormControl(),
     commentaire: new FormControl(''),
@@ -31,6 +40,8 @@ export class AddSinglePointageComponent implements OnInit {
   projects: any = [];
   maxDate: Date = new Date();
   initials: string = '';
+  isCellUpdated = false;
+  updatedDay: any;
 
   @Input()
   datePointage: any;
@@ -68,9 +79,6 @@ export class AddSinglePointageComponent implements OnInit {
     });
   }
 
-  close() {
-    this.dialogRef.close();
-  }
   save() {
     this.data.jourPointage ? this.updatePointage() : this.createPointage();
   }
@@ -79,7 +87,15 @@ export class AddSinglePointageComponent implements OnInit {
     this.jourPointageService
       .update(this.addPointageForm.value, 'jourPointages')
       .subscribe((resp) => {
-        this.dialogRef.close();
+        this.isCellUpdated = true;
+        this.updatedDay = parseDate(
+          this.addPointageForm.controls['jourPointage'].value
+        );
+        this.dialogRef.close({
+          status: true,
+          isCellUpdated: this.isCellUpdated,
+          updatedDay: this.updatedDay,
+        });
         this.snackBarService.openBar(
           'Pointage du ' +
             resp.jourPointage.substring(0, 5) +
@@ -97,7 +113,16 @@ export class AddSinglePointageComponent implements OnInit {
     this.jourPointageService
       .create(this.addPointageForm.value, 'jourPointages')
       .subscribe((resp) => {
-        this.dialogRef.close();
+        console.log('update ok');
+        this.isCellUpdated = true;
+        this.updatedDay = parseDate(
+          this.addPointageForm.controls['jourPointage'].value
+        );
+        this.dialogRef.close({
+          status: true,
+          isCellUpdated: true,
+          updatedDay: this.updatedDay,
+        });
         this.snackBarService.openBar(
           'Pointage du ' +
             resp.jourPointage.substring(0, 5) +
@@ -105,5 +130,9 @@ export class AddSinglePointageComponent implements OnInit {
           ''
         );
       });
+  }
+
+  onCancel() {
+    this.dialogRef.close(false);
   }
 }

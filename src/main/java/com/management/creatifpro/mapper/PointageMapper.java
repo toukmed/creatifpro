@@ -27,13 +27,6 @@ public class PointageMapper extends GenericMapper<PointageDto, PointageEntity> {
                 .builder()
                 .id(entity.getId())
                 .employe(employeMapper.toMinimalDto(entity.getEmploye()))
-                .lundi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.MONDAY)))
-                .mardi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.TUESDAY)))
-                .mercredi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.WEDNESDAY)))
-                .jeudi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.THURSDAY)))
-                .vendredi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.FRIDAY)))
-                .samedi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.SATURDAY)))
-                .dimanche(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.SUNDAY)))
                 .build();
     }
 

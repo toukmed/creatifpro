@@ -9,6 +9,7 @@ import java.util.Optional;
 public record SearchDto(
         Optional<String> libelle,
         Optional<String> projet,
+        Optional<String> typeContrat,
         Optional<String> startDate,
         Optional<String> endDate,
         Optional<Integer> page,

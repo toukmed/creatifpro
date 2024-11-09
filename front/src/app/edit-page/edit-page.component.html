@@ -5,9 +5,10 @@
   (backClicked)="manageBack()"
   (validateClicked)="validate()"
 />
+@if (entityName === 'pointages') {
 <app-calendar
-  *ngIf="entityName === 'pointages'"
   [entity]="entity"
   [entityName]="entityName"
   [isReadOnly]="isReadOnly"
 ></app-calendar>
+}

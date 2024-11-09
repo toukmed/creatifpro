@@ -1,5 +1,14 @@
-.calendar-cell {
-  padding-left: 10px;
+@keyframes highlight {
+  from {
+    background-color: greenyellow; /* Start with a highlight color */
+  }
+  to {
+    background-color: transparent; /* End with no color */
+  }
+}
+
+.highlighted-cell {
+  animation: highlight 2s ease-in-out; /* Animation lasts 2 seconds */
 }
 
 .cal-day-number {
@@ -9,8 +18,7 @@
 }
 
 .pointage-container {
-  margin-top: 10px;
-  display: flex;
+  display: grid;
 }
 .pointage-container-paid-color {
   background-color: aliceblue;
@@ -21,11 +29,11 @@
 
 .grid-items {
   display: grid;
-  width: 50%;
-  border-radius: 10%;
+  width: 40%;
+  height: 80px;
   align-items: center;
-  margin: 5px 0;
-  padding: 10px;
+  margin: 5px;
+  padding: 10px 10px 0 10px;
 }
 
 .pointage-items {
@@ -37,8 +45,7 @@
 .action-items {
   bottom: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: end;
   margin: 5% 0 0 10%;
 }
 
@@ -54,28 +61,190 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20px; /* Circle width */
-  height: 20px; /* Circle height */
-  border-radius: 50%; /* Makes the div a circle */
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
-mat-icon {
-  font-size: 18px;
+.header-container {
+  display: flex; /* Left and right elements are spread to the extremes */
+  align-items: center; /* Align vertically */
+  width: 100%; /* Full width of the header */
+  gap: 10px;
+  padding: 0 16px; /* Horizontal padding */
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  background-color: #f9f9f9; /* Optional background color */
+  border-bottom: 1px solid #ddd; /* Optional bottom border */
 }
 
-.month-navigation {
+.month-display {
   display: flex;
-  justify-content: right;
   align-items: center;
-  gap: 10px;
-  padding-right: 20px;
 }
-.form-and-calendar-display {
-  gap: 10px;
+
+.mat-icon-size {
+  vertical-align: middle;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+mat-card {
+  margin: 20px 20px 20px 20px;
+}
+
+.custom-card {
+  max-width: 350px;
+}
+
+.card-container {
+  display: flex;
+  align-items: flex-start; /* Align items horizontally (circle on left, content on right) */
+  margin-right: 100px;
+}
+
+.circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px; /* Circle width */
+  height: 100px; /* Circle height */
+  background-color: #f46608; /* Background color */
+  color: white; /* Text color */
+  border-radius: 50%; /* Makes the div a circle */
+  font-size: 24px; /* Font size for the text */
+  text-align: center; /* Center text inside the circle */
+  margin-right: 16px; /* Adds space between the circle and text content */
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}
+
+mat-card-subtitle {
+  font-size: 12px; /* Reduced font size */
+  vertical-align: top;
+}
+
+.calendar-container {
   padding: 20px;
 }
 
-button {
-  width: 10px;
-  height: 10px;
+////////////////////
+.portfolio-card {
+  width: 100%;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.portfolio-content {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.portfolio-item {
+  display: flex;
+  align-items: center;
+  width: 30%;
+}
+
+.icon-container {
+  padding: 10px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-right: 15px;
+}
+
+.portfolio-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolio-details p {
+  margin: 0;
+  font-size: 14px;
+  color: #888;
+}
+
+.portfolio-details h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #333;
+}
+
+.change-info {
+  margin-top: 5px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.up-arrow {
+  color: #4caf50;
+  margin-right: 5px;
+}
+
+.down-arrow {
+  color: #f44336;
+  margin-right: 5px;
+}
+
+.report-button {
+  display: block;
+  margin: 0 auto;
+}
+
+////////////////////////////::after
+.actions-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.month-display-content {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between the icon and month text */
+}
+
+.ajout-button {
+  margin-left: auto; /* Pushes the "Ajout en masse" button to the right */
+}
+
+.mat-form-field {
+  min-width: 150px;
+}
+
+.mat-icon-button {
+  cursor: pointer;
+}
+
+.month-navigation {
+  display: flex; /* Flexbox layout for horizontal alignment */
+  align-items: center; /* Vertically aligns date picker */
+  gap: 10px; /* Space between buttons and date picker */
+  position: relative;
+}
+
+.mat-form-field.month-picker {
+  width: 200px; /* Set date picker width */
+}
+
+button.mat-icon-button {
+  display: inline-flex; /* Ensures buttons are properly aligned */
+  align-items: center;
+  margin-top: -10px; /* Lift buttons to top (adjust as necessary) */
+}
+

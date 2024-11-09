@@ -4,6 +4,6 @@ export class JourPointage extends Resource {
   jourPointage: string;
   pointage: number;
   status: boolean;
-  commentaire: string
+  commentaire: string;
 }
 

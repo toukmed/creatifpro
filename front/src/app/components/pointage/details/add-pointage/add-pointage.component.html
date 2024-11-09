@@ -1,6 +1,16 @@
 <div><h3>Ajouter le pointage en masse</h3></div>
-<div [formGroup]="addPointageForm" class="mg-20 container">
-  <div class="section-1">
+<div
+  [formGroup]="addPointageForm"
+  [ngClass]="this.data?.fromMainPage ? 'container' : ''"
+  class="mg-20"
+>
+  @if (isCreating) {
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+  }
+  <div [ngClass]="this.data?.fromMainPage ? 'section-1' : ''">
+    @if (this.data?.fromMainPage) {
     <mat-form-field>
       <mat-label>Projet</mat-label>
       <mat-select formControlName="projet">
@@ -9,15 +19,15 @@
         }
       </mat-select>
     </mat-form-field>
-
     <mat-form-field>
       <mat-label>Type contrat</mat-label>
       <mat-select formControlName="typeContrat">
-        <mat-option value="cdi">CDI</mat-option>
-        <mat-option value="horaire">HORAIRE</mat-option>
+        <mat-option value="CDI">CDI</mat-option>
+        <mat-option value="HORAIRE">HORAIRE</mat-option>
       </mat-select>
     </mat-form-field>
-
+    } @if(typeContrat === 'HORAIRE' ||(typeContrat === 'HORAIRE' &&
+    this.data?.fromMainPage)){
     <mat-form-field class="example-full-width">
       <mat-label>Nombre d'heures</mat-label>
       <input
@@ -26,12 +36,12 @@
         min="0"
         max="12"
         placeholder="Nombre d'heures"
-        formControlName="totalHours"
+        formControlName="pointage"
       />
     </mat-form-field>
-
+    }
     <mat-form-field>
-      <mat-label>Saisissez la semaine cible</mat-label>
+      <mat-label>Saisissez les jours cibles</mat-label>
       <mat-date-range-input [rangePicker]="picker">
         <input
           matStartDate
@@ -52,7 +62,23 @@
       ></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>Commentaire</mat-label>
+      <textarea
+        style="height: 100px"
+        matInput
+        placeholder="Ex. Ajout d'heure supplémentaires"
+        formControlName="commentaire"
+      ></textarea>
+    </mat-form-field>
+    <div class="ml-10">
+      <mat-slide-toggle formControlName="status"></mat-slide-toggle>
+      <mat-label>{{
+        data?.jourPointage?.status ? "Payé" : "Non payé"
+      }}</mat-label>
+    </div>
   </div>
+  @if (this.data?.fromMainPage) {
   <div class="section-2">
     <mat-card>
       <app-generic-table
@@ -63,14 +89,16 @@
         [addable]="false"
         [searchable]="true"
         [entity]="'pointage'"
-        (searched)="employesByProject($event)"
-        (checkBox)="onCheckboxChange($event)"
+        [canDisplay]="false"
+        (searched)="listEmployees($event)"
+        (selectionChanged)="onCheckboxChange($event)"
       >
       </app-generic-table>
     </mat-card>
   </div>
+  }
 </div>
-<div class="button-row">
+<div class="actions-button">
   <button mat-raised-button (click)="close()">Annuler</button>
   <button
     [disabled]="!addPointageForm.valid"
