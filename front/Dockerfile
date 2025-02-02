@@ -8,10 +8,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build --prod
+RUN npm run build --configuration production
 
 # Use an NGINX image to serve the Angular app
 FROM nginx:alpine
-COPY --from=build /app/dist/your-angular-app-name /usr/share/nginx/html
+COPY --from=build /app/dist/front /usr/share/nginx/html
 EXPOSE 80
 

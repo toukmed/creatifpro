@@ -1,0 +1,35 @@
+version: '3'
+services:
+  backend:
+    image: creatifpro-back
+    container_name: creatifpro-back
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  frontend:
+    image: creatifpro-front
+    container_name: creatifpro-front
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:latest
+    container_name: creatifpro-postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: creatifpro
+    ports:
+      - "5433:5433"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
