@@ -3,6 +3,10 @@ import { columns } from './projet.variables';
 import { Projet } from '../../models/projet';
 import { ResourceService } from '../../services/resource.service';
 import { Router } from '@angular/router';
+import { AddEditProjetComponent } from './add-edit-projet/add-edit-projet.component';
+import { DialogConfig } from '@angular/cdk/dialog';
+import { dialogConfig } from '../../utils/utils';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-projet',
@@ -11,12 +15,14 @@ import { Router } from '@angular/router';
 })
 export class ProjetComponent implements OnInit {
   readonly columns = columns;
+  readonly dialogConfig = dialogConfig;
 
   projets: Projet[];
 
   constructor(
     private service: ResourceService<Projet>,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -38,16 +44,10 @@ export class ProjetComponent implements OnInit {
   }
 
   add() {
-    const fieldsToFilter = ['niveau', 'pilote', 'technologie', 'pole'];
-    /* activiteEditFields
-      .filter((ef) => fieldsToFilter.includes(ef.name))
-      .forEach(
-        (ef) =>
-          (ef.staticRequestParam = {
-            serviceMetierId: this.credentials.selectedServiceMetier?.id,
-          })
-      ); */
-
-    this.router.navigate(['projets', 'new']);
+    const dialogConfig = this.dialogConfig({}, '1000px', '700px');
+    this.dialog
+      .open(AddEditProjetComponent, dialogConfig)
+      .afterClosed()
+      .subscribe((resp) => {});
   }
 }

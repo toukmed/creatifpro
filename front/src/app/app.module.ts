@@ -61,6 +61,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { AddEditProjetComponent } from './components/projet/add-edit-projet/add-edit-projet.component';
 
 registerLocaleData(localeFr);
 
@@ -121,6 +122,7 @@ const materialModules = [
     VisuPageComponent,
     AddSinglePointageComponent,
     CalendarComponent,
+    AddEditProjetComponent,
   ],
   imports: [
     ...materialModules,

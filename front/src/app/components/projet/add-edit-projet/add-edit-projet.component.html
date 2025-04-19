@@ -1,0 +1,23 @@
+<div><h3>Ajouter nouveau projet</h3></div>
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <mat-label>Favorite food</mat-label>
+    <input matInput placeholder="Ex. Pizza" value="Sushi" />
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Favorite food</mat-label>
+    <input matInput placeholder="Ex. Pizza" value="Sushi" />
+  </mat-form-field>
+</form>
+<div class="actions-button">
+  <button mat-raised-button (click)="close()">Annuler</button>
+  <button
+    [disabled]="!addProjetForm.valid"
+    mat-raised-button
+    color="primary"
+    (click)="save()"
+  >
+    Valider
+  </button>
+</div>

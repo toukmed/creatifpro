@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.management</groupId>
 	<artifactId>creatifpro</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>creatifpro</name>
 	<description>CREATIFPRO Management application</description>
 	<properties>
