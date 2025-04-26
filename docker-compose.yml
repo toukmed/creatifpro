@@ -15,11 +15,11 @@ services:
     networks:
       - creatifpro-network
 
-  creatifpro-backend:
+  creatifpro-back:
     build:
-      context: ./creatifpro-backend
+      context: .
       dockerfile: Dockerfile
-    container_name: creatifpro-backend
+    container_name: creatifpro-back
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres?currentSchema=creatifpro
       SPRING_DATASOURCE_USERNAME: postgres
@@ -31,15 +31,15 @@ services:
     networks:
       - creatifpro-network
 
-  creatifpro-frontend:
+  creatifpro-front:
     build:
-      context: ./creatifpro-frontend
+      context: ./front
       dockerfile: Dockerfile
-    container_name: creatifpro-frontend
+    container_name: creatifpro-front
     ports:
       - "80:80"
     depends_on:
-      - creatifpro-backend
+      - creatifpro-back
     networks:
       - creatifpro-network
 
