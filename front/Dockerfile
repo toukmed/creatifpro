@@ -10,7 +10,7 @@ RUN npm run build --prod
 
 FROM nginx:stable-alpine
 
-COPY --from=build /app/dist/creatifpro /usr/share/nginx/html
+COPY --from=build /app/dist/front /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
