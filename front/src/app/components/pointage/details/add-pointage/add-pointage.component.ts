@@ -112,7 +112,6 @@ export class AddPointageComponent implements OnInit {
           }
           this.convertToLocalTime(startDate, 'startDate');
           this.convertToLocalTime(endDate, 'endDate');
-          console.log(this.addPointageForm.value);
           this.pointageService
             .addList(this.addPointageForm.value, 'pointages/create')
             .subscribe(() => {
@@ -139,7 +138,6 @@ export class AddPointageComponent implements OnInit {
 
   onCheckboxChange(employesIds: any) {
     this.addPointageForm.controls['employesIds'].setValue(employesIds);
-    console.log('form:::', this.addPointageForm.controls['employesIds'].value);
   }
 
   page_changed(event: any) {

@@ -179,12 +179,10 @@ export class GenericTableComponent implements AfterViewInit, OnChanges {
   }
 
   onSelectAllCheckbox(event: any) {
-    console.log('event.every', event);
     this.selectAllChecked = event.checked;
     this.selectedItems.clear();
 
     if (this.selectAllChecked) {
-      console.log('this.data.every', this.dataSource.data);
       this.dataSource.data.forEach((element) =>
         this.selectedItems.add(element.id)
       );
@@ -203,7 +201,6 @@ export class GenericTableComponent implements AfterViewInit, OnChanges {
       this.selectAllChecked = false;
     }
 
-    console.log('this.data.every', this.dataSource.data);
     this.selectAllChecked = this.dataSource.data.every((el) =>
       this.selectedItems.has(el.id)
     );

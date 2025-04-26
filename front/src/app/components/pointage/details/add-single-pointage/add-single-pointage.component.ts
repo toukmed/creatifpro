@@ -113,7 +113,6 @@ export class AddSinglePointageComponent implements OnInit {
     this.jourPointageService
       .create(this.addPointageForm.value, 'jourPointages')
       .subscribe((resp) => {
-        console.log('update ok');
         this.isCellUpdated = true;
         this.updatedDay = parseDate(
           this.addPointageForm.controls['jourPointage'].value

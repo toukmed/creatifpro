@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.time.LocalDate;
+
 @Builder
 public record EmployeDto(
         Long id,
@@ -15,7 +17,7 @@ public record EmployeDto(
         @NotBlank(message = "Le cin de l'employé est obligatoire")
         String cin,
         String numeroTelephone,
-        String dateIntegration,
+        LocalDate dateIntegration,
         @NotNull
         ContratEmploye typeContrat,
         String poste,

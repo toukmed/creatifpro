@@ -1,15 +1,13 @@
-# Start with a base image with Java 19
-FROM eclipse-temurin:19-jdk-jammy
+# Step 1: Build
+FROM eclipse-temurin:21-jdk AS build
+WORKDIR /creatifpro
+COPY . .
+RUN chmod +x mvnw
+RUN ./mvnw clean package -DskipTests
 
-# Create a directory for the app
-WORKDIR /app
-
-# Copy built Spring Boot jar into container
-COPY target/creatifpro-0.0.1-SNAPSHOT.jar /app/creatifpro-0.0.1-SNAPSHOT.jar
-
-# Expose the port the app runs on
+# Step 2: Run
+FROM eclipse-temurin:21-jre
+WORKDIR /carrefour
+COPY --from=build /creatifpro/target/*.jar creatifpro.jar
 EXPOSE 8080
-
-# Run the jar file
-ENTRYPOINT ["java", "-jar", "/app/creatifpro-0.0.1-SNAPSHOT.jar"]
-
+ENTRYPOINT ["java", "-jar", "creatifpro.jar"]

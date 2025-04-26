@@ -1,17 +1,19 @@
-# Use Node.js image to build the app
-FROM node:18 as build
+# Frontend/Dockerfile
+FROM node:20-alpine AS build
 
-# Set the working directory
 WORKDIR /app
-
-# Install dependencies and build the Angular app
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm install
+
 COPY . .
-RUN npm run build --configuration production
+RUN npm run build --prod
 
-# Use an NGINX image to serve the Angular app
-FROM nginx:alpine
-COPY --from=build /app/dist/front /usr/share/nginx/html
+FROM nginx:stable-alpine
+
+COPY --from=build /app/dist/creatifpro /usr/share/nginx/html
+
+# Optional: custom nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
-
+CMD ["nginx", "-g", "daemon off;"]

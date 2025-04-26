@@ -61,7 +61,18 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+<<<<<<< HEAD
 import { AddEditProjetComponent } from './components/projet/add-edit-projet/add-edit-projet.component';
+=======
+import { ValidationFooterComponent } from './validation-footer/validation-footer.component';
+import { MatList, MatListItem } from '@angular/material/list';
+import { AddProjetComponent } from './components/projet/add-projet/add-projet.component';
+import { EditProjetComponent } from './components/projet/edit-projet/edit-projet.component';
+import { VisuProjetComponent } from './components/projet/visu-projet/visu-projet.component';
+import { AddPersonnelComponent } from './components/personnel/add-personnel/add-personnel.component';
+import { EditPersonnelComponent } from './components/personnel/edit-personnel/edit-personnel.component';
+import { VisuPersonnelComponent } from './components/personnel/visu-personnel/visu-personnel.component';
+>>>>>>> b32abcf... config + upgrade java version to 21 + some code
 
 registerLocaleData(localeFr);
 
@@ -122,7 +133,17 @@ const materialModules = [
     VisuPageComponent,
     AddSinglePointageComponent,
     CalendarComponent,
+<<<<<<< HEAD
     AddEditProjetComponent,
+=======
+    ValidationFooterComponent,
+    AddProjetComponent,
+    EditProjetComponent,
+    VisuProjetComponent,
+    AddPersonnelComponent,
+    EditPersonnelComponent,
+    VisuPersonnelComponent,
+>>>>>>> b32abcf... config + upgrade java version to 21 + some code
   ],
   imports: [
     ...materialModules,
@@ -146,5 +167,9 @@ const materialModules = [
     { provide: CoreDateAdapter, useClass: CustomDateAdapter },
   ],
   bootstrap: [AppComponent],
+<<<<<<< HEAD
+=======
+  exports: [],
+>>>>>>> b32abcf... config + upgrade java version to 21 + some code
 })
 export class AppModule {}

@@ -202,7 +202,6 @@ export class PointageComponent implements OnInit {
   }
 
   loadChartData(data: any) {
-    console.log(data);
     this.employeName = (
       data.row.employe.nom +
       ' ' +

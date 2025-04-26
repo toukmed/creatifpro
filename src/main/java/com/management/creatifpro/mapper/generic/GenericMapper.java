@@ -13,7 +13,7 @@ public abstract class GenericMapper<
         T,
         U extends BaseEntity> {
 
-    protected final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    protected final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public abstract T toDto(U entity);
     public abstract U toEntity(T entityDto);
