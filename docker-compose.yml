@@ -5,15 +5,16 @@ services:
     image: postgres:17
     container_name: postgres_db
     environment:
+      POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - creatifpro-network
+    restart: unless-stopped
 
   creatifpro-back:
     build:
@@ -30,6 +31,7 @@ services:
       - creatifpro-postgres
     networks:
       - creatifpro-network
+    restart: unless-stopped
 
   creatifpro-front:
     build:
@@ -42,6 +44,7 @@ services:
       - creatifpro-back
     networks:
       - creatifpro-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
