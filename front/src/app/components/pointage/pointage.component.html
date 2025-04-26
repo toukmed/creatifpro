@@ -22,54 +22,9 @@
         (addClicked)="add()"
         [exporting]="exporting"
         (exportClicked)="export()"
-        (showChart)="loadChartData($event)"
       >
       </app-generic-table>
     </mat-card>
   </div>
-  @if(showChartsClicked){
-  <div [ngClass]="showChartsClicked ? 'charts-section' : ''">
-    <h4>
-      Statistiques du pointage pour l'employe
-      <span style="color: #f46608">{{ employeName }}</span> sur l'année
-      actuelle.
-    </h4>
-    <ngx-charts-pie-chart
-      [view]="view"
-      [legendTitle]="'Paiement'"
-      [scheme]="colorScheme"
-      [results]="pointagePaimentStatus"
-      [legend]="showLegend"
-      [legendPosition]="legendPosition"
-      [labels]="showLabels"
-      [doughnut]="isDoughnut"
-      (select)="onSelect($event)"
-    >
-    </ngx-charts-pie-chart>
-    <ngx-charts-pie-chart
-      [legendTitle]="'Absence'"
-      [view]="view"
-      [scheme]="colorScheme"
-      [results]="pointageAbsenceStatus"
-      [legend]="showLegend"
-      [legendPosition]="legendPosition"
-      [labels]="showLabels"
-      [doughnut]="isDoughnut"
-      (select)="onSelect($event)"
-    >
-    </ngx-charts-pie-chart>
-    <ngx-charts-pie-chart
-      [view]="view"
-      [legendTitle]="'Saisi'"
-      [scheme]="colorScheme"
-      [results]="pointageFillStatus"
-      [legend]="showLegend"
-      [legendPosition]="legendPosition"
-      [labels]="showLabels"
-      [doughnut]="isDoughnut"
-      (select)="onSelect($event)"
-    >
-    </ngx-charts-pie-chart>
-  </div>
-  }
+
 </div>

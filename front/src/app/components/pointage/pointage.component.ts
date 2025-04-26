@@ -16,12 +16,6 @@ import { AddPointageComponent } from './details/add-pointage/add-pointage.compon
 import { Projet } from '../../models/projet';
 import { FormControl, FormGroup } from '@angular/forms';
 import { dialogConfig } from '../../utils/utils';
-import {
-  Color,
-  LegendPosition,
-  ScaleType,
-  ViewDimensions,
-} from '@swimlane/ngx-charts';
 
 const weekStart = getStartOfWeek(new Date());
 const weekEnd = getEndOfWeek(new Date());
@@ -48,51 +42,7 @@ export class PointageComponent implements OnInit {
   exporting = false;
   showChartsClicked = false;
   employeName: string;
-  stats: any[];
 
-  // Start Chart data
-  pointagePaimentStatus = [
-    {
-      name: 'Payé',
-      value: 63,
-    },
-    {
-      name: 'Impayé',
-      value: 37,
-    },
-  ];
-  pointageFillStatus = [
-    {
-      name: 'Saisi',
-      value: 70,
-    },
-    {
-      name: 'Non Saisi',
-      value: 30,
-    },
-  ];
-  pointageAbsenceStatus = [
-    {
-      name: 'Abscence',
-      value: 13,
-    },
-    {
-      name: 'presence',
-      value: 87,
-    },
-  ];
-  view: [number, number] = [450, 200];
-
-  showLegend: boolean = true;
-  showLabels: boolean = true;
-  isDoughnut: boolean = false;
-  legendPosition = LegendPosition.Right;
-  colorScheme = {
-    name: 'fire',
-    selectable: true,
-    group: ScaleType.Linear,
-    domain: ['#E65100', '#FF6433', '#CC5E3D', '#FFA533', '#FF6F00', '#FF794E'],
-  };
   onSelect(data): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
@@ -199,22 +149,6 @@ export class PointageComponent implements OnInit {
           this.exporting = false;
         }, 2000);
       });
-  }
-
-  loadChartData(data: any) {
-    this.employeName = (
-      data.row.employe.nom +
-      ' ' +
-      data.row.employe.prenom
-    ).toUpperCase();
-    this.showChartsClicked = data.clicked;
-    if (this.showChartsClicked) {
-      this.service
-        .getStats(data.row.id, 'jourPointages')
-        .subscribe((resp: any[]) => {
-          this.stats = resp;
-        });
-    }
   }
 
   private setDateNavigationAndListPointage(navigationWeek: Date) {

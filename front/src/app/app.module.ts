@@ -60,7 +60,6 @@ import { CalendarComponent } from './components/pointage/details/calendar/calend
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AddProjetComponent } from './components/projet/add-projet/add-projet.component';
 import { EditProjetComponent } from './components/projet/edit-projet/edit-projet.component';
 import { VisuProjetComponent } from './components/projet/visu-projet/visu-projet.component';
@@ -103,7 +102,6 @@ const materialModules = [
   MatSnackBarModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
-  NgxChartsModule,
 ];
 
 @NgModule({
