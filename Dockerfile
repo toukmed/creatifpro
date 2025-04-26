@@ -7,7 +7,7 @@ RUN ./mvnw clean package -DskipTests
 
 # Step 2: Run
 FROM eclipse-temurin:21-jre
-WORKDIR /carrefour
+WORKDIR /creatifpro
 COPY --from=build /creatifpro/target/*.jar creatifpro.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "creatifpro.jar"]
