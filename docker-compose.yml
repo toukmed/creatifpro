@@ -33,7 +33,7 @@ services:
       - creatif-network
     restart: unless-stopped
 
-  creatif-front:
+  front:
     build:
       context: ./front
       dockerfile: Dockerfile
@@ -41,7 +41,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - creatif-back
+      - back
     networks:
       - creatif-network
     restart: unless-stopped
