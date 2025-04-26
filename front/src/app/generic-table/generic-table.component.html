@@ -1,34 +1,31 @@
-<div class="generic-table">
-  <div class="search-table" *ngIf="addable || searchable">
-    <button
-      (click)="add_clicked()"
-      *ngIf="addable"
-      matTooltip="Ajouter"
-      mat-fab
-      color="primary"
-      aria-label="Ajouter"
+<div [ngClass]="showChartClicked ? 'generic-table-shrinked' : 'generic-table'">
+  @if (addable || searchable) {
+  <div
+    [ngClass]="showChartClicked ? 'config-section-shrinked' : 'config-section'"
+  >
+    <div
+      [ngClass]="
+        showChartClicked ? 'search-section-shrinked' : 'search-section'
+      "
     >
-      <mat-icon>add</mat-icon>
-    </button>
-
-    <mat-slide-toggle
-      *ngIf="enabled"
-      class="mat-slide-toggle"
-      [checked]="false"
-      [disabled]="false"
-      (change)="filter_clicked()"
-      [(ngModel)]="active"
-    >
-    </mat-slide-toggle>
-    <div class="align-elements">
+      @if (addable) {
+      <button
+        (click)="add_clicked()"
+        matTooltip="Ajouter"
+        mat-fab
+        color="primary"
+        aria-label="Ajouter"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+      } @if (searchable) {
       <mat-form-field
         color="accent"
         subscriptSizing="dynamic"
-        *ngIf="searchable"
         appearance="outline"
-        class="full-width search-field"
+        [ngClass]="showChartClicked ? 'search-field-shrinked' : 'search-field'"
       >
-        <mat-label>Recherche par libelle</mat-label>
+        <mat-label>Rechercher</mat-label>
         <mat-icon color="accent" matPrefix>search</mat-icon>
         <input
           (keyup)="input_searched($event)"
@@ -36,26 +33,58 @@
           matInput
         />
       </mat-form-field>
-      @if (entity === 'pointage') {
-      <mat-icon>arrow_back_ios</mat-icon>
+      }
+    </div>
 
-      <mat-form-field class="mt-10">
-        <mat-label>Saisissez un interval</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date" />
-          <input matEndDate placeholder="End date" />
-        </mat-date-range-input>
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker"
-        ></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-      </mat-form-field>
-
-      <mat-icon>arrow_forward_ios</mat-icon>
+    <div
+      [ngClass]="
+        showChartClicked ? 'filter-section-shrinked' : 'filter-section'
+      "
+    >
+      @if (entity === 'pointage' && canDisplay) {
+      <div class="justify-content" [formGroup]="filterForm">
+        <mat-form-field>
+          <mat-label>Type contrat</mat-label>
+          <mat-select formControlName="typeContrat">
+            <mat-option value="CDI">CDI</mat-option>
+            <mat-option value="HORAIRE">HORAIRE</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-date-range-input [rangePicker]="picker">
+            <input
+              matStartDate
+              placeholder="Start date"
+              formControlName="start"
+            />
+            <input matEndDate placeholder="End date" formControlName="end" />
+          </mat-date-range-input>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+      } @if (exportable) {
+      <button
+        (click)="export_clicked()"
+        matTooltip="Exporter"
+        mat-fab
+        color="primary"
+        aria-label="Ajouter"
+      >
+        <mat-icon
+          >@if(exporting){
+          <mat-spinner mode="indeterminate" diameter="25"></mat-spinner>
+          }@else {download}</mat-icon
+        >
+      </button>
       }
     </div>
   </div>
+
+  }
   <mat-table
     [dataSource]="dataSource"
     matSort
@@ -66,31 +95,27 @@
       *ngFor="let def of columnsAll; trackBy: trackBy"
       [matColumnDef]="def.path"
     >
+      @if (def.path === 'id') {
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-checkbox (change)="onSelectAllCheckbox($event)"></mat-checkbox
+      ></mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-checkbox
+          [checked]="selectedItems.has(element.id)"
+          (change)="onCheckboxChange($event, element.id)"
+        ></mat-checkbox>
+      </mat-cell>
+
+      }@else {
       <mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ def.libelle }}</mat-header-cell
       >
       <mat-cell *matCellDef="let element">
         <ng-container>
-          @if (entity === 'pointage' && !def.path.startsWith('employe')) {
-          <mat-icon
-            [ngClass]="{
-              green: resolve(def.path, element) === '1',
-              red: resolve(def.path, element) === '0'
-            }"
-            [fontIcon]="
-              resolve(def.path, element) === '1'
-                ? 'check_circle'
-                : resolve(def.path, element) === '0'
-                ? 'cancel'
-                : ''
-            "
-          >
-          </mat-icon>
-          }
-
           {{ resolve(def.path, element) }}
         </ng-container>
       </mat-cell>
+      }
     </ng-container>
 
     <ng-container matColumnDef="delete">
@@ -105,48 +130,36 @@
         </button>
       </mat-cell>
     </ng-container>
-    <ng-container *ngIf="isEditable || hasDetails" matColumnDef="actions">
+    @if (isEditable || hasDetails) {
+    <ng-container matColumnDef="actions">
       <mat-header-cell class="actions" *matHeaderCellDef></mat-header-cell>
       <mat-cell class="actions" *matCellDef="let row">
-        <button
-          mat-icon-button
-          [matMenuTriggerFor]="menu"
-          aria-label="Example icon-button with a menu"
-        >
-          <mat-icon>more_vert</mat-icon>
+        @if (hasDetails) {
+        <button (click)="showDetails_clicked(row)" mat-icon-button>
+          <mat-icon>remove_red_eye</mat-icon>
         </button>
-        <mat-menu #menu="matMenu">
-          <button
-            (click)="showDetails_clicked(row)"
-            mat-menu-item
-            *ngIf="hasDetails"
-          >
-            <mat-icon>remove_red_eye</mat-icon>
-            <span>Visualiser</span>
-          </button>
-          <button mat-menu-item (click)="edit_clicked(row)" *ngIf="isEditable">
-            <mat-icon>edit</mat-icon>
-            <span>Editer</span>
-          </button>
-        </mat-menu>
+        } @if (isEditable) {
+        <button mat-icon-button (click)="edit_clicked(row)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        }
       </mat-cell>
     </ng-container>
-
+    }
     <mat-header-row *matHeaderRowDef="columnsPath"></mat-header-row>
     <mat-row
       *matRowDef="let row; columns: columnsPath"
       (click)="clickableRow ? row_clicked(row) : ''"
       [class.clicked-row]="clickedRow?.id === row?.id"
       [class.clickable-row]="clickableRow"
+      [ngClass]="clickedRow && clickedRow?.id === row?.id ? 'clicked-row' : ''"
     ></mat-row>
   </mat-table>
   <mat-paginator
-    *ngIf="showPagination"
-    [pageSizeOptions]="[10, 25, 100]"
+    [pageSizeOptions]="[10, 25, 50]"
     (page)="page_changed($event)"
     [length]="total"
     [pageIndex]="currentPage"
-    class="paginator"
     aria-label="Taille de la page"
   ></mat-paginator>
 </div>

@@ -27,22 +27,15 @@ public class PointageMapper extends GenericMapper<PointageDto, PointageEntity> {
                 .builder()
                 .id(entity.getId())
                 .employe(employeMapper.toMinimalDto(entity.getEmploye()))
-                .lundi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.MONDAY)))
-                .mardi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.TUESDAY)))
-                .mercredi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.WEDNESDAY)))
-                .jeudi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.THURSDAY)))
-                .vendredi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.FRIDAY)))
-                .samedi(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.SATURDAY)))
-                .dimanche(jourPointageMapper.toDto(filterJourPointage(entity.getPointages(), DayOfWeek.SUNDAY)))
                 .build();
     }
 
     private JourPointageEntity filterJourPointage(List<JourPointageEntity> pointages, DayOfWeek day){
-        return pointages.size() > 0 ?
+        List<JourPointageEntity> filteredList = !pointages.isEmpty() ?
                 pointages.stream()
                 .filter(jourPointageEntity -> jourPointageEntity.getJourPointage().getDayOfWeek().equals(day))
-                .toList()
-                .get(0) : null;
+                .toList() : null;
+        return filteredList != null && !filteredList.isEmpty() ? filteredList.get(0) : null;
     }
 
     @Override

@@ -1,0 +1,49 @@
+<mat-dialog-content [formGroup]="form">
+  <div>
+    <h3>
+      {{
+        isEdit ? "Modifier le projet" + projet.nom : "Créer un nouveau projet"
+      }}
+    </h3>
+  </div>
+  <div class="justify-content">
+    <mat-form-field>
+      <mat-label>Nom</mat-label>
+      <input matInput placeholder="Nom projet" formControlName="nom" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Référence</mat-label>
+      <input
+        matInput
+        placeholder="Référence projet"
+        formControlName="reference"
+      />
+    </mat-form-field>
+  </div>
+  <div class="justify-content">
+    <mat-form-field>
+      <mat-label>Ville</mat-label>
+      <input matInput placeholder="Ville" formControlName="ville" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Date de démarrage</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="dateDemarrage"
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" style="margin: 0 10px 10px 0">
+  <app-validation-buttons
+    (saveEvent)="save()"
+    (closeEvent)="close()"
+    [disabled]="!form.valid"
+  ></app-validation-buttons>
+</mat-dialog-actions>

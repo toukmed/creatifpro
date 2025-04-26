@@ -1,4 +1,4 @@
-<h2>Personnel</h2>
+<h3>Personnel</h3>
 <mat-card>
   <app-generic-table
     [columns]="columns"
@@ -8,6 +8,7 @@
     [addable]="true"
     [searchable]="true"
     [isEditable]="true"
+    [isDeletable]="true"
     [hasDetails]="true"
     (edit)="edit($event, false)"
     (showDetails)="edit($event, true)"

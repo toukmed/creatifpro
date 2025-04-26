@@ -28,7 +28,7 @@ public class EmployeMapper extends GenericMapper<EmployeDto, EmployeEntity> {
                 .prenom(entity.getPrenom())
                 .cin(entity.getCin())
                 .numeroTelephone(entity.getNumeroTelephone())
-                .dateIntegration(entity.getDateIntegration().format(DATE_FORMATTER))
+                .dateIntegration(LocalDate.parse(entity.getDateIntegration().format(DATE_FORMATTER)))
                 .tarifJournalier(entity.getTarifJournalier())
                 .poste(entity.getPoste())
                 .salaireMensuel(entity.getSalaireMensuel())
@@ -43,6 +43,10 @@ public class EmployeMapper extends GenericMapper<EmployeDto, EmployeEntity> {
                 .id(entity.getId())
                 .nom(entity.getNom())
                 .prenom(entity.getPrenom())
+                .projet(projetMapper.toDto(entity.getProjet()))
+                .typeContrat(entity.getTypeContrat())
+                .poste(entity.getPoste())
+                .numeroTelephone(entity.getNumeroTelephone())
                 .build();
     }
 
@@ -54,14 +58,14 @@ public class EmployeMapper extends GenericMapper<EmployeDto, EmployeEntity> {
                 .prenom(entityDto.prenom())
                 .cin(entityDto.cin())
                 .numeroTelephone(entityDto.numeroTelephone())
-                .dateIntegration(LocalDate.parse(entityDto.dateIntegration(), DATE_FORMATTER))
+                .dateIntegration(entityDto.dateIntegration())
                 .tarifJournalier(entityDto.tarifJournalier())
                 .salaireMensuel(entityDto.salaireMensuel())
                 .poste(entityDto.poste())
                 .typeContrat(entityDto.typeContrat())
                 .projet(entityDto.projet() != null ? projetRepository
-                        .findById(entityDto.projet().id())
-                        .orElseThrow(() -> new AppException("Projet with id: " + entityDto.projet().id() + " not found", HttpStatus.NOT_FOUND))
+                        .findByReference(entityDto.projet().reference())
+                        .orElseThrow(() -> new AppException("Projet with reference: " + entityDto.projet().reference() + " not found", HttpStatus.NOT_FOUND))
                         : null)
                 .build();
     }

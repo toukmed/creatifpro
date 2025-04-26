@@ -1,6 +1,7 @@
 #home {
   display: grid;
   gap: 20px;
+  margin: 40px;
 }
 
 @media (min-width: 1200px) {
@@ -34,7 +35,17 @@
   font-size: 40px;
 }
 
-h3 {
+h4 {
   letter-spacing: 2px;
   padding-top: 20px;
+}
+
+.clickable-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.clickable-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

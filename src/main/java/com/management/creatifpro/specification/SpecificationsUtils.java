@@ -1,9 +1,6 @@
 package com.management.creatifpro.specification;
 
-import com.management.creatifpro.entity.JourPointageEntity;
 import jakarta.persistence.criteria.Path;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -22,24 +19,41 @@ public class SpecificationsUtils {
         };
     }
 
-    public static <T> Specification<T> betweenValues(LocalDate startDate, LocalDate endDate) {
+    public static <T, E extends Enum<E>> Specification<T> enumEquals(String path, E enumValue) {
+        String[] pathArray = path.split("\\.");
         return (root, query, cb) -> {
-            // Join to JourPointageEntity list
-            root.fetch("pointages");
+            Path<Object> pathT = root.get(pathArray[0]);
+            for (String p : Arrays.stream(pathArray).skip(1).toList()) {
+                pathT = pathT.get(p);
+            }
 
-            // Create a subquery to filter based on jourPointage date range
-            Subquery<JourPointageEntity> subquery = query.subquery(JourPointageEntity.class);
-            Root<JourPointageEntity> jourPointageRoot = subquery.from(JourPointageEntity.class);
-            subquery.select(jourPointageRoot);
+            // Compare enum values directly
+            return cb.equal(pathT, enumValue);
+        };
+    }
 
-            // Define the join condition
-            subquery.where(cb.and(
-                    cb.equal(jourPointageRoot.get("pointageEntity"), root),
-                    cb.between(jourPointageRoot.get("jourPointage"), startDate, endDate)
-            ));
+    public static <T> Specification<T> equals(String path, Long value) {
+        String[] pathArray = path.split("\\.");
+        return (root, query, cb) -> {
+            Path<String> pathT = root.get(pathArray[0]);
+            for (String p : Arrays.stream(pathArray).skip(1).toList()) {
+                pathT = pathT.get(p);
+            }
 
-            // Correlate the subquery with the outer query
-            return cb.exists(subquery);
+            return cb.equal(pathT, value);
+        };
+    }
+
+    public static <T> Specification<T> betweenValues(LocalDate startDate, LocalDate endDate) {
+
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.between(root.get("jourPointage"), startDate, endDate);
+    }
+
+    public static <T> Specification<T> orderASCBy(String fieldName) {
+        return (root, query, criteriaBuilder) -> {
+            query.orderBy(criteriaBuilder.asc(root.get(fieldName)));
+            return criteriaBuilder.conjunction();
         };
     }
 }

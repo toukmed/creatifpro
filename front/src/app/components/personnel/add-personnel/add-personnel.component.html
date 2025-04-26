@@ -1,0 +1,101 @@
+<mat-dialog-content [formGroup]="form">
+  <div>
+    <h3>
+      {{
+        isEdit && employe
+          ? "Modifier la fiche de " + employe.nom
+          : "Créer une fiche employé"
+      }}
+    </h3>
+  </div>
+  <div class="justify-content">
+    <mat-form-field>
+      <mat-label>Nom</mat-label>
+      <input matInput placeholder="Nom" formControlName="nom" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Prénom</mat-label>
+      <input matInput placeholder="Prénom" formControlName="prenom" />
+    </mat-form-field>
+  </div>
+  <div class="justify-content">
+    <mat-form-field>
+      <mat-label>CIN</mat-label>
+      <mat-icon matSuffix>id_card</mat-icon>
+      <input matInput placeholder="CIN" formControlName="cin" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-icon matSuffix>phone</mat-icon>
+      <mat-label>Numéro de téléphone</mat-label>
+      <input
+        matInput
+        placeholder="numeroTelephone"
+        formControlName="numeroTelephone"
+      />
+    </mat-form-field>
+  </div>
+  <div class="justify-content">
+    <mat-form-field formGroupName="projet">
+      <mat-label>Projet</mat-label>
+      <mat-select formControlName="reference">
+        @for (projet of projets;track projet) {
+        <mat-option [value]="projet.reference">{{ projet.nom }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Poste</mat-label>
+      <input matInput placeholder="Poste" formControlName="poste" />
+    </mat-form-field>
+  </div>
+  <div class="justify-content">
+    <mat-form-field>
+      <mat-label>Date d'intégration'</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="dateIntegration"
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Type contrat</mat-label>
+      <mat-select formControlName="typeContrat">
+        <mat-option value="CDI">CDI</mat-option>
+        <mat-option value="HORAIRE">HORAIRE</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+    @if(form.get('typeContrat')?.value === 'HORAIRE'){
+    <mat-form-field>
+      <mat-label>Tarif journalier</mat-label>
+      <input
+        matInput
+        placeholder="Tarif journalier"
+        formControlName="tarifJournalier"
+      />
+    </mat-form-field>
+    } @if(form.get('typeContrat')?.value === 'CDI'){
+    <mat-form-field>
+      <mat-label>Salaire mensuel</mat-label>
+      <input
+        matInput
+        placeholder="Salaire mensuel"
+        formControlName="salaireMensuel"
+      />
+    </mat-form-field>
+    }
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" style="margin: 50px 10px 10px 0">
+  <app-validation-buttons
+    (saveEvent)="save()"
+    (closeEvent)="close()"
+    [disabled]="!form.valid"
+  ></app-validation-buttons>
+</mat-dialog-actions>

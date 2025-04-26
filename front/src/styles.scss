@@ -1,4 +1,42 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$tw-indigo-palette: (
+  50: #ffe0cb,
+  100: #ffcaa7,
+  200: #fdaf7b,
+  300: #ff7922,
+  500: #fe6a08,
+  700: #ff6600,
+  contrast: (
+    50: #282828c4,
+    100: #282828c4,
+    200: #282828c4,
+    300: white,
+    500: white,
+  ),
+);
+
+$my-app-primary: mat.define-palette($tw-indigo-palette);
+$my-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+$my-app-warn: mat.define-palette(mat.$red-palette);
+
+$my-app-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $my-app-primary,
+      accent: $my-app-accent,
+      warn: $my-app-warn,
+    ),
+  )
+);
+
+@include mat.all-component-themes($my-app-theme);
+
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
+
 html,
 body {
   height: 100%;
@@ -6,28 +44,42 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Open Sans, "Light 300";
 }
 
-h2 {
+h3 {
   display: flex;
   flex-direction: row;
   letter-spacing: 3px;
+  margin-left: 20px;
 }
 
-h2:before,
-h2:after {
+.primary {
+  color: #ff6600;
+  margin-left: 10px;
+}
+
+.button-row {
+  bottom: 0;
+  gap: 10px;
+  right: 10px;
+  margin: 0px 10px 20px 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+h3:after {
   content: "";
   flex: 1 1;
-  border-bottom: 1px solid #c2185b;
+  border-bottom: 1px solid #ff6600;
   margin: auto;
 }
 
-h2:before {
+h3:before {
   margin-right: 20px;
 }
 
-h2:after {
+h3:after {
   margin-left: 20px;
 }
 
@@ -68,4 +120,32 @@ h2:after {
 
 .p-25 {
   padding: 25px;
+}
+
+.justify-content {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.ml-10 {
+  margin-left: 20px;
+}
+
+.warning-snackbar {
+  background-color: red;
+}
+.success-snackbar {
+  background-color: greenyellow;
+}
+
+.button {
+  display: flex;
+  margin-bottom: 20px;
 }

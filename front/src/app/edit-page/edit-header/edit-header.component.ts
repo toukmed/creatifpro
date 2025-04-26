@@ -18,12 +18,12 @@ import { MatIconModule } from '@angular/material/icon';
       >
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h2 style="flex: 1">
+      <h3 style="flex: 1">
         {{
           isAddition ? 'Création ' : isReadOnly ? 'Visualisation ' : 'Edition '
         }}
         {{ title }}
-      </h2>
+      </h3>
       @if (!isReadOnly) {
       <button
         [disabled]="isValidateDisabled"
@@ -59,3 +59,4 @@ export class EditHeaderComponent {
   @Output()
   validateClicked = new EventEmitter();
 }
+

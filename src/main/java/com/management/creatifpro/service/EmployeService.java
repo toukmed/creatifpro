@@ -9,6 +9,7 @@ import com.management.creatifpro.mapper.EmployeMapper;
 import com.management.creatifpro.repository.EmployeRepository;
 import com.management.creatifpro.repository.PointageRepository;
 import com.management.creatifpro.specification.SpecificationsUtils;
+import com.management.creatifpro.util.ContratEmploye;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,7 @@ public class EmployeService implements GenericService<EmployeEntity, SearchDto, 
         return buildFilterStream(searchDto)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .reduce(Specification::or)
+                .reduce(Specification::and)
                 .map(specs -> employeMapper.toDtoPage(employeRepository.findAll(specs, pageable), pageable))
                 .orElseGet(() -> employeMapper.toDtoPage(employeRepository.findAll(pageable), pageable));
     }
@@ -82,13 +83,17 @@ public class EmployeService implements GenericService<EmployeEntity, SearchDto, 
 
     @Override
     public Stream<Optional<Specification<EmployeEntity>>> buildFilterStream(SearchDto searchDto) {
+        Optional<Specification<EmployeEntity>> projetSpec = searchDto.projet()
+                .map(value -> SpecificationsUtils.likeValue("projet.reference", value));
         Optional<Specification<EmployeEntity>> nomSpec = searchDto.libelle()
                 .map(value -> SpecificationsUtils.likeValue("nom", value));
         Optional<Specification<EmployeEntity>> prenomSpec = searchDto.libelle()
                 .map(value -> SpecificationsUtils.likeValue("prenom", value));
         Optional<Specification<EmployeEntity>> cinSpec = searchDto.libelle()
                 .map(value -> SpecificationsUtils.likeValue("cin", value));
-        return Stream.of(nomSpec,prenomSpec, cinSpec);
+        Optional<Specification<EmployeEntity>> typeContratSpec = searchDto.typeContrat()
+                .map(value -> SpecificationsUtils.enumEquals("typeContrat", !value.isEmpty() ? ContratEmploye.valueOf(value): null));
+        return Stream.of(nomSpec,prenomSpec, cinSpec, projetSpec, typeContratSpec);
     }
 
     private void validateEmploye(EmployeDto employeDto){

@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  creatifpro-postgres:
+    image: postgres:17
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - creatifpro-network
+
+  creatifpro-backend:
+    build:
+      context: ./creatifpro-backend
+      dockerfile: Dockerfile
+    container_name: creatifpro-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres?currentSchema=creatifpro
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - creatifpro-postgres
+    networks:
+      - creatifpro-network
+
+  creatifpro-frontend:
+    build:
+      context: ./creatifpro-frontend
+      dockerfile: Dockerfile
+    container_name: creatifpro-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - creatifpro-backend
+    networks:
+      - creatifpro-network
+
+volumes:
+  postgres_data:
+
+networks:
+  creatifpro-network:

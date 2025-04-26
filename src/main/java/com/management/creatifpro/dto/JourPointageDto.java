@@ -2,16 +2,21 @@ package com.management.creatifpro.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
+
+import java.util.Optional;
 
 @Builder
 public record JourPointageDto(
         Long id,
-        @NotNull
         String jourPointage,
+        Optional<String> startDate,
+        Optional<String> endDate,
 
-        @Max(value = 1, message = "Le pointage ne peux pas depassé 8H, equivalente à 1")
+        @Max(value = 12, message = "Le pointage ne peux pas depassé 12H")
         @Min(value = 0, message = "La valeur minimale du pointage est 0")
-        Float pointage
+        Float pointage,
+        boolean status,
+        String commentaire,
+        Long idPointage
 ) implements GenericDto { }

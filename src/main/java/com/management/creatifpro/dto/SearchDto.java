@@ -8,8 +8,11 @@ import java.util.Optional;
 @Builder
 public record SearchDto(
         Optional<String> libelle,
-        Optional<String> weekStartDate,
-        Optional<String> weekEndDate,
+        Optional<String> projet,
+        Optional<String> typeContrat,
+        Optional<String> startDate,
+        Optional<String> endDate,
         Optional<Integer> page,
+        Optional<Long> idPointage,
         Optional<Integer> size,
         Optional<Sort> sort) implements GenericDto { }

@@ -19,6 +19,8 @@ public class JourPointageMapper extends GenericMapper<JourPointageDto, JourPoint
                 .id(entity.getId())
                 .jourPointage(entity.getJourPointage().format(DATE_FORMATTER))
                 .pointage(entity.getPointage())
+                .status(entity.isStatus())
+                .commentaire(entity.getCommentaire())
                 .build() : null;
     }
 

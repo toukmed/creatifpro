@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -7,5 +7,13 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./confirm-dialog.component.scss'],
 })
 export class ConfirmDialogComponent {
+
+  @Output()
+  confirmAction = new EventEmitter<boolean>(); 
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: string) {}
+
+  onConfirm(){
+
+  }
 }

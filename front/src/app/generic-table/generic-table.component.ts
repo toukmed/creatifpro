@@ -3,7 +3,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  signal,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -21,7 +24,7 @@ interface ColumnDef {
   templateUrl: './generic-table.component.html',
   styleUrl: './generic-table.component.scss',
 })
-export class GenericTableComponent implements AfterViewInit {
+export class GenericTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -35,11 +38,15 @@ export class GenericTableComponent implements AfterViewInit {
   @Input()
   addable = false;
   @Input()
+  exportable = false;
+  @Input()
   enabled = false;
   @Input()
   searchable = false;
   @Input()
   isEditable = false;
+  @Input()
+  isDeletable = false;
   @Input()
   hasDetails = false;
   @Input()
@@ -48,8 +55,20 @@ export class GenericTableComponent implements AfterViewInit {
   deletable = false;
   @Input()
   entity = '';
+  @Input()
+  filterForm: any;
+  @Input()
+  exporting = false;
+  @Input()
+  typeContrat: string = '';
+  @Input()
+  canDisplay: boolean = true;
+  @Input()
+  canDisplayList: boolean = true;
   @Output()
   addClicked = new EventEmitter<any>();
+  @Output()
+  exportClicked = new EventEmitter<any>();
   @Output()
   searched = new EventEmitter<any>();
   @Output()
@@ -64,12 +83,22 @@ export class GenericTableComponent implements AfterViewInit {
   removed = new EventEmitter<any>();
   @Output()
   filterClicked = new EventEmitter<any>();
+  @Output()
+  checkBox = new EventEmitter<any>();
+  @Output()
+  allCheckBox = new EventEmitter<any>();
+  @Output()
+  showChart = new EventEmitter<any>();
+  @Output() selectionChanged = new EventEmitter<number[]>();
 
+  selectAllChecked: boolean = false;
+  selectedItems: Set<number> = new Set();
   searchedValue = '';
   active = true;
   clickedRow: any;
   showPagination = true;
   loading = false;
+  showChartClicked = false;
 
   constructor(private router: Router) {}
 
@@ -95,10 +124,24 @@ export class GenericTableComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.nbActions = [this.isEditable, this.hasDetails].filter((v) => v).length;
     if (this.isEditable || this.hasDetails) this.columnsPath.push('actions');
     if (this.deletable) this.columnsPath.push('delete');
+    this.selectedItems = new Set();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && !changes['data'].firstChange) {
+      this.clearSelection();
+    }
+  }
+
+  clearSelection() {
+    this.selectedItems.clear();
+    this.selectAllChecked = false;
+    this.emitSelectionChange();
   }
 
   trackBy(index: number, el: any) {
@@ -137,6 +180,40 @@ export class GenericTableComponent implements AfterViewInit {
     });
   }
 
+  onSelectAllCheckbox(event: any) {
+    this.selectAllChecked = event.checked;
+    this.selectedItems.clear();
+
+    if (this.selectAllChecked) {
+      this.dataSource.data.forEach((element) =>
+        this.selectedItems.add(element.id)
+      );
+    }
+
+    this.emitSelectionChange();
+  }
+
+  onCheckboxChange(event: any, itemId: number) {
+    const isChecked = event.checked;
+
+    if (isChecked) {
+      this.selectedItems.add(itemId);
+    } else {
+      this.selectedItems.delete(itemId);
+      this.selectAllChecked = false;
+    }
+
+    this.selectAllChecked = this.dataSource.data.every((el) =>
+      this.selectedItems.has(el.id)
+    );
+
+    this.emitSelectionChange();
+  }
+
+  emitSelectionChange() {
+    this.selectionChanged.emit(Array.from(this.selectedItems));
+  }
+
   edit_clicked(row: any) {
     this.edit.emit(row);
   }
@@ -150,8 +227,12 @@ export class GenericTableComponent implements AfterViewInit {
   }
 
   row_clicked(row: any) {
+    if (this.clickedRow?.id === row.id) {
+      this.showChartClicked = !this.showChartClicked;
+    }
     this.clickedRow = row;
-    this.showDetails.emit(row);
+
+    this.showChart.emit({ row: row, clicked: this.showChartClicked });
   }
 
   filter_clicked() {
@@ -160,5 +241,9 @@ export class GenericTableComponent implements AfterViewInit {
       page: this.currentPage,
       libelle: this.searchedValue,
     });
+  }
+
+  export_clicked() {
+    this.exportClicked.emit();
   }
 }
