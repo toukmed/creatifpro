@@ -46,6 +46,8 @@ export class GenericTableComponent implements AfterViewInit, OnChanges {
   @Input()
   isEditable = false;
   @Input()
+  isDeletable = false;
+  @Input()
   hasDetails = false;
   @Input()
   clickableRow = false;

@@ -41,9 +41,9 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end" style="margin: 0 10px 10px 0">
-  <app-validation-footer
+  <app-validation-buttons
     (saveEvent)="save()"
     (closeEvent)="close()"
     [disabled]="!form.valid"
-  ></app-validation-footer>
+  ></app-validation-buttons>
 </mat-dialog-actions>
