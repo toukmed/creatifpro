@@ -149,3 +149,43 @@ h3:after {
   display: flex;
   margin-bottom: 20px;
 }
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+// Start Edit Pointage Styles
+.pointage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.chips-container {
+  margin-bottom: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .pointage-form {
+    max-width: 100%;
+    gap: 12px;
+  }
+}
+// End Edit Pointage Styles

@@ -1,21 +1,20 @@
 import { Resource } from './resource';
-import { Projet } from './projet';
+import { Project } from './projet';
 
 export class Employe extends Resource {
-  nom: string;
-  prenom: string;
+  firstName: string;
+  lastName: string;
   cin?: string;
-  numeroTelephone?: string;
-  dateIntegration?: Date;
-  typeContrat?: TypeContrat;
-  poste: string;
-  tarifJournalier?: number;
-  salaireMensuel?: number;
-  projet?: Projet;
+  phoneNumber?: string;
+  integrationDate?: Date;
+  contractType?: ContractType;
+  jobRole: string;
+  hourlyRate?: number;
+  salary?: number;
+  projet?: Project;
 }
 
-export enum TypeContrat {
-  CDI,
-  CDD,
+export enum ContractType {
+  SALARIE,
   HORAIRE,
 }

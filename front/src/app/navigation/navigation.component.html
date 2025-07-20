@@ -1,13 +1,10 @@
-<div id="menu-wrapper">
-  <div *ngFor="let item of navLinks; trackBy: trackBy">
-    <a
-      routerLinkActive="link-active"
-      [routerLink]="item.link"
-      mat-mini-fab
-      [matTooltip]="item.libelle"
-      color="basic"
-    >
-      <mat-icon>{{ item.icon }}</mat-icon>
+<nav>
+  <mat-nav-list>
+    <a mat-list-item *ngFor="let link of navLinks; trackBy: trackBy" [routerLink]="link.link">
+      <div class="nav-link-content">
+        <mat-icon *ngIf="link.icon" matListIcon>{{ link.icon }}</mat-icon>
+        <span *ngIf="!collapsed">{{ link.libelle }}</span>
+      </div>
     </a>
-  </div>
-</div>
+  </mat-nav-list>
+</nav>

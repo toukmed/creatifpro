@@ -1,0 +1,116 @@
+<div class="generic-table">
+  <div class="config-section">
+    <div class="search-section" [formGroup]="filterForm">
+      <button
+        (click)="add()"
+        matTooltip="Ajouter"
+        mat-fab
+        color="primary"
+        aria-label="Ajouter"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+      <mat-form-field
+        subscriptSizing="dynamic"
+        appearance="outline"
+        class="search-field"
+      >
+        <mat-label>Rechercher</mat-label>
+        <mat-icon color="accent" matPrefix>search</mat-icon>
+        <input formControlName="label" matInput />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Projet</mat-label>
+        <mat-select formControlName="project">
+          @for (project of projects;track project) {
+          <mat-option [value]="project.code">{{ project.code }}</mat-option>
+          }
+        </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          aria-label="Clear"
+          *ngIf="filterForm.get('project')?.value"
+          (click)="filterForm.get('project')?.setValue('')"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="filter-section" [formGroup]="filterForm">
+      <div class="month-picker-container">
+        <button
+          mat-icon-button
+          (click)="previousMonth()"
+          aria-label="Mois précédent"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="month-label">
+          {{ currentMonth | date : "MMMM yyyy" : undefined : "fr" }}
+        </span>
+        <button mat-icon-button (click)="nextMonth()" aria-label="Mois suivant">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  <mat-table
+    [dataSource]="dataSource"
+    matSort
+    class="mat-elevation-z0 table"
+    [class.placeholder]="loading"
+  >
+    <ng-container
+      *ngFor="let def of columnsAll; trackBy: trackBy"
+      [matColumnDef]="def.path"
+    >
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ def.libelle }}</mat-header-cell
+      >
+      <mat-cell *matCellDef="let element">
+        <ng-container>
+          {{ resolve(def.path, element) }}
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <mat-header-cell class="actions" *matHeaderCellDef></mat-header-cell>
+      <mat-cell class="actions" *matCellDef="let row">
+        <button
+          (click)="remove(row)"
+          mat-icon-button
+          aria-label="Example icon button with a menu icon"
+        >
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <mat-header-cell class="actions" *matHeaderCellDef></mat-header-cell>
+      <mat-cell class="actions" *matCellDef="let row">
+        <button (click)="edit(row, true)" mat-icon-button>
+          <mat-icon>remove_red_eye</mat-icon>
+        </button>
+        <button mat-icon-button (click)="edit(row, false)">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="columnsPath"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: columnsPath"
+      [class.clicked-row]="clickedRow?.id === row?.id"
+      [ngClass]="clickedRow && clickedRow?.id === row?.id ? 'clicked-row' : ''"
+    ></mat-row>
+  </mat-table>
+  <mat-paginator
+    [pageSizeOptions]="[10, 25, 50]"
+    (page)="page_changed($event)"
+    [length]="totalElements"
+    [pageIndex]="currentPage"
+    aria-label="Taille de la page"
+  ></mat-paginator>
+</div>

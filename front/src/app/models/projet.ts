@@ -1,6 +1,6 @@
 import { Resource } from './resource';
 
-export class Projet extends Resource {
-  nom: string;
+export class Project extends Resource {
+  code: string;
   reference: string;
 }
