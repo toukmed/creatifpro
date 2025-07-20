@@ -14,14 +14,10 @@ export const authGuard: CanActivateFn = (
   const router: Router = inject(Router);
   const protectedRoutes: string[] = [
     '/accueil',
-    '/pointages',
+    '/pointages/salaries',
+    '/pointages/horaires',
     '/employes',
-    '/consommations',
     '/projets',
-    '/paiements',
-    '/caisses',
-    '/devis',
-    '/facturations',
   ];
   let token = localStorage.getItem('auth_token');
   if (token !== null) {

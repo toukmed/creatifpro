@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-navigation',
@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent {
+  @Input() collapsed = false;
   navLinks = navLinks;
 
   trackBy(index: number, el: any) {
@@ -15,59 +16,24 @@ export class NavigationComponent {
 
 export const navLinks = [
   {
-    link: '/pointages',
+    link: '/accueil',
+    icon: 'home',
+    libelle: 'Acceuil',
+    desc: "Page d'accueil",
+    condition: true,
+  },
+  {
+    link: '/pointages/horaires',
     icon: 'edit_calendar',
-    libelle: 'Pointage',
-    desc: 'Géstion du Pointage',
+    libelle: 'Pointage horaires',
+    desc: 'Pointage horaires',
     condition: true,
   },
   {
-    link: '/employes',
-    icon: 'group',
-    libelle: 'Personels',
-    desc: 'Géstion du Personel',
-    condition: true,
-  },
-  {
-    link: '/consommations',
-    icon: 'shelves',
-    libelle: 'Consommation',
-    desc: 'Géstion de la Consommation',
-    condition: true,
-  },
-  {
-    link: '/projets',
-    icon: 'apartment',
-    libelle: 'Projets',
-    desc: 'Géstion des Projets',
-    condition: true,
-  },
-  {
-    link: '/paiements',
-    icon: 'receipt_long',
-    libelle: 'Paiements',
-    desc: 'Géstion des Paiements',
-    condition: true,
-  },
-  {
-    link: '/caisses',
-    icon: 'payments',
-    libelle: 'Caisse',
-    desc: 'Géstion de la Caisse',
-    condition: true,
-  },
-  {
-    link: '/devis',
-    icon: 'task',
-    libelle: 'Devis',
-    desc: 'Géstion des Devis',
-    condition: true,
-  },
-  {
-    link: '/facturations',
-    icon: 'feed',
-    libelle: 'Facturation',
-    desc: 'Géstion de la Facturation',
+    link: '/pointages/salaries',
+    icon: 'work_history',
+    libelle: 'Pointage salariés',
+    desc: 'Pointage salariés',
     condition: true,
   },
 ].filter((l) => l.condition);

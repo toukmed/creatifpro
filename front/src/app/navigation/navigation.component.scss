@@ -9,3 +9,9 @@ a.link-active {
   color: var(--mdc-fab-container-color);
   background-color: var(--mat-fab-foreground-color);
 }
+
+.nav-link-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

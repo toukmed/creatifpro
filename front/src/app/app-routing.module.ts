@@ -1,18 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { PointageComponent } from './components/pointage/pointage.component';
-import { PersonnelComponent } from './components/personnel/personnel.component';
-import { ConsommationComponent } from './components/consommation/consommation.component';
-import { ProjetComponent } from './components/projet/projet.component';
-import { PaiementComponent } from './components/paiement/paiement.component';
-import { CaisseComponent } from './components/caisse/caisse.component';
-import { DevisComponent } from './components/devis/devis.component';
-import { FacturationComponent } from './components/facturation/facturation.component';
 import { LoginComponent } from './login/login.component';
 import { authGuard } from './services/guards/auth.guard';
-import { EditPageComponent } from './edit-page/edit-page.component';
-import { VisuPageComponent } from './edit-page/visu-page/visu-page.component';
+import { ListPointageComponent } from './components/list-pointages/list-pointage.component';
+import { AddPointageComponent } from './components/add-pointage/add-pointage.component';
+import { EditPointageComponent } from './components/edit-pointage/edit-pointage.component';
+import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/visu-pointage.component';
 
 const routes: Routes = [
   {
@@ -25,62 +19,46 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'pointages',
-    component: PointageComponent,
+    path: 'pointages/horaires',
+    component: ListPointageComponent,
     canActivate: [authGuard],
     data: { animation: 'root' },
   },
   {
-    path: 'pointages/:id',
-    component: EditPageComponent,
+    path: 'pointages/salaries',
+    component: ListPointageComponent,
+    canActivate: [authGuard],
+    data: { animation: 'root' },
+  },
+  {
+    path: 'pointages/horaires/add',
+    component: AddPointageComponent,
     data: { animation: 'edit' },
   },
   {
-    path: 'pointages/:id/visu',
-    component: VisuPageComponent,
+    path: 'pointages/salaries/add',
+    component: AddPointageComponent,
     data: { animation: 'edit' },
   },
   {
-    path: 'employes',
-    component: PersonnelComponent,
-    canActivate: [authGuard],
-    data: { animation: 'root' },
+    path: 'pointages/horaires/:id',
+    component: EditPointageComponent,
+    data: { animation: 'edit' },
   },
   {
-    path: 'consommations',
-    component: ConsommationComponent,
-    canActivate: [authGuard],
-    data: { animation: 'root' },
+    path: 'pointages/salaries/:id',
+    component: EditPointageComponent,
+    data: { animation: 'edit' },
   },
   {
-    path: 'projets',
-    component: ProjetComponent,
-    canActivate: [authGuard],
-    data: { animation: 'root' },
+    path: 'pointages/horaires/:id/visu',
+    component: VisuPointageComponent,
+    data: { animation: 'edit' },
   },
   {
-    path: 'paiements',
-    component: PaiementComponent,
-    canActivate: [authGuard],
-    data: { animation: 'root' },
-  },
-  {
-    path: 'caisses',
-    component: CaisseComponent,
-    canActivate: [authGuard],
-    data: { animation: 'root' },
-  },
-  {
-    path: 'devis',
-    component: DevisComponent,
-    canActivate: [authGuard],
-    data: { animation: 'root' },
-  },
-  {
-    path: 'facturations',
-    component: FacturationComponent,
-    canActivate: [authGuard],
-    data: { animation: 'root' },
+    path: 'pointages/salaries/:id/visu',
+    component: VisuPointageComponent,
+    data: { animation: 'edit' },
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

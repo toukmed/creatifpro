@@ -12,3 +12,65 @@ mat-drawer-container {
 mat-drawer-content {
   padding: 10px;
 }
+
+.sidenav {
+  width: 250px;
+  background: #f5f5f5;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+}
+
+.app-root-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+app-header {
+  z-index: 2;
+  position: relative;
+}
+
+.main-container {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+// Sidenav header styles
+.sidenav-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: left;
+  padding: 0 0 0 0;
+}
+
+.sidenav {
+  width: 250px;
+  transition: width 0.2s;
+  min-width: 60px;
+  box-sizing: border-box;
+}
+
+.sidenav.collapsed {
+  width: 60px;
+  min-width: 60px;
+}
+
+.nav-link-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidenav.collapsed .nav-link-content {
+  justify-content: center;
+  gap: 0;
+}
+
+.collapse-btn {
+  position: absolute;
+  top: 0px;    // adjust as needed for your header height
+  left: -10px;   // move the button further to the left
+  z-index: 100;
+  border-radius: 20%;
+  background: #fff;
+}

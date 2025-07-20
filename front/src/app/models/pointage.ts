@@ -1,15 +1,11 @@
-import { Validators } from '@angular/forms';
 import { Employe } from './employe';
-import { JourPointage } from './jourPointage';
 import { Resource } from './resource';
+import { Project } from './projet';
 
 export class Pointage extends Resource {
-  employe: Employe;
-  datePointage: Date;
-  pointages: JourPointage[];
-  startDate: Date;
-  endDate: Date;
-  projet: string;
+  employee: Employe;
+  project: Project;
+  pointageDate: Date;
   totalHours: number;
-  employesList: number[];
+  comment: string;
 }

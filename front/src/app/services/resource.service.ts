@@ -7,24 +7,24 @@ import { Resource } from '../models/resource';
   providedIn: 'root',
 })
 export class ResourceService<T extends Resource> {
-  private readonly url = 'http://localhost:8080';
+  private readonly baseUrl = 'http://localhost:8080/api';
 
   constructor(private httpClient: HttpClient) {}
 
   login(item: T, endpoint: string): Observable<any> {
-    return this.httpClient.post<T>(`${this.url}/${endpoint}`, item);
+    return this.httpClient.post<T>(`${this.baseUrl}/${endpoint}`, item);
   }
 
   register(item: T, endpoint: string): Observable<any> {
-    return this.httpClient.post<T>(`${this.url}/${endpoint}`, item);
+    return this.httpClient.post<T>(`${this.baseUrl}/${endpoint}`, item);
   }
 
   public create(item: T, endpoint: string): Observable<T> {
-    return this.httpClient.post<T>(`${this.url}/${endpoint}/create`, item);
+    return this.httpClient.post<T>(`${this.baseUrl}/${endpoint}/create`, item);
   }
 
   public update(item: T, endpoint: string): Observable<T> {
-    return this.httpClient.put<T>(`${this.url}/${endpoint}/update`, item);
+    return this.httpClient.put<T>(`${this.baseUrl}/${endpoint}/update`, item);
   }
 
   public getById(
@@ -32,38 +32,31 @@ export class ResourceService<T extends Resource> {
     endpoint: string,
     pathParam?: string
   ): Observable<any> {
-    const url = `${this.url}/${endpoint}/${id}`;
+    const url = `${this.baseUrl}/${endpoint}/${id}`;
 
-    const finalUrl = pathParam ? `${url}?jourPointage=${pathParam}` : url;
-
-    return this.httpClient.get(finalUrl);
+    return this.httpClient.get(url);
   }
 
   public isExistBy(
     endpoint: string,
     idPointage: string,
-    jourPointage: string
   ): Observable<any> {
-    const url = `${this.url}/${endpoint}/isExistBy`;
-    const finalUrl =
-      idPointage && jourPointage
-        ? `${url}?idPointage=${idPointage}&jourPointage=${jourPointage}`
-        : url;
-    return this.httpClient.get(finalUrl);
+    const url = `${this.baseUrl}/${endpoint}/isExistBy/${idPointage}`;
+
+    return this.httpClient.get(url);
   }
 
   public list(body: any, endpoint: string): Observable<any> {
-    return this.httpClient.post(`${this.url}/${endpoint}`, body);
+    return this.httpClient.post(`${this.baseUrl}/${endpoint}`, body);
   }
 
   public addList(body: any, endpoint: string): Observable<any> {
-    return this.httpClient.post(`${this.url}/${endpoint}`, body);
+    return this.httpClient.post(`${this.baseUrl}/${endpoint}`, body);
   }
 
   public delete(id: number, endpoint: string, pathParam?: string) {
-    const url = `${this.url}/${endpoint}/${id}`;
-    const finalUrl = pathParam ? `${url}?jourPointage=${pathParam}` : url;
-    return this.httpClient.delete(finalUrl);
+    const url = `${this.baseUrl}/${endpoint}/${id}`;
+    return this.httpClient.delete(url);
   }
 
   public exportToCSV(
@@ -73,7 +66,7 @@ export class ResourceService<T extends Resource> {
     endpoint: string,
     idPointage?: number
   ): Observable<Blob> {
-    const url = `${this.url}/${endpoint}/export/csv?typeContrat=${typeContrat}&startDate=${startDate}&endDate=${endDate}`;
+    const url = `${this.baseUrl}/${endpoint}/export/csv?typeContrat=${typeContrat}&startDate=${startDate}&endDate=${endDate}`;
     const finalUrl = idPointage ? `${url}&idPointage=${idPointage}` : url;
 
     return this.httpClient.get(finalUrl, {
@@ -83,7 +76,7 @@ export class ResourceService<T extends Resource> {
 
   public getStats(id: number, endpoint: string) {
     return this.httpClient.get(
-      `${this.url}/${endpoint}/stats?pointageId=${id}`
+      `${this.baseUrl}/${endpoint}/stats?pointageId=${id}`
     );
   }
 }

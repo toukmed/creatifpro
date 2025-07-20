@@ -1,9 +1,29 @@
-@if(showHeader()){
-<app-header></app-header>
-}
+<div class="app-root-layout">
+  @if(showHeader()){
+  <app-header></app-header>
+  }
 
-<mat-drawer-container [@routeAnimations]="prepareRoute(outlet)">
-  <mat-drawer-content>
-    <router-outlet #outlet="outlet"></router-outlet>
-  </mat-drawer-content>
-</mat-drawer-container>
+  <mat-drawer-container
+    class="main-container"
+    [@routeAnimations]="prepareRoute(outlet)"
+  >
+    <mat-drawer #drawer mode="side" [opened]="sidenavOpened" class="sidenav">
+      <app-navigation [collapsed]="!sidenavOpened"></app-navigation>
+    </mat-drawer>
+    <mat-drawer-content>
+      <button
+        matMiniFab
+        (click)="toggleSidenav()"
+        class="collapse-btn"
+        aria-label="Collapse sidebar"
+      >
+        <mat-icon>{{
+          sidenavOpened
+            ? "keyboard_double_arrow_left"
+            : "keyboard_double_arrow_right"
+        }}</mat-icon>
+      </button>
+      <router-outlet #outlet="outlet"></router-outlet>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

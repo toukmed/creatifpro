@@ -13,15 +13,6 @@ import { MatCardModule } from '@angular/material/card';
 import { NavigationComponent } from './navigation/navigation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
-import { PointageComponent } from './components/pointage/pointage.component';
-import { PersonnelComponent } from './components/personnel/personnel.component';
-import { ConsommationComponent } from './components/consommation/consommation.component';
-import { ProjetComponent } from './components/projet/projet.component';
-import { PaiementComponent } from './components/paiement/paiement.component';
-import { CaisseComponent } from './components/caisse/caisse.component';
-import { FacturationComponent } from './components/facturation/facturation.component';
-import { DevisComponent } from './components/devis/devis.component';
-import { GenericTableComponent } from './generic-table/generic-table.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -48,25 +39,19 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CustomDateAdapter } from './services/custom-date-adapter';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { AddPointageComponent } from './components/pointage/details/add-pointage/add-pointage.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { EditPageComponent } from './edit-page/edit-page.component';
-import { EditHeaderComponent } from './edit-page/edit-header/edit-header.component';
-import { VisuPageComponent } from './edit-page/visu-page/visu-page.component';
-import { AddSinglePointageComponent } from './components/pointage/details/add-single-pointage/add-single-pointage.component';
+import { EditHeaderComponent } from './components/edit-pointage/edit-header/edit-header.component';
 import { MatChipsModule } from '@angular/material/chips';
 import localeFr from '@angular/common/locales/fr';
-import { CalendarComponent } from './components/pointage/details/calendar/calendar.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AddProjetComponent } from './components/projet/add-projet/add-projet.component';
-import { EditProjetComponent } from './components/projet/edit-projet/edit-projet.component';
-import { VisuProjetComponent } from './components/projet/visu-projet/visu-projet.component';
-import { AddPersonnelComponent } from './components/personnel/add-personnel/add-personnel.component';
-import { EditPersonnelComponent } from './components/personnel/edit-personnel/edit-personnel.component';
-import { VisuPersonnelComponent } from './components/personnel/visu-personnel/visu-personnel.component';
 import { ValidationButtonsComponent } from './validation-buttons/validation-buttons.component';
+import { ListPointageComponent } from './components/list-pointages/list-pointage.component';
+import { AddPointageComponent } from './components/add-pointage/add-pointage.component';
+import { EditPointageComponent } from './components/edit-pointage/edit-pointage.component';
+import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/visu-pointage.component';
+import { MatListModule } from '@angular/material/list';
 
 registerLocaleData(localeFr);
 
@@ -110,29 +95,13 @@ const materialModules = [
     HeaderComponent,
     HomeComponent,
     NavigationComponent,
-    PointageComponent,
-    PersonnelComponent,
-    ConsommationComponent,
-    ProjetComponent,
-    PaiementComponent,
-    CaisseComponent,
-    FacturationComponent,
-    DevisComponent,
-    GenericTableComponent,
     LoginComponent,
     ConfirmDialogComponent,
-    AddPointageComponent,
-    EditPageComponent,
-    VisuPageComponent,
-    AddSinglePointageComponent,
-    CalendarComponent,
-    AddProjetComponent,
-    EditProjetComponent,
-    VisuProjetComponent,
-    AddPersonnelComponent,
-    EditPersonnelComponent,
-    VisuPersonnelComponent,
     ValidationButtonsComponent,
+    ListPointageComponent,
+    AddPointageComponent,
+    EditPointageComponent,
+    VisuPointageComponent,
   ],
   imports: [
     ...materialModules,
@@ -145,6 +114,7 @@ const materialModules = [
     CommonModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatListModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
