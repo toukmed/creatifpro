@@ -88,5 +88,4 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan $VPS_HOST >> ~/.ssh/known_hosts
-    - scp -r * root@$VPS_HOST:/root/$VPS_DIR
-    - ssh root@$VPS_HOST 'cd /root/$VPS_DIR && git pull -r && docker-compose down && docker-compose up -d --build'
+    - ssh root@$VPS_HOST 'cd $VPS_DIR && git pull -r && docker-compose down && docker-compose up -d --build'
