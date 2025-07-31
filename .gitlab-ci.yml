@@ -1,59 +1,91 @@
+#stages:
+##  - build
+##  - test
+##  - publish
+#  - deploy
+#
+#services:
+#  - name: postgres:latest
+#    alias: postgres
+#
+#variables:
+#  TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+#  TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+#  POSTGRES_DB: postgres
+#  POSTGRES_USER: postgres
+#  POSTGRES_PASSWORD: admin
+#  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+#  SPRING_DATASOURCE_USERNAME: postgres
+#  SPRING_DATASOURCE_PASSWORD: admin
+#
+#cache:
+#  paths:
+#    - .m2/repository/
+#
+##build:
+##  stage: build
+##  image: maven:3.9.9-eclipse-temurin-21
+##  script:
+##    - mvn clean install -DskipTests=true
+##  artifacts:
+##    paths:
+##      - target/*.jar
+##
+##test:
+##  stage: test
+##  image: maven:3.9.9-eclipse-temurin-21
+##  script:
+##    - mvn test
+##  services:
+##    - name: postgres:latest
+##      alias: postgres
+##
+#
+#deploy_production:
+#  stage: deploy
+#  image: alpine:latest
+#  before_script:
+#    - apk add --no-cache openssh-client
+#    - mkdir -p ~/.ssh
+#    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+#    - chmod 600 ~/.ssh/id_ed25519
+#    - eval $(ssh-agent -s)
+#    - ssh-add ~/.ssh/id_ed25519
+#    - ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+#  script:
+#    - ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "cd $VPS_DIR && git pull -r && docker compose down && docker compose up -d --build"
+#
+#  only:
+#    - main
+
 stages:
-#  - build
-#  - test
-#  - publish
+  - build
   - deploy
 
+image: docker:latest
+
 services:
-  - name: postgres:latest
-    alias: postgres
+  - docker:dind
 
 variables:
-  TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
-  TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
-  POSTGRES_DB: postgres
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: admin
-  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-  SPRING_DATASOURCE_USERNAME: postgres
-  SPRING_DATASOURCE_PASSWORD: admin
+  DOCKER_TLS_CERTDIR: ""
 
-cache:
-  paths:
-    - .m2/repository/
+before_script:
+  - docker info
 
-#build:
-#  stage: build
-#  image: maven:3.9.9-eclipse-temurin-21
-#  script:
-#    - mvn clean install -DskipTests=true
-#  artifacts:
-#    paths:
-#      - target/*.jar
-#
-#test:
-#  stage: test
-#  image: maven:3.9.9-eclipse-temurin-21
-#  script:
-#    - mvn test
-#  services:
-#    - name: postgres:latest
-#      alias: postgres
-#
-
-deploy_production:
-  stage: deploy
-  image: alpine:latest
-  before_script:
-    - apk add --no-cache openssh-client
-    - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-    - chmod 600 ~/.ssh/id_ed25519
-    - eval $(ssh-agent -s)
-    - ssh-add ~/.ssh/id_ed25519
-    - ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+build:
+  stage: build
   script:
-    - ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "cd $VPS_DIR && git pull -r && docker compose down && docker compose up -d --build"
+    - docker-compose -f docker-compose.yml build
 
+deploy:
+  stage: deploy
   only:
     - main
+  script:
+    - apk add --no-cache openssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan $VPS_HOST >> ~/.ssh/known_hosts
+    - ssh root@$VPS_HOST 'cd $VPS_DIR && git pull -r && docker-compose down && docker-compose up -d --build'
