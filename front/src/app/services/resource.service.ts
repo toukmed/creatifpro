@@ -7,7 +7,7 @@ import { Resource } from '../models/resource';
   providedIn: 'root',
 })
 export class ResourceService<T extends Resource> {
-  private readonly baseUrl = 'http://localhost:8080/api';
+  private readonly baseUrl = 'http://161.35.70.66:8080/api';
 
   constructor(private httpClient: HttpClient) {}
 
