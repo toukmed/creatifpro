@@ -85,7 +85,9 @@ deploy:
   script:
     - apk add --no-cache openssh
     - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/gitlab_ci_key
+    - chmod 600 ~/.ssh/gitlab_ci_key
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
     - ssh-keyscan $VPS_HOST >> ~/.ssh/known_hosts
     - ssh root@$VPS_HOST 'cd $VPS_DIR && git pull -r && docker-compose down && docker-compose up -d --build'
