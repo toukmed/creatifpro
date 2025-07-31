@@ -48,5 +48,5 @@ RUN npm install && npm run build --prod
 
 FROM nginx:alpine
 COPY --from=build /app/dist/front /usr/share/nginx/html
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY ../nginx/default.conf /etc/nginx/conf.d/default.conf
 
