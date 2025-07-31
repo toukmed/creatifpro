@@ -44,9 +44,9 @@
 FROM node:20 as build
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build --prod
+RUN npm install
+RUN npm run build --prod
 
 FROM nginx:alpine
-COPY --from=build /app/dist/front /usr/share/nginx/html
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist/front/browser /usr/share/nginx/html
 
