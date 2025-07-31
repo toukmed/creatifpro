@@ -26,27 +26,20 @@ services:
     networks:
       - creatif-network
     restart: always
-
-  front:
-    build: ./front
-    container_name: creatif_front
-    depends_on:
-      - back
-    networks:
-      - creatif-network
-    restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   nginx:
-    image: nginx:alpine
+    build: ./front
     container_name: creatif_nginx
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./nginx/ssl:/etc/ssl
     ports:
       - "80:80"
       - "443:443"
-    depends_on:
-      - front
     networks:
       - creatif-network
 
