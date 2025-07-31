@@ -12,8 +12,11 @@
 #EXPOSE 8080
 #ENTRYPOINT ["java", "-jar", "creatifpro.jar"]
 
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
+COPY . .
+RUN chmod +x mvnw
+RUN ./mvnw clean package -DskipTests
 COPY target/*.jar creatifpro-0.0.1.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "creatifpro-0.0.1.jar"]
