@@ -43,7 +43,6 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - /etc/letsencrypt/live/erp.creatif-pro.com:/etc/letsencrypt/live/erp.creatif-pro.com:ro
       - /etc/letsencrypt/archive/erp.creatif-pro.com:/etc/letsencrypt/archive/erp.creatif-pro.com:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
     ports:
       - "80:80"
       - "443:443"
