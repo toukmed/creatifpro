@@ -58,6 +58,7 @@ function slideTo(direction: any) {
 })
 export class AppComponent {
   sidenavOpened = true;
+  navLinks = navLinks;
 
   constructor() {}
 
@@ -96,3 +97,27 @@ export class AppComponent {
     this.sidenavOpened = !this.sidenavOpened;
   }
 }
+
+export const navLinks = [
+  {
+    link: '/accueil',
+    icon: 'home',
+    libelle: 'Acceuil',
+    desc: "Page d'accueil",
+    condition: true,
+  },
+  {
+    link: '/pointages/horaires',
+    icon: 'edit_calendar',
+    libelle: 'Pointage horaires',
+    desc: 'Pointage horaires',
+    condition: true,
+  },
+  {
+    link: '/pointages/salaries',
+    icon: 'work_history',
+    libelle: 'Pointage salariés',
+    desc: 'Pointage salariés',
+    condition: true,
+  },
+].filter((l) => l.condition);

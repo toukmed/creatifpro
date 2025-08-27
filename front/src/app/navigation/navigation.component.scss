@@ -1,17 +1,43 @@
-#menu-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  align-items: center;
+// #menu-wrapper {
+//   display: flex;
+//   justify-content: center;
+//   gap: 25px;
+//   align-items: center;
+// }
+
+// a.link-active {
+//   color: var(--mdc-fab-container-color);
+//   background-color: var(--mat-fab-foreground-color);
+// }
+
+// .nav-link-content {
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+// }
+
+.sidenav-container {
+  height: 100vh;
 }
 
-a.link-active {
-  color: var(--mdc-fab-container-color);
-  background-color: var(--mat-fab-foreground-color);
+mat-sidenav {
+  background: #1976d2; // material blue
+  color: white;
+  overflow: hidden;
+  transition: width 0.3s ease;
 }
 
-.nav-link-content {
+.menu-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+mat-nav-list a {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  color: white;
+  transition: padding 0.3s ease;
 }
+

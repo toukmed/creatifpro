@@ -20,7 +20,7 @@ public class WebConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("http://161.35.70.66");
+        config.addAllowedOrigin("http://72.60.91.94");
         config.addAllowedOrigin("https://erp.creatif-pro.com/");
         config.addAllowedOrigin("http://erp.creatif-pro.com/");
         config.addAllowedOrigin("https://www.erp.creatif-pro.com/");

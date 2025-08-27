@@ -93,4 +93,4 @@ deploy:
     - ssh-add ~/.ssh/gitlab_ci_key
     - ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
   script:
-    - ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "cd $VPS_DIR && git pull -r && docker compose down && docker compose up -d --build"
+    - ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "cd $VPS_DIR && git pull -r && sudo docker compose down && sudo docker compose up -d --build"

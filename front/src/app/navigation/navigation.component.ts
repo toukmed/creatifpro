@@ -6,11 +6,16 @@ import { Component, Input } from '@angular/core';
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent {
-  @Input() collapsed = false;
+  @Input() sidenavOpened = true;
   navLinks = navLinks;
 
   trackBy(index: number, el: any) {
     return el.link;
+  }
+
+  toggleSidenav() {
+    this.sidenavOpened = !this.sidenavOpened;
+    console.log('Sidenav toggled:', this.sidenavOpened);
   }
 }
 
