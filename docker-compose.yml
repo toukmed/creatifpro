@@ -55,6 +55,9 @@ services:
       - ./certbot/conf:/etc/letsencrypt
     networks:
       - creatif-network
+    depends_on:
+      back:
+        condition: service_healthy
 
   certbot:
     image: certbot/certbot:latest
