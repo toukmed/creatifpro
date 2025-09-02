@@ -48,7 +48,7 @@ services:
       - ./nginx/conf:/etc/nginx/conf.d:rw
       - ./certbot/www:/var/www/certbot:rw
       - ./certbot/conf:/etc/letsencrypt:rw
-      - ./front/dist/front:/usr/share/nginx/html:rw
+      - ./front/dist/front/browser:/usr/share/nginx/html:rw
     networks:
       - creatif-network
 
