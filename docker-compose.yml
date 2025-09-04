@@ -42,32 +42,32 @@ services:
     image: nginx:latest
     ports:
       - "80:80"
-      - "443:443"
+      #- "443:443"
     restart: always
     volumes:
       - ./nginx/conf:/etc/nginx/conf.d:rw
-      - ./certbot/www:/var/www/certbot:rw
-      - ./certbot/conf:/etc/letsencrypt:rw
+      #- ./certbot/www:/var/www/certbot:rw
+      #- ./certbot/conf:/etc/letsencrypt:rw
       - ./front/dist/front/browser:/usr/share/nginx/html:rw
     networks:
       - creatif-network
 
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www:/var/www/certbot:rw
-      - ./certbot/conf:/etc/letsencrypt:rw
-    networks:
-      - creatif-network
-  certbot-renew:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www:/var/www/certbot:rw
-      - ./certbot/conf:/etc/letsencrypt:rw
-    entrypoint: [ "/bin/sh", "-c" ]
-    command: [ "while true; do certbot renew --webroot --webroot-path /var/www/certbot/ --quiet && sleep 12h; done" ]
-    networks:
-      - creatif-network
+#  certbot:
+#    image: certbot/certbot:latest
+#    volumes:
+#      - ./certbot/www:/var/www/certbot:rw
+#      - ./certbot/conf:/etc/letsencrypt:rw
+#    networks:
+#      - creatif-network
+#  certbot-renew:
+#    image: certbot/certbot:latest
+#    volumes:
+#      - ./certbot/www:/var/www/certbot:rw
+#      - ./certbot/conf:/etc/letsencrypt:rw
+#    entrypoint: [ "/bin/sh", "-c" ]
+#    command: [ "while true; do certbot renew --webroot --webroot-path /var/www/certbot/ --quiet && sleep 12h; done" ]
+#    networks:
+#      - creatif-network
 
 volumes:
   postgres_data:
