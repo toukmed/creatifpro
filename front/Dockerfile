@@ -41,12 +41,18 @@
 #EXPOSE 80
 #CMD ["nginx", "-g", "daemon off;"]
 
-FROM node:20 AS build
+# Stage 1: build Angular
+FROM node:20-alpine AS builder
 WORKDIR /app
-COPY . .
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npm run build --prod
 
-FROM nginx:alpine
-COPY --from=build /app/dist/front/browser /usr/share/nginx/html
+# Stage 2: Nginx
+FROM nginx:latest
+COPY --from=builder /app/dist/front/browser /usr/share/nginx/html
+COPY ./nginx/app.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 

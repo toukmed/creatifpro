@@ -29,26 +29,12 @@ services:
       - creatif-network
     restart: always
 
-  front:
-    build: ./front
-    container_name: creatif_front
-    depends_on:
-      - back
-    networks:
-      - creatif-network
-    restart: always
-
   nginx:
-    image: nginx:latest
+    build: ./front   # build la partie front + Nginx
+    container_name: creatif_nginx
     ports:
       - "80:80"
-      #- "443:443"
     restart: always
-    volumes:
-      - ./nginx/conf:/etc/nginx/conf.d:rw
-      #- ./certbot/www:/var/www/certbot:rw
-      #- ./certbot/conf:/etc/letsencrypt:rw
-      - ./front/dist/front/browser:/usr/share/nginx/html:rw
     networks:
       - creatif-network
 
