@@ -3,6 +3,11 @@
   height: 40px;
 }
 
+.input {
+  --mat-form-field-container-vertical-padding: 36px; /* increase height */
+  --mat-form-field-container-height: 56px;           /* optional fixed height */
+}
+
 .clicked-row {
   background-color: #ececec;
 }
@@ -40,7 +45,7 @@ mat-table.placeholder mat-cell span.blank {
   flex-wrap: wrap;
   align-items: start;
   gap: 16px;
-  margin: 4% 0 0 4%;
+  margin: 1% 0 0 4%;
 }
 
 .search-section {
@@ -54,6 +59,11 @@ mat-table.placeholder mat-cell span.blank {
   flex: 1 1 220px;
   min-width: 220px;
   max-width: 500px;
+  // Adjust input field height
+  --mat-form-field-container-vertical-padding: 10px;
+  --mat-form-field-container-height: 30px; 
+  --mat-form-field-label-text-size: 4px;
+  --mat-form-field-label-offset-y: -20px;
 }
 
 .filter-section {

@@ -6,3 +6,25 @@ app-navigation {
   flex: 1;
   text-align: center;
 }
+
+.header {
+  border-bottom: 1px solid #E0E0E0;
+}
+
+button {
+  border: 1px solid #E0E0E0; 
+  border-radius: 10%;
+}
+
+.icon-lg :hover {
+  background-color: #bcbaba;
+}
+
+.icon-lg {
+  font-size: 15px;   // bigger icon
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  margin: 5px;
+}
+

@@ -2,6 +2,13 @@
 
 @include mat.core();
 
+
+$my-density-config: (
+  default: (
+    size: -2  // makes all components smaller
+  ),
+);
+
 $tw-indigo-palette: (
   50: #ffe0cb,
   100: #ffcaa7,
@@ -34,6 +41,7 @@ $my-app-theme: mat.define-light-theme(
 );
 
 @include mat.all-component-themes($my-app-theme);
+@include mat.all-component-themes($my-density-config);
 
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 
@@ -148,6 +156,7 @@ h3:after {
 .button {
   display: flex;
   margin-bottom: 20px;
+  border: 0.3px solid red;
 }
 
 .spacer {
@@ -187,5 +196,10 @@ h3:after {
     max-width: 100%;
     gap: 12px;
   }
+}
+
+input .mat-mdc-input-element {
+  --mat-form-field-container-vertical-padding: 36px; /* increase height */
+  --mat-form-field-container-height: 56px;           /* optional fixed height */
 }
 // End Edit Pointage Styles

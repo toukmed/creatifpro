@@ -1,18 +1,26 @@
-<mat-toolbar id="toolbar" color="primary">
+<mat-toolbar id="toolbar" color="basic" class="header">
   <span id="logo">
-    <a class="no-style-ref" style="font-size: 2em" routerLink="accueil">
+    <a class="no-style-ref" style="font-size: 1em" routerLink="accueil">
       <i>CREATIF PRO </i>
     </a>
     <small>BETA 0.0.1</small>
   </span>
   <div class="spacer"></div>
-  <a
-    routerLinkActive="link-active"
-    (click)="onLogout()"
-    mat-mini-fab
-    [matTooltip]="tooltipMessage"
-    color="basic"
-  >
-    <mat-icon>logout</mat-icon>
-  </a>
+  <button
+  matMiniFab
+  routerLinkActive="link-active"
+  (click)="onLogout()"
+  [matTooltip]="tooltipMessage"
+>
+  <mat-icon  class="icon-lg">logout</mat-icon>
+</button>
 </mat-toolbar>
+<div style="margin: 10px 20px 10px 80px;">
+  <span id="logo">
+    <a class="no-style-ref" style="font-size: 1em" routerLink="accueil">
+      
+      <i>{{currentUrl}}</i>
+    </a>
+  </span>
+</div>
+

@@ -4,18 +4,11 @@
     #sidenav 
     mode="side" 
     [opened]="true" 
-    [style.width]="sidenavOpened ? '240px' : '70px'">
-    
-    <div class="menu-header">
-      <button mat-icon-button (click)="toggleSidenav()">
-        <mat-icon>{{ sidenavOpened ? 'chevron_left' : 'chevron_right' }}</mat-icon>
-      </button>
-    </div>
+    [style.width]="'100px'">
 
     <mat-nav-list>
       <a mat-list-item *ngFor="let item of navLinks" [routerLink]="item.link">
         <mat-icon matListIcon>{{item.icon}}</mat-icon>
-        <span *ngIf="sidenavOpened">{{item.libelle}}</span>
       </a>
     </mat-nav-list>
   </mat-sidenav>

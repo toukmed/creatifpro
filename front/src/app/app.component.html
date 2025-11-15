@@ -1,15 +1,24 @@
 <div class="app-root-layout">
-  @if(showHeader()){
-  <app-header></app-header>
-  <app-navigation [sidenavOpened]="sidenavOpened"></app-navigation>
+  @if(showHeader()) {
+    <app-header></app-header>
   }
 
-  <mat-drawer-container
-    class="main-container"
-    [@routeAnimations]="prepareRoute(outlet)"
-  >
+  <mat-drawer-container class="main-container">
+    
+    <!-- SIDE NAVIGATION -->
+    <mat-drawer mode="side" opened>
+      @if(showHeader()) {
+        <app-navigation></app-navigation>
+      }
+    </mat-drawer>
+
+    <!-- MAIN CONTENT -->
     <mat-drawer-content>
-      <router-outlet #outlet="outlet"></router-outlet>
+      <div class="page-content">
+        <router-outlet></router-outlet>
+      </div>
     </mat-drawer-content>
+
   </mat-drawer-container>
+
 </div>

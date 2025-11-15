@@ -57,7 +57,6 @@ function slideTo(direction: any) {
   animations: [slider],
 })
 export class AppComponent {
-  sidenavOpened = true;
   navLinks = navLinks;
 
   constructor() {}
@@ -91,10 +90,6 @@ export class AppComponent {
       outlet.activatedRouteData &&
       outlet.activatedRouteData['animation']
     );
-  }
-
-  toggleSidenav() {
-    this.sidenavOpened = !this.sidenavOpened;
   }
 }
 
