@@ -9,6 +9,58 @@
 services:
 
   # ──────────────────────────────────────────
+  # Reverse proxy & edge router – Traefik v3
+  # ──────────────────────────────────────────
+  traefik:
+    image: traefik:v3
+    container_name: creatif_traefik
+    command:
+      # Docker provider – discover services via labels
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=creatif-network"
+      # HTTP entrypoint
+      - "--entrypoints.web.address=:80"
+      # Health-check ping endpoint
+      - "--ping=true"
+      # ── Uncomment the block below to enable HTTPS via Let's Encrypt ──
+      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # - "--entrypoints.websecure.address=:443"
+      # - "--certificatesresolvers.letsencrypt.acme.email=admin@toukrichtemed.com"
+      # - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+    ports:
+      - "80:80"
+      # - "443:443"   # uncomment to enable HTTPS
+    volumes:
+      # Read-only Docker socket – Traefik needs it to discover services
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      # - "letsencrypt:/letsencrypt"   # uncomment to enable HTTPS
+    networks:
+      - creatif-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+        reservations:
+          cpus: "0.1"
+          memory: 32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ──────────────────────────────────────────
   # Database – PostgreSQL 17
   # ──────────────────────────────────────────
   db:
@@ -63,8 +115,7 @@ services:
     depends_on:
       db:
         condition: service_healthy   # wait until postgres is ready
-    ports:
-      - "127.0.0.1:8080:8080"   # bind to localhost only – fronted by nginx
+    # No port binding needed – Traefik reaches the backend via the Docker network
     networks:
       - creatif-network
     restart: unless-stopped
@@ -74,6 +125,18 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+    labels:
+      - "traefik.enable=true"
+      # Route /api/* to this service (higher priority than the frontend catch-all)
+      - "traefik.http.routers.back.rule=PathPrefix(`/api/`)"
+      - "traefik.http.routers.back.entrypoints=web"
+      - "traefik.http.services.back.loadbalancer.server.port=8080"
+      # ── Uncomment to expose /api/ over HTTPS (reuses the same 'back' service) ──
+      # - "traefik.http.routers.back-secure.rule=PathPrefix(`/api/`)"
+      # - "traefik.http.routers.back-secure.entrypoints=websecure"
+      # - "traefik.http.routers.back-secure.service=back"
+      # - "traefik.http.routers.back-secure.tls=true"
+      # - "traefik.http.routers.back-secure.tls.certresolver=letsencrypt"
     deploy:
       resources:
         limits:
@@ -89,18 +152,18 @@ services:
         max-file: "5"
 
   # ──────────────────────────────────────────
-  # Frontend – Angular + Nginx
+  # Frontend – Angular SPA (nginx static server)
+  # Traefik is the public entry point; this container only serves static files.
   # ──────────────────────────────────────────
-  nginx:
+  front:
     build:
       context: ./front
       dockerfile: Dockerfile
-    container_name: creatif_nginx
-    ports:
-      - "80:80"
+    container_name: creatif_front
+    # No port binding needed – Traefik reaches the container via the Docker network
     depends_on:
-      back:
-        condition: service_healthy   # wait until backend is ready
+      traefik:
+        condition: service_healthy
     networks:
       - creatif-network
     restart: unless-stopped
@@ -110,6 +173,18 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+    labels:
+      - "traefik.enable=true"
+      # Catch-all route – lower priority than /api/ because it is less specific
+      - "traefik.http.routers.front.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.front.entrypoints=web"
+      - "traefik.http.services.front.loadbalancer.server.port=80"
+      # ── Uncomment to serve the frontend over HTTPS (reuses the same 'front' service) ──
+      # - "traefik.http.routers.front-secure.rule=PathPrefix(`/`)"
+      # - "traefik.http.routers.front-secure.entrypoints=websecure"
+      # - "traefik.http.routers.front-secure.service=front"
+      # - "traefik.http.routers.front-secure.tls=true"
+      # - "traefik.http.routers.front-secure.tls.certresolver=letsencrypt"
     deploy:
       resources:
         limits:
@@ -124,30 +199,11 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  # ──────────────────────────────────────────
-  # TLS certificate management (uncomment to enable HTTPS)
-  # ──────────────────────────────────────────
-  # certbot:
-  #   image: certbot/certbot:latest
-  #   volumes:
-  #     - ./certbot/www:/var/www/certbot:rw
-  #     - ./certbot/conf:/etc/letsencrypt:rw
-  #   networks:
-  #     - creatif-network
-
-  # certbot-renew:
-  #   image: certbot/certbot:latest
-  #   volumes:
-  #     - ./certbot/www:/var/www/certbot:rw
-  #     - ./certbot/conf:/etc/letsencrypt:rw
-  #   entrypoint: ["/bin/sh", "-c"]
-  #   command: ["while true; do certbot renew --webroot --webroot-path /var/www/certbot/ --quiet && sleep 12h; done"]
-  #   networks:
-  #     - creatif-network
-
 volumes:
   postgres_data:
     driver: local
+  # letsencrypt:   # uncomment to enable HTTPS / Let's Encrypt certificate storage
+  #   driver: local
 
 networks:
   creatif-network:
