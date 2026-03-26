@@ -55,7 +55,6 @@ export class AddPointageComponent implements OnInit {
 
   id: string = '';
   endpoint: string = '';
-  contractType: string = '';
   project: string = '';
   entityName: string = '';
 
@@ -75,7 +74,6 @@ export class AddPointageComponent implements OnInit {
       ) || '';
 
     this.endpoint = 'pointages/' + this.conf.requests[this.entityName];
-    this.contractType = this.entityName === 'horaires' ? 'HORAIRE' : 'SALARIE';
 
     this.listProjects();
     this.addPointageForm.get('project')!.valueChanges.subscribe(() => {
@@ -145,7 +143,6 @@ export class AddPointageComponent implements OnInit {
     const project = this.addPointageForm.get('project')!.value;
     const params: any = {};
 
-    params.contractType = this.contractType;
     params.pageIndex = 0;
     params.pageSize = 10;
     if (project) {

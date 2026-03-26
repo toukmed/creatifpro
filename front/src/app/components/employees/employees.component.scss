@@ -1,0 +1,6 @@
+@use 'variables' as *;
+@use 'list-page';
+
+.employee-table {
+  @extend %data-table;
+}

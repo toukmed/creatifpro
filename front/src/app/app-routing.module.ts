@@ -7,6 +7,7 @@ import { ListPointageComponent } from './components/list-pointages/list-pointage
 import { AddPointageComponent } from './components/add-pointage/add-pointage.component';
 import { EditPointageComponent } from './components/edit-pointage/edit-pointage.component';
 import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/visu-pointage.component';
+import { EmployeesComponent } from './components/employees/employees.component';
 
 const routes: Routes = [
   {
@@ -19,34 +20,34 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'pointages/horaires',
+    path: 'pointages',
     component: ListPointageComponent,
     canActivate: [authGuard],
     data: { animation: 'root' },
   },
   {
-    path: 'pointages/salaries',
-    component: ListPointageComponent,
+    path: 'employees',
+    component: EmployeesComponent,
     canActivate: [authGuard],
     data: { animation: 'root' },
   },
   {
-    path: 'pointages/horaires/add',
+    path: 'pointages/add',
     component: AddPointageComponent,
     data: { animation: 'edit' },
   },
   {
-    path: 'pointages/salaries/add',
+    path: 'employees/add',
     component: AddPointageComponent,
     data: { animation: 'edit' },
   },
   {
-    path: 'pointages/horaires/:id',
+    path: 'pointages/:id',
     component: EditPointageComponent,
     data: { animation: 'edit' },
   },
   {
-    path: 'pointages/salaries/:id',
+    path: 'employees/:id',
     component: EditPointageComponent,
     data: { animation: 'edit' },
   },
@@ -56,7 +57,7 @@ const routes: Routes = [
     data: { animation: 'edit' },
   },
   {
-    path: 'pointages/salaries/:id/visu',
+    path: 'employees/:id/visu',
     component: VisuPointageComponent,
     data: { animation: 'edit' },
   },

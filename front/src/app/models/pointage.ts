@@ -8,4 +8,5 @@ export class Pointage extends Resource {
   pointageDate: Date;
   totalHours: number;
   comment: string;
+  isPaid: boolean;
 }

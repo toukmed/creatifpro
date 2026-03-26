@@ -57,9 +57,14 @@ function slideTo(direction: any) {
   animations: [slider],
 })
 export class AppComponent {
-  navLinks = navLinks;
+  sidebarCollapsed = false;
 
-  constructor() {}
+  constructor() {
+    const savedState = localStorage.getItem('sidenavOpen');
+    if (savedState !== null) {
+      this.sidebarCollapsed = !JSON.parse(savedState);
+    }
+  }
 
   showHeader() {
     let token = localStorage.getItem('auth_token');
@@ -79,10 +84,10 @@ export class AppComponent {
     }
   }
 
-  slider = trigger('routeAnimations', [
-    transition('root => edit', slideTo('left')),
-    transition('edit => root', slideTo('right')),
-  ]);
+  onSidebarToggle(collapsed: boolean): void {
+    this.sidebarCollapsed = collapsed;
+    localStorage.setItem('sidenavOpen', JSON.stringify(!collapsed));
+  }
 
   prepareRoute(outlet: RouterOutlet) {
     return (
@@ -92,27 +97,3 @@ export class AppComponent {
     );
   }
 }
-
-export const navLinks = [
-  {
-    link: '/accueil',
-    icon: 'home',
-    libelle: 'Acceuil',
-    desc: "Page d'accueil",
-    condition: true,
-  },
-  {
-    link: '/pointages/horaires',
-    icon: 'edit_calendar',
-    libelle: 'Pointage horaires',
-    desc: 'Pointage horaires',
-    condition: true,
-  },
-  {
-    link: '/pointages/salaries',
-    icon: 'work_history',
-    libelle: 'Pointage salariés',
-    desc: 'Pointage salariés',
-    condition: true,
-  },
-].filter((l) => l.condition);

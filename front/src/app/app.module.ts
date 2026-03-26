@@ -49,9 +49,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ValidationButtonsComponent } from './validation-buttons/validation-buttons.component';
 import { ListPointageComponent } from './components/list-pointages/list-pointage.component';
 import { AddPointageComponent } from './components/add-pointage/add-pointage.component';
+import { AddPointageDialogComponent } from './components/add-pointage-dialog/add-pointage-dialog.component';
 import { EditPointageComponent } from './components/edit-pointage/edit-pointage.component';
 import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/visu-pointage.component';
+import { CalendarPointageDialogComponent } from './components/calendar-pointage-dialog/calendar-pointage-dialog.component';
 import { MatListModule } from '@angular/material/list';
+import { EmployeesComponent } from './components/employees/employees.component';
 
 registerLocaleData(localeFr);
 
@@ -100,8 +103,11 @@ const materialModules = [
     ValidationButtonsComponent,
     ListPointageComponent,
     AddPointageComponent,
+    AddPointageDialogComponent,
     EditPointageComponent,
     VisuPointageComponent,
+    CalendarPointageDialogComponent,
+    EmployeesComponent,
   ],
   imports: [
     ...materialModules,

@@ -13,7 +13,10 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { columns } from './pointage.variables';
-import { ContractType } from '../../models/employe';
+import { MatDialog } from '@angular/material/dialog';
+import { AddPointageDialogComponent } from '../add-pointage-dialog/add-pointage-dialog.component';
+import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { CalendarPointageDialogComponent } from '../calendar-pointage-dialog/calendar-pointage-dialog.component';
 
 const monthStart = getStartOfMonth(new Date());
 
@@ -50,7 +53,6 @@ export class ListPointageComponent implements OnInit {
 
   //STRINGS
   activeRoute: string = '';
-  contractType: ContractType;
   project: string = '';
   label: string = '';
   searchedValue = '';
@@ -76,7 +78,8 @@ export class ListPointageComponent implements OnInit {
     private service: ResourceService<Pointage>,
     private projectService: ResourceService<Project>,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -85,13 +88,12 @@ export class ListPointageComponent implements OnInit {
         this.route.snapshot.url.map((u) => u.path).includes(item)
       ) || '';
 
-    this.contractType =
-      this.activeRoute === 'horaires'
-        ? ContractType.HORAIRE
-        : ContractType.SALARIE;
+    const params: any = {};
+    params.startDate = this.startDate;
+    params.endDate = this.endDate;
 
     this.listProjects();
-    this.listPointage({});
+    this.listPointage(params);
 
     this.filterForm.valueChanges.subscribe((formValues) => {
       const params: any = {};
@@ -103,9 +105,6 @@ export class ListPointageComponent implements OnInit {
 
       if (formValues.project) {
         params.project = this.project;
-      }
-      if (this.contractType) {
-        params.contractType = this.contractType;
       }
       params.startDate = this.startDate;
       params.endDate = this.endDate;
@@ -169,7 +168,6 @@ export class ListPointageComponent implements OnInit {
     if (!params.pageSize) {
       params.pageSize = 10;
     }
-    params.contractType = this.contractType;
 
     this.service.list(params, this.endpoint).subscribe((resp) => {
       this.dataSource.data = resp.content;
@@ -180,22 +178,68 @@ export class ListPointageComponent implements OnInit {
   }
 
   edit(configuration: any, details: boolean) {
-    let array = [this.endpoint, this.activeRoute, configuration.id];
-    if (details) array.push('visu');
-    this.router.navigate(array);
+    const dialogRef = this.dialog.open(CalendarPointageDialogComponent, {
+      width: '90vw',
+      height: '90vh',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'calendar-dialog-panel',
+      autoFocus: false,
+      data: {
+        entityName: this.activeRoute,
+        row: configuration,
+        currentMonth: this.currentMonth,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.listPointage({
+          pageIndex: this.paginator?.pageIndex || 0,
+          pageSize: this.paginator?.pageSize || 10,
+          startDate: this.startDate,
+          endDate: this.endDate,
+        });
+      }
+    });
   }
 
   add() {
-    let array = [this.endpoint, this.activeRoute, 'add'];
-    this.router.navigate(array);
+    const dialogRef = this.dialog.open(AddPointageDialogComponent, {
+      width: '580px',
+      maxHeight: '90vh',
+      panelClass: 'jira-dialog-panel',
+      autoFocus: false,
+      data: { entityName: this.activeRoute },
+    });
+
+    dialogRef.afterClosed().subscribe((created) => {
+      if (created) {
+        this.listPointage({
+          pageIndex: this.paginator?.pageIndex || 0,
+          pageSize: this.paginator?.pageSize || 10,
+          startDate: this.startDate,
+          endDate: this.endDate,
+        });
+      }
+    });
   }
 
   remove(event: Pointage) {
-    this.service.delete(event.id, this.endpoint).subscribe(() => {
-      this.listPointage({
-        pageIndex: this.paginator.pageIndex,
-        pageSize: this.paginator.pageSize,
-      });
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      data: 'Êtes-vous sûr de vouloir supprimer ce pointage ?',
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.service.delete(event.id, this.endpoint).subscribe(() => {
+          this.listPointage({
+            pageIndex: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+          });
+        });
+      }
     });
   }
 
@@ -211,7 +255,6 @@ export class ListPointageComponent implements OnInit {
     if (this.project && this.project !== '') {
       params.project = this.project;
     }
-    params.contractType = this.contractType;
 
     this.listPointage(params);
   }

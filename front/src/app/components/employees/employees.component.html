@@ -1,0 +1,165 @@
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Pointages</h1>
+      <span class="record-count">{{ totalElements }} enregistrements</span>
+    </div>
+    <div class="header-right">
+      <button
+        (click)="add()"
+        mat-flat-button
+        color="primary"
+        class="btn-create"
+        aria-label="Ajouter un pointage"
+      >
+        <mat-icon>add</mat-icon>
+        Ajouter un employé
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar" [formGroup]="filterForm">
+    <div class="filter-group">
+      <mat-form-field
+        subscriptSizing="dynamic"
+        appearance="outline"
+        class="filter-field search-input"
+      >
+        <mat-icon matPrefix class="filter-icon">search</mat-icon>
+        <input formControlName="label" matInput placeholder="Rechercher par nom..." />
+      </mat-form-field>
+
+      <mat-form-field
+        subscriptSizing="dynamic"
+        appearance="outline"
+        class="filter-field project-select"
+      >
+        <mat-label>Projet</mat-label>
+        <mat-select formControlName="project">
+          @for (project of projects; track project) {
+            <mat-option [value]="project.code">{{ project.code }}</mat-option>
+          }
+        </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          aria-label="Effacer le filtre projet"
+          *ngIf="filterForm.get('project')?.value"
+          (click)="filterForm.get('project')?.setValue(''); $event.stopPropagation()"
+        >
+          <mat-icon class="clear-icon">close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="month-navigator">
+      <button
+        mat-icon-button
+        (click)="previousMonth()"
+        aria-label="Mois précédent"
+        type="button"
+        class="month-nav-btn"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="month-label">
+        {{ currentMonth | date : 'MMMM yyyy' : undefined : 'fr' }}
+      </span>
+      <button
+        mat-icon-button
+        (click)="nextMonth()"
+        aria-label="Mois suivant"
+        type="button"
+        class="month-nav-btn"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Data Table Card -->
+  <div class="table-card" [class.is-loading]="loading">
+    <mat-table [dataSource]="dataSource" matSort class="employee-table">
+      <ng-container
+        *ngFor="let def of columnsAll; trackBy: trackBy"
+        [matColumnDef]="def.path"
+      >
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ def.libelle }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          @if (def.path === 'totalHours') {
+            @if (element.totalHours === 0) {
+              <span class="status-badge status-warning">
+                <mat-icon class="badge-icon">schedule</mat-icon>
+                Non pointé
+              </span>
+            } @else {
+              <span class="status-badge status-success">
+                <mat-icon class="badge-icon">check_circle</mat-icon>
+                {{ resolve(def.path, element) }}h
+              </span>
+            }
+          } @else if (def.path === 'projet') {
+            <span class="project-tag">{{ resolve(def.path, element) }}</span>
+          } @else {
+            {{ resolve(def.path, element) }}
+          }
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef class="col-actions"></mat-header-cell>
+        <mat-cell *matCellDef="let row" class="col-actions">
+          <div class="row-actions">
+            <button
+              (click)="edit(row, true)"
+              mat-icon-button
+              matTooltip="Voir les détails"
+              class="action-btn action-view"
+              type="button"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button
+              (click)="edit(row, false)"
+              mat-icon-button
+              matTooltip="Modifier"
+              class="action-btn action-edit"
+              type="button"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              (click)="remove(row)"
+              mat-icon-button
+              matTooltip="Supprimer"
+              class="action-btn action-delete"
+              type="button"
+              aria-label="Supprimer ce pointage"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columnsPath"></mat-header-row>
+      <mat-row
+        *matRowDef="let row; columns: columnsPath"
+        [class.row-selected]="clickedRow?.id === row?.id"
+      ></mat-row>
+    </mat-table>
+
+    <mat-paginator
+      [pageSizeOptions]="[10, 25, 50]"
+      (page)="page_changed($event)"
+      [length]="totalElements"
+      [pageIndex]="currentPage"
+      aria-label="Taille de la page"
+      class="table-paginator"
+    ></mat-paginator>
+  </div>
+</div>

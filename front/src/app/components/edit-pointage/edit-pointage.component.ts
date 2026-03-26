@@ -32,7 +32,6 @@ export class EditPointageComponent implements OnInit {
   employees: Employe[] = [];
   routesItem: string[] = ['horaires', 'salaries'];
   endpoint: string = '';
-  contractType: string = '';
   project: string = '';
 
   addPointageForm: FormGroup = new FormGroup({

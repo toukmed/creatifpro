@@ -1,0 +1,157 @@
+<div class="calendar-dialog">
+  <!-- Header -->
+  <div class="calendar-header">
+    <div class="header-left">
+      <div class="employee-info">
+        <div class="avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="info-text">
+          <h2 class="employee-name">{{ employeeName }}</h2>
+          <span class="project-badge">{{ projectCode }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="month-nav">
+        <button mat-icon-button (click)="previousMonth()" class="nav-btn">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="month-title">{{ monthLabel }}</span>
+        <button mat-icon-button (click)="nextMonth()" class="nav-btn">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-value">{{ getWorkedDaysCount() }}</span>
+          <span class="stat-label">jours</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">{{ getTotalHoursForMonth() }}</span>
+          <span class="stat-label">heures</span>
+        </div>
+      </div>
+      <button mat-icon-button (click)="close()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading bar -->
+  <mat-progress-bar *ngIf="loading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
+
+  <!-- Calendar Grid -->
+  <div class="calendar-body">
+    <!-- Week day headers -->
+    <div class="weekday-row">
+      <div
+        class="weekday-cell"
+        *ngFor="let day of weekDays; let i = index"
+        [class.weekend]="i >= 5"
+      >
+        {{ day }}
+      </div>
+    </div>
+
+    <!-- Calendar weeks -->
+    <div class="weeks-container">
+      <div class="week-row" *ngFor="let week of calendarWeeks">
+        <div
+          class="day-cell"
+          *ngFor="let day of week"
+          [class.other-month]="!day.isCurrentMonth"
+          [class.today]="day.isToday"
+          [class.future]="day.isFuture"
+          [class.editing]="day.editing"
+          (click)="!day.editing && day.isCurrentMonth && !day.isFuture ? startEdit(day) : null"
+        >
+          <!-- Day number -->
+          <div class="day-number" [class.today-badge]="day.isToday">
+            {{ day.dayNumber }}
+          </div>
+
+          <!-- Pointage display (not editing) -->
+          <div class="day-content" *ngIf="!day.editing && day.isCurrentMonth">
+            <div *ngIf="day.pointage?.totalHours > 0" class="pointage-value">
+              <span class="hours">{{ day.pointage.totalHours }} h</span>
+            </div>
+            <div *ngIf="!day.pointage" class="empty-slot">
+              <mat-icon class="add-hint">add_circle_outline</mat-icon>
+            </div>
+            <div *ngIf="day.pointage?.comment" class="comment-text">
+              {{ day.pointage.comment }}
+            </div>
+            <div *ngIf="day.pointage" class="paid-indicator" [class.is-paid]="day.pointage.isPaid" [class.is-unpaid]="!day.pointage.isPaid">
+              <mat-icon>attach_money</mat-icon>
+              <span class="paid-label">{{ day.pointage.isPaid ? 'payé' : 'impayé' }}</span>
+            </div>
+          </div>
+
+          <!-- Inline edit form -->
+          <div class="edit-form" *ngIf="day.editing" (click)="$event.stopPropagation()">
+            <input
+              type="number"
+              class="edit-input"
+              [(ngModel)]="day.editValue"
+              [min]="0"
+              [max]="12"
+              [step]="0.5"
+              [placeholder]="'Heures'"
+              autofocus
+            />
+            <input
+              type="text"
+              class="edit-comment"
+              [(ngModel)]="day.editComment"
+              placeholder="Note..."
+            />
+            <div class="edit-actions">
+              <button
+                mat-icon-button
+                class="btn-save"
+                (click)="saveEdit(day)"
+                [disabled]="saving"
+                matTooltip="Enregistrer"
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                class="btn-cancel"
+                (click)="cancelEdit(day); $event.stopPropagation()"
+                matTooltip="Annuler"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="calendar-footer">
+    <div class="legend">
+      <span class="legend-item">
+        <span class="legend-dot paid-dot"></span> Payé
+      </span>
+      <span class="legend-item">
+        <span class="legend-dot unpaid-dot"></span> Non payé
+      </span>
+      <span class="legend-item">
+        <span class="legend-dot empty"></span> Non pointé
+      </span>
+      <span class="legend-item">
+        <span class="legend-dot today-dot"></span> Aujourd'hui
+      </span>
+    </div>
+    <button mat-flat-button color="primary" (click)="close()" class="btn-done">
+      Fermer
+    </button>
+  </div>
+</div>

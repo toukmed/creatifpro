@@ -3,11 +3,7 @@
 @include mat.core();
 
 
-$my-density-config: (
-  default: (
-    size: -2  // makes all components smaller
-  ),
-);
+// Density is applied per-component below for fine-grained control
 
 $tw-indigo-palette: (
   50: #ffe0cb,
@@ -41,7 +37,21 @@ $my-app-theme: mat.define-light-theme(
 );
 
 @include mat.all-component-themes($my-app-theme);
-@include mat.all-component-themes($my-density-config);
+
+// ─── Centralized Form Field Density ────────────────────────────────────
+// Apply compact density globally to all form fields (-4 is the most compact)
+.mat-mdc-form-field {
+  @include mat.form-field-density(-4);
+}
+
+// Apply compact density to selects, inputs, and buttons for consistency
+.mat-mdc-select {
+  @include mat.select-density(-4);
+}
+
+.mat-mdc-paginator {
+  @include mat.paginator-density(-4);
+}
 
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 
@@ -52,7 +62,9 @@ body {
 
 body {
   margin: 0;
-  font-family: Open Sans, "Light 300";
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h3 {
@@ -197,9 +209,65 @@ h3:after {
     gap: 12px;
   }
 }
-
-input .mat-mdc-input-element {
-  --mat-form-field-container-vertical-padding: 36px; /* increase height */
-  --mat-form-field-container-height: 56px;           /* optional fixed height */
-}
 // End Edit Pointage Styles
+// ─── Reusable Form Field Width Utilities ──────────────────────────────
+// Use these classes on mat-form-field to control width consistently
+.field-xs  { width: 120px; max-width: 120px; }
+.field-sm  { width: 180px; max-width: 180px; }
+.field-md  { width: 260px; max-width: 260px; }
+.field-lg  { width: 360px; max-width: 360px; }
+.field-full { width: 100%; }
+
+.icon-lg {
+  font-size: 15px;   // bigger icon
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+}
+
+button[matMiniFab] {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  border: 1px solid #E0E0E0; 
+  background-color: white;
+  border-radius: 10%;
+  
+  .mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    stroke-linecap: round;
+  }
+}
+
+// ─── Jira-Inspired Dialog Panel ────────────────────────────────────────
+.jira-dialog-panel {
+  .mat-mdc-dialog-container {
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(9, 30, 66, 0.18), 0 0 1px rgba(9, 30, 66, 0.12);
+
+    .mdc-dialog__surface {
+      border-radius: 12px !important;
+      padding: 0 !important;
+    }
+  }
+
+// ─── Calendar Dialog Panel ─────────────────────────────────────────────
+.calendar-dialog-panel {
+  .mat-mdc-dialog-container {
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 12px 48px rgba(9, 30, 66, 0.2), 0 0 1px rgba(9, 30, 66, 0.14);
+
+    .mdc-dialog__surface {
+      border-radius: 16px !important;
+      padding: 0 !important;
+    }
+  }
+}
+}

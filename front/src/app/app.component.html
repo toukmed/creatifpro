@@ -1,24 +1,18 @@
-<div class="app-root-layout">
+<div class="app-layout" [class.sidebar-collapsed]="sidebarCollapsed">
   @if(showHeader()) {
-    <app-header></app-header>
-  }
-
-  <mat-drawer-container class="main-container">
-    
-    <!-- SIDE NAVIGATION -->
-    <mat-drawer mode="side" opened>
-      @if(showHeader()) {
-        <app-navigation></app-navigation>
-      }
-    </mat-drawer>
-
-    <!-- MAIN CONTENT -->
-    <mat-drawer-content>
-      <div class="page-content">
+    <app-header
+      [sidebarCollapsed]="sidebarCollapsed"
+      (toggleSidebar)="onSidebarToggle(!sidebarCollapsed)">
+    </app-header>
+    <div class="app-body">
+      <aside class="app-sidebar">
+        <app-navigation [collapsed]="sidebarCollapsed"></app-navigation>
+      </aside>
+      <main class="app-content">
         <router-outlet></router-outlet>
-      </div>
-    </mat-drawer-content>
-
-  </mat-drawer-container>
-
+      </main>
+    </div>
+  } @else {
+    <router-outlet></router-outlet>
+  }
 </div>

@@ -1,26 +1,25 @@
-<mat-toolbar id="toolbar" color="basic" class="header">
-  <span id="logo">
-    <a class="no-style-ref" style="font-size: 1em" routerLink="accueil">
-      <i>CREATIF PRO </i>
-    </a>
-    <small>BETA 0.0.1</small>
-  </span>
-  <div class="spacer"></div>
-  <button
-  matMiniFab
-  routerLinkActive="link-active"
-  (click)="onLogout()"
-  [matTooltip]="tooltipMessage"
->
-  <mat-icon  class="icon-lg">logout</mat-icon>
-</button>
-</mat-toolbar>
-<div style="margin: 10px 20px 10px 80px;">
-  <span id="logo">
-    <a class="no-style-ref" style="font-size: 1em" routerLink="accueil">
-      
-      <i>{{currentUrl}}</i>
-    </a>
-  </span>
+<div class="topbar">
+  <div class="topbar-start">
+    <button
+      class="sidebar-toggle"
+      (click)="toggleSidebar.emit()"
+      [attr.aria-label]="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+      <mat-icon>{{ sidebarCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
+    </button>
+    <div class="brand-link" routerLink="/accueil">
+      <div class="brand-logo"><span>C</span></div>
+      <span class="brand-name">CreatifPro</span>
+    </div>
+    <span class="topbar-divider"></span>
+    <div class="breadcrumb-trail">
+      <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
+        <span class="crumb" [class.crumb-active]="last">{{ crumb }}</span>
+        <mat-icon class="crumb-separator" *ngIf="!last">chevron_right</mat-icon>
+      </ng-container>
+    </div>
+  </div>
+  <div class="topbar-end">
+    <span class="version-tag">BETA 0.0.1</span>
+  </div>
 </div>
 

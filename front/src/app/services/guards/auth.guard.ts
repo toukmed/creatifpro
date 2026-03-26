@@ -14,9 +14,8 @@ export const authGuard: CanActivateFn = (
   const router: Router = inject(Router);
   const protectedRoutes: string[] = [
     '/accueil',
-    '/pointages/salaries',
-    '/pointages/horaires',
-    '/employes',
+    '/pointages',
+    '/employees',
     '/projets',
   ];
   let token = localStorage.getItem('auth_token');

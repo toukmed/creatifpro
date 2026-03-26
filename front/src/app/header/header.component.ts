@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
 import { filter } from 'rxjs';
 
 @Component({
@@ -9,34 +8,25 @@ import { filter } from 'rxjs';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  readonly login = 'login';
-  readonly tooltipMessage = 'Se déconnecter';
+  @Input() sidebarCollapsed = false;
+  @Output() toggleSidebar = new EventEmitter<void>();
 
-  currentUrl: string = 'accueil';
-
-
-  showHeader = false;
+  breadcrumbs: string[] = ['Accueil'];
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationEnd)
-      )
+      .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-
-        // URI without query params
-        const segments = event.url.split('/').filter(segment => segment);
-
-        // Join segments with ' -> '
-        this.currentUrl = segments.join(' -> ');
-        console.log(this.currentUrl);
+        const segments = event.url.split('/').filter(s => s && !s.startsWith('?'));
+        this.breadcrumbs = segments.length > 0
+          ? segments.map(s => this.formatSegment(s))
+          : ['Accueil'];
       });
   }
 
-  onLogout() {
-    window.localStorage.removeItem('auth_token');
-    this.router.navigate(['login']);
+  private formatSegment(segment: string): string {
+    return segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
   }
 }

@@ -38,6 +38,16 @@ export class ResourceService<T extends Resource> {
     return this.httpClient.get(url);
   }
 
+  public listById(
+    id: number,
+    endpoint: string,
+    body: any,
+  ): Observable<any> {
+    const url = `${this.baseUrl}/${endpoint}/${id}`;
+
+    return this.httpClient.post(url, body);
+  }
+
   public isExistBy(
     endpoint: string,
     idPointage: string,

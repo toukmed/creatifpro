@@ -8,6 +8,7 @@
 
 # Node
 /node_modules
+ node_module/*
 npm-debug.log
 yarn-error.log
 
@@ -37,6 +38,43 @@ yarn-error.log
 testem.log
 /typings
 
+# Environment files
+.env
+.env.local
+.env.*.local
+
 # System files
 .DS_Store
+/.Ds_Store
 Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Package lock (uncomment if using yarn)
+# package-lock.json
+
+# Optional: npm/yarn cache
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+.pnp.*
+
+# Editor directories and files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing
+/coverage
+/e2e/reports
+
+# Docker
+docker-compose.override.yml

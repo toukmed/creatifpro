@@ -1,21 +1,27 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
 })
-export class NavigationComponent {
-  @Input() sidenavOpened = true;
+export class NavigationComponent implements OnInit {
+  @Input() collapsed = false;
+
   navLinks = navLinks;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {}
+
+  onLogout(): void {
+    window.localStorage.removeItem('auth_token');
+    this.router.navigate(['login']);
+  }
 
   trackBy(index: number, el: any) {
     return el.link;
-  }
-
-  toggleSidenav() {
-    this.sidenavOpened = !this.sidenavOpened;
-    console.log('Sidenav toggled:', this.sidenavOpened);
   }
 }
 
@@ -23,22 +29,22 @@ export const navLinks = [
   {
     link: '/accueil',
     icon: 'home',
-    libelle: 'Acceuil',
+    libelle: 'Accueil',
     desc: "Page d'accueil",
     condition: true,
   },
   {
-    link: '/pointages/horaires',
+    link: '/pointages',
     icon: 'edit_calendar',
-    libelle: 'Pointage horaires',
-    desc: 'Pointage horaires',
+    libelle: 'Pointages',
+    desc: 'Pointages',
     condition: true,
   },
   {
-    link: '/pointages/salaries',
+    link: '/employees',
     icon: 'work_history',
-    libelle: 'Pointage salariés',
-    desc: 'Pointage salariés',
+    libelle: 'Employés',
+    desc: 'Employés',
     condition: true,
   },
 ].filter((l) => l.condition);

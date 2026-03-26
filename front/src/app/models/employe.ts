@@ -7,14 +7,9 @@ export class Employe extends Resource {
   cin?: string;
   phoneNumber?: string;
   integrationDate?: Date;
-  contractType?: ContractType;
   jobRole: string;
   hourlyRate?: number;
   salary?: number;
   projet?: Project;
 }
 
-export enum ContractType {
-  SALARIE,
-  HORAIRE,
-}
