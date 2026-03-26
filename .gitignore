@@ -32,3 +32,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment secrets – override locally, never commit real credentials ###
+# .env is committed with placeholder values; replace them before deploying.
+# .env.local overrides .env locally and is never committed.
+.env.local
+.env.*.local

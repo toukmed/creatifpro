@@ -1,62 +1,210 @@
+# ============================================================
+# CreatifPro – Docker Compose
+#
+# Prerequisites:
+#   Fill in the placeholder values in .env with your own
+#   passwords before running `docker compose up -d`.
+# ============================================================
+
 services:
+
+  # ──────────────────────────────────────────
+  # Reverse proxy & edge router – Traefik v3
+  # ──────────────────────────────────────────
+  traefik:
+    image: traefik:v3
+    container_name: creatif_traefik
+    command:
+      # Docker provider – discover services via labels
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=creatif-network"
+      # HTTP entrypoint
+      - "--entrypoints.web.address=:80"
+      # Health-check ping endpoint
+      - "--ping=true"
+      # ── Uncomment the block below to enable HTTPS via Let's Encrypt ──
+      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # - "--entrypoints.websecure.address=:443"
+      # - "--certificatesresolvers.letsencrypt.acme.email=admin@toukrichtemed.com"
+      # - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+    ports:
+      - "80:80"
+      # - "443:443"   # uncomment to enable HTTPS
+    volumes:
+      # Read-only Docker socket – Traefik needs it to discover services
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      # - "letsencrypt:/letsencrypt"   # uncomment to enable HTTPS
+    networks:
+      - creatif-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+        reservations:
+          cpus: "0.1"
+          memory: 32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ──────────────────────────────────────────
+  # Database – PostgreSQL 17
+  # ──────────────────────────────────────────
   db:
-    image: postgres:17
+    image: postgres:17-alpine
     container_name: creatif_db
+    env_file: .env
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"   # bind to localhost only – not exposed publicly
     networks:
       - creatif-network
-    restart: always
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
+  # ──────────────────────────────────────────
+  # Backend – Spring Boot
+  # ──────────────────────────────────────────
   back:
-    build: ./back
+    build:
+      context: ./back
+      dockerfile: Dockerfile
     container_name: creatif_back
+    env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      JAVA_OPTS: ${JAVA_OPTS:--XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0}
     depends_on:
-      - db
-    ports:
-      - "8080:8080"
+      db:
+        condition: service_healthy   # wait until postgres is ready
+    # No port binding needed – Traefik reaches the backend via the Docker network
     networks:
       - creatif-network
-    restart: always
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "traefik.enable=true"
+      # Route /api/* to this service (higher priority than the frontend catch-all)
+      - "traefik.http.routers.back.rule=PathPrefix(`/api/`)"
+      - "traefik.http.routers.back.entrypoints=web"
+      - "traefik.http.services.back.loadbalancer.server.port=8080"
+      # ── Uncomment to expose /api/ over HTTPS (reuses the same 'back' service) ──
+      # - "traefik.http.routers.back-secure.rule=PathPrefix(`/api/`)"
+      # - "traefik.http.routers.back-secure.entrypoints=websecure"
+      # - "traefik.http.routers.back-secure.service=back"
+      # - "traefik.http.routers.back-secure.tls=true"
+      # - "traefik.http.routers.back-secure.tls.certresolver=letsencrypt"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
 
-  nginx:
-    build: ./front   # build la partie front + Nginx
-    container_name: creatif_nginx
-    ports:
-      - "80:80"
-    restart: always
+  # ──────────────────────────────────────────
+  # Frontend – Angular SPA (nginx static server)
+  # Traefik is the public entry point; this container only serves static files.
+  # ──────────────────────────────────────────
+  front:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: creatif_front
+    # No port binding needed – Traefik reaches the container via the Docker network
+    depends_on:
+      traefik:
+        condition: service_healthy
     networks:
       - creatif-network
-
-#  certbot:
-#    image: certbot/certbot:latest
-#    volumes:
-#      - ./certbot/www:/var/www/certbot:rw
-#      - ./certbot/conf:/etc/letsencrypt:rw
-#    networks:
-#      - creatif-network
-#  certbot-renew:
-#    image: certbot/certbot:latest
-#    volumes:
-#      - ./certbot/www:/var/www/certbot:rw
-#      - ./certbot/conf:/etc/letsencrypt:rw
-#    entrypoint: [ "/bin/sh", "-c" ]
-#    command: [ "while true; do certbot renew --webroot --webroot-path /var/www/certbot/ --quiet && sleep 12h; done" ]
-#    networks:
-#      - creatif-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "traefik.enable=true"
+      # Catch-all route – lower priority than /api/ because it is less specific
+      - "traefik.http.routers.front.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.front.entrypoints=web"
+      - "traefik.http.services.front.loadbalancer.server.port=80"
+      # ── Uncomment to serve the frontend over HTTPS (reuses the same 'front' service) ──
+      # - "traefik.http.routers.front-secure.rule=PathPrefix(`/`)"
+      # - "traefik.http.routers.front-secure.entrypoints=websecure"
+      # - "traefik.http.routers.front-secure.service=front"
+      # - "traefik.http.routers.front-secure.tls=true"
+      # - "traefik.http.routers.front-secure.tls.certresolver=letsencrypt"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+        reservations:
+          cpus: "0.1"
+          memory: 32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   postgres_data:
+    driver: local
+  # letsencrypt:   # uncomment to enable HTTPS / Let's Encrypt certificate storage
+  #   driver: local
 
 networks:
   creatif-network:
+    driver: bridge
