@@ -7,8 +7,9 @@ import { Resource } from '../models/resource';
   providedIn: 'root',
 })
 export class ResourceService<T extends Resource> {
-  //private readonly baseUrl = 'http://72.60.91.94:8080/api';
-  private readonly baseUrl = 'http://localhost:8080/api';
+  // For local development, use: 'http://localhost:8080/api'
+  // For production (Traefik proxies /api/ to the backend), use a relative URL:
+  private readonly baseUrl = '/api';
 
   constructor(private httpClient: HttpClient) {}
 

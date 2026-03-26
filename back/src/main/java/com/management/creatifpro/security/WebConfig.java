@@ -20,12 +20,12 @@ public class WebConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("http://72.60.91.94");
-        config.addAllowedOrigin("https://72.60.91.94");
-        config.addAllowedOrigin("https://toukrichtemed.com");
-        config.addAllowedOrigin("http://toukrichtemed.com");
-        config.addAllowedOrigin("https://www.toukrichtemed.com");
-        config.addAllowedOrigin("http://www.toukrichtemed.com");
+        config.addAllowedOrigin("http://195.35.25.62");
+        config.addAllowedOrigin("https://195.35.25.62");
+        config.addAllowedOrigin("https://growthserved.com");
+        config.addAllowedOrigin("http://growthserved.com");
+        config.addAllowedOrigin("https://www.growthserved.com");
+        config.addAllowedOrigin("http://www.growthserved.com");
         config.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
                 "Accept", "Authorization", "Origin, Accept", "X-Requested-With",
                 "Access-Control-Request-Method", "Access-Control-Request-Headers"));
