@@ -58,6 +58,11 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd ~/projects/creatifpro/creatifpro
+            echo "=== Pre-deploy database backup ==="
+            bash scripts/backup-db.sh
+            echo "=== Pulling latest code ==="
             git pull origin main
+            echo "=== Building images ==="
             docker compose build --parallel
+            echo "=== Deploying ==="
             docker compose up -d
