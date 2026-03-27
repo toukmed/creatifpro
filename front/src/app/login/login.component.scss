@@ -1,14 +1,341 @@
-.login-container {
+@use '../../styles/variables' as *;
+
+// ─── Auth Page Layout ──────────────────────────────────────────────────
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+  background: $background;
+}
+
+// ─── Left Brand Panel ──────────────────────────────────────────────────
+.auth-brand {
+  flex: 0 0 44%;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 70vh;
+  background: linear-gradient(145deg, #ff6600 0%, #ff8533 50%, #ff6600 100%);
+  position: relative;
+  overflow: hidden;
+
+  .brand-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 48px;
+  }
+
+  .brand-logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+
+    span {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+  }
+
+  .brand-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 12px;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-tagline {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 280px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  // Decorative floating circles
+  .brand-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .deco-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .deco-1 {
+    width: 300px;
+    height: 300px;
+    top: -80px;
+    right: -60px;
+  }
+
+  .deco-2 {
+    width: 200px;
+    height: 200px;
+    bottom: -40px;
+    left: -40px;
+  }
+
+  .deco-3 {
+    width: 120px;
+    height: 120px;
+    top: 40%;
+    left: 10%;
+  }
 }
 
-.login-card {
-  width: 30%;
+// ─── Right Form Panel ──────────────────────────────────────────────────
+.auth-form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
 }
 
-.full-width {
+.auth-form-wrapper {
   width: 100%;
+  max-width: 440px;
+}
+
+.auth-header {
+  margin-bottom: 28px;
+
+  .auth-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .auth-subtitle {
+    font-size: 14px;
+    color: $text-secondary;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+// ─── Toggle Buttons ────────────────────────────────────────────────────
+.auth-toggle {
+  display: flex;
+  background: $background;
+  border-radius: $radius-md;
+  padding: 4px;
+  margin-bottom: 28px;
+  border: 1px solid $border-light;
+
+  .toggle-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-secondary;
+    background: transparent;
+    cursor: pointer;
+    transition: all $transition;
+    font-family: inherit;
+
+    &:hover:not(.active) {
+      color: $text-primary;
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    &.active {
+      background: #fff;
+      color: #ff6600;
+      box-shadow: $shadow-sm;
+    }
+  }
+}
+
+// ─── Form Styles ───────────────────────────────────────────────────────
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-field {
+  width: 100%;
+
+  .mat-icon[matPrefix] {
+    color: $text-muted;
+    margin-right: 8px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+
+  .auth-field {
+    flex: 1;
+  }
+}
+
+// ─── Error / Success Messages ──────────────────────────────────────────
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: $danger-bg;
+  border: 1px solid rgba($danger-red, 0.15);
+  border-radius: $radius-md;
+  color: $danger-red;
+  font-size: 13px;
+  margin-bottom: 4px;
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+}
+
+.auth-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: $success-bg;
+  border: 1px solid rgba($success-green, 0.15);
+  border-radius: $radius-md;
+  color: $success-green;
+  font-size: 13px;
+  margin-bottom: 4px;
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+}
+
+// ─── Submit Button ─────────────────────────────────────────────────────
+.auth-submit-btn {
+  width: 100%;
+  height: 46px;
+  border-radius: $radius-md !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px;
+  background: #ff6600 !important;
+  color: #fff !important;
+  margin-top: 8px;
+  transition: all $transition;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover:not(:disabled) {
+    background: #e55b00 !important;
+    box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+  }
+
+  &:disabled {
+    background: $border-color !important;
+    color: $text-muted !important;
+    cursor: not-allowed;
+  }
+
+  .btn-spinner {
+    display: inline-block;
+
+    ::ng-deep circle {
+      stroke: #fff;
+    }
+  }
+}
+
+// ─── Footer Link ───────────────────────────────────────────────────────
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 13px;
+  color: $text-secondary;
+
+  .auth-link {
+    color: #ff6600;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color $transition;
+
+    &:hover {
+      color: #e55b00;
+      text-decoration: underline;
+    }
+  }
+}
+
+// ─── Responsive ────────────────────────────────────────────────────────
+@media (max-width: 900px) {
+  .auth-page {
+    flex-direction: column;
+  }
+
+  .auth-brand {
+    flex: 0 0 auto;
+    padding: 48px 24px;
+    min-height: 200px;
+
+    .brand-title {
+      font-size: 24px;
+    }
+
+    .brand-tagline {
+      font-size: 13px;
+    }
+  }
+
+  .auth-form-panel {
+    padding: 32px 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-brand {
+    min-height: 160px;
+    padding: 32px 20px;
+
+    .brand-logo-circle {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 16px;
+
+      span {
+        font-size: 26px;
+      }
+    }
+  }
+
+  .auth-form-wrapper {
+    max-width: 100%;
+  }
 }
