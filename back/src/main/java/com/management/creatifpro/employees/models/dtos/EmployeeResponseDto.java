@@ -17,5 +17,8 @@ public record EmployeeResponseDto(
         LocalDate dateIntegration,
         Float hourlyRate,
         Float salary,
+        String chantier,
+        String nCnss,
+        String rib,
         ProjectResponseDto project
         ) { }
