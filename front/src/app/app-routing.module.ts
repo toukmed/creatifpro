@@ -12,6 +12,7 @@ import { EmployeesComponent } from './components/employees/employees.component';
 import { UsersComponent } from './components/users/users.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { MaterielsComponent } from './components/materiels/materiels.component';
+import { StockComponent } from './components/stock/stock.component';
 
 const routes: Routes = [
   {
@@ -50,6 +51,8 @@ const routes: Routes = [
   {
     path: 'materiels',
     component: MaterielsComponent,
+    path: 'stock',
+    component: StockComponent,
     canActivate: [authGuard, roleGuard],
     data: { animation: 'root', roles: ['SUPER_ADMIN', 'ADMIN'] },
   },
