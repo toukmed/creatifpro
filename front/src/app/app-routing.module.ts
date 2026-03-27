@@ -11,6 +11,7 @@ import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/
 import { EmployeesComponent } from './components/employees/employees.component';
 import { UsersComponent } from './components/users/users.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { MaterielsComponent } from './components/materiels/materiels.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,12 @@ const routes: Routes = [
   {
     path: 'projets',
     component: ProjectsComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { animation: 'root', roles: ['SUPER_ADMIN', 'ADMIN'] },
+  },
+  {
+    path: 'materiels',
+    component: MaterielsComponent,
     canActivate: [authGuard, roleGuard],
     data: { animation: 'root', roles: ['SUPER_ADMIN', 'ADMIN'] },
   },

@@ -38,6 +38,13 @@ export const navLinks: NavLink[] = [
     roles: ['SUPER_ADMIN', 'ADMIN'],
   },
   {
+    link: '/materiels',
+    icon: 'construction',
+    libelle: 'Matériels',
+    desc: 'Gestion des matériels',
+    roles: ['SUPER_ADMIN', 'ADMIN'],
+  },
+  {
     link: '/utilisateurs',
     icon: 'group',
     libelle: 'Utilisateurs',
