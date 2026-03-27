@@ -38,3 +38,10 @@ build/
 # .env.local overrides .env locally and is never committed.
 .env.local
 .env.*.local
+.env
+
+.DS_Store
+../.DS_Store
+
+front/node_modules/
+node_modules
