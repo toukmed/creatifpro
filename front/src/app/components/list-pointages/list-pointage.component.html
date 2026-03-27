@@ -90,7 +90,7 @@
         <mat-header-cell *matHeaderCellDef class="col-actions"></mat-header-cell>
         <mat-cell *matCellDef="let row" class="col-actions">
           <div class="row-actions">
-            <button
+            <!--button
               (click)="edit(row, true)"
               mat-icon-button
               matTooltip="Voir les détails"
@@ -98,7 +98,7 @@
               type="button"
             >
               <mat-icon>visibility</mat-icon>
-            </button>
+            </button-->
             <button
               (click)="edit(row, false)"
               mat-icon-button
@@ -108,7 +108,7 @@
             >
               <mat-icon>edit</mat-icon>
             </button>
-            <button
+            <!--button
               (click)="remove(row)"
               mat-icon-button
               matTooltip="Supprimer"
@@ -117,7 +117,7 @@
               aria-label="Supprimer ce pointage"
             >
               <mat-icon>delete_outline</mat-icon>
-            </button>
+            </button-->
           </div>
         </mat-cell>
       </ng-container>
