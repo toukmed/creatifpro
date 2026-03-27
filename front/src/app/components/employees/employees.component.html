@@ -75,9 +75,9 @@
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="form-field">
-            <mat-label>Taux horaire</mat-label>
+            <mat-label>Taux journalier</mat-label>
             <mat-icon matPrefix>payments</mat-icon>
-            <input matInput type="number" formControlName="hourlyRate" placeholder="Ex: 50" />
+            <input matInput type="number" formControlName="dailyRate" placeholder="Ex: 50" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="form-field">
@@ -190,7 +190,9 @@
             {{ def.libelle }}
           </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            @if (def.path === 'project.code') {
+            @if (def.path === 'fullName') {
+              {{ element.lastName }} {{ element.firstName }}
+            } @else if (def.path === 'project.code') {
               <span class="project-tag">{{ resolve(def.path, element) }}</span>
             } @else if (def.path === 'salary') {
               @if (element.salary) {

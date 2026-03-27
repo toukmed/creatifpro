@@ -36,7 +36,7 @@ public class EmployeeEntity extends BaseEntity {
     private String cin;
     private String phoneNumber;
     private String jobRole;
-    private Float hourlyRate;
+    private Float dailyRate;
     private Float salary;
     private String chantier;
     private String nCnss;

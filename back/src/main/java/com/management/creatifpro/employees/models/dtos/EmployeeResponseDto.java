@@ -15,7 +15,7 @@ public record EmployeeResponseDto(
         String phoneNumber,
         String jobRole,
         LocalDate dateIntegration,
-        Float hourlyRate,
+        Float dailyRate,
         Float salary,
         String chantier,
         String nCnss,

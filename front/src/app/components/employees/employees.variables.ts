@@ -1,14 +1,14 @@
 
 export const columns = [
-  { path: 'firstName', libelle: 'Prénom' },
-  { path: 'lastName', libelle: 'Nom' },
+  { path: 'fullName', libelle: 'Nom et Prénom' },
   { path: 'cin', libelle: 'CIN' },
-  { path: 'chantier', libelle: 'Chantier' },
+  { path: 'phoneNumber', libelle: 'Téléphone' },
+  { path: 'dateIntegration', libelle: 'Date d\'intégration' },
   { path: 'nCnss', libelle: 'N° CNSS' },
   { path: 'rib', libelle: 'RIB' },
   { path: 'project.code', libelle: 'Projet' },
-  { path: 'dateIntegration', libelle: 'Date d\'intégration' },
-  { path: 'phoneNumber', libelle: 'Téléphone' },
+  { path: 'chantier', libelle: 'Chantier' },
   { path: 'jobRole', libelle: 'Poste' },
   { path: 'salary', libelle: 'Salaire' },
+  { path: 'dailyRate', libelle: 'Taux journalier' },
 ];

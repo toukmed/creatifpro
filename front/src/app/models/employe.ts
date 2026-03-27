@@ -8,7 +8,7 @@ export class Employe extends Resource {
   phoneNumber?: string;
   dateIntegration?: Date;
   jobRole: string;
-  hourlyRate?: number;
+  dailyRate?: number;
   salary?: number;
   chantier?: string;
   nCnss?: string;

@@ -96,7 +96,7 @@ public class EmployeeService {
         existing.setPhoneNumber(request.phoneNumber());
         existing.setJobRole(request.jobRole());
         existing.setIntegrationDate(request.dateIntegration());
-        existing.setHourlyRate(request.hourlyRate());
+        existing.setDailyRate(request.dailyRate());
         existing.setSalary(request.salary());
         existing.setProject(project);
 
