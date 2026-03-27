@@ -55,6 +55,7 @@ import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/
 import { CalendarPointageDialogComponent } from './components/calendar-pointage-dialog/calendar-pointage-dialog.component';
 import { MatListModule } from '@angular/material/list';
 import { EmployeesComponent } from './components/employees/employees.component';
+import { UsersComponent } from './components/users/users.component';
 
 registerLocaleData(localeFr);
 
@@ -108,6 +109,7 @@ const materialModules = [
     VisuPointageComponent,
     CalendarPointageDialogComponent,
     EmployeesComponent,
+    UsersComponent,
   ],
   imports: [
     ...materialModules,

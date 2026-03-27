@@ -13,8 +13,10 @@ public class UserMapper {
                 .builder()
                 .id(entity.getId())
                 .login(entity.getLogin())
+                .email(entity.getEmail())
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
+                .role(entity.getRole().name())
                 .build();
     }
 

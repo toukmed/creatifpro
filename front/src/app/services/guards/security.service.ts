@@ -1,27 +1,61 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
+interface DecodedToken {
+  iss?: string;
+  exp?: number;
+  iat?: number;
+  firstName?: string;
+  lastName?: string;
+  role?: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class SecurityService {
-  private readonly loggedIn = false;
-  private readonly token = window.localStorage.getItem('auth_token');
-
   constructor(private httpClient: HttpClient) {}
 
   isLoggedIn(): boolean {
-    // Check if the token is present and not expired
-    return !!this.token && !this.isTokenExpired(this.token);
+    const token = window.localStorage.getItem('auth_token');
+    return !!token && !this.isTokenExpired(token);
   }
 
   private isTokenExpired(token: string): boolean {
-    // Implement your token expiration logic here
-    // For example, compare the token's expiration date with the current date
-    const expirationDate =
-      new Date(/* Extract the expiration date from the token */);
-    return expirationDate <= new Date();
+    try {
+      const decodedToken = jwtDecode(token);
+      if (!decodedToken.exp) return true;
+      return decodedToken.exp < Date.now() / 1000;
+    } catch {
+      return true;
+    }
+  }
+
+  private getDecodedToken(): DecodedToken | null {
+    const token = window.localStorage.getItem('auth_token');
+    if (!token) return null;
+    try {
+      return jwtDecode<DecodedToken>(token);
+    } catch {
+      return null;
+    }
+  }
+
+  getUserRole(): string | null {
+    const decoded = this.getDecodedToken();
+    return decoded?.role ?? null;
+  }
+
+  isAdmin(): boolean {
+    return this.getUserRole() === 'ADMIN';
+  }
+
+  getUserName(): string | null {
+    const decoded = this.getDecodedToken();
+    if (!decoded) return null;
+    return `${decoded.firstName ?? ''} ${decoded.lastName ?? ''}`.trim() || decoded.iss || null;
   }
 
   setAuthToken(token: string) {
@@ -30,5 +64,9 @@ export class SecurityService {
     } else {
       window.localStorage.removeItem('auth_token');
     }
+  }
+
+  clearAuthToken(): void {
+    window.localStorage.removeItem('auth_token');
   }
 }

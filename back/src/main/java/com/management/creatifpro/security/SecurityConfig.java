@@ -3,6 +3,7 @@ package com.management.creatifpro.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final UserAuthProvider userAuthProvider;
@@ -25,8 +27,13 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtAuthFilter(userAuthProvider), BasicAuthenticationFilter.class)
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) ->
-                                requests.anyRequest().permitAll()
-
+                        requests
+                                .requestMatchers("/api/login").permitAll()
+                                .requestMatchers("/health", "/actuator/**").permitAll()
+                                .requestMatchers("/api/register").hasRole("ADMIN")
+                                .requestMatchers("/api/employees/**").hasRole("ADMIN")
+                                .requestMatchers("/api/users/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
                 );
         return http.build();
     }

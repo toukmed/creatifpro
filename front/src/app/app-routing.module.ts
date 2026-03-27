@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { authGuard } from './services/guards/auth.guard';
+import { roleGuard } from './services/guards/role.guard';
 import { ListPointageComponent } from './components/list-pointages/list-pointage.component';
 import { AddPointageComponent } from './components/add-pointage/add-pointage.component';
 import { EditPointageComponent } from './components/edit-pointage/edit-pointage.component';
 import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/visu-pointage.component';
 import { EmployeesComponent } from './components/employees/employees.component';
+import { UsersComponent } from './components/users/users.component';
 
 const routes: Routes = [
   {
@@ -28,8 +30,14 @@ const routes: Routes = [
   {
     path: 'employees',
     component: EmployeesComponent,
-    canActivate: [authGuard],
-    data: { animation: 'root' },
+    canActivate: [authGuard, roleGuard],
+    data: { animation: 'root', roles: ['ADMIN'] },
+  },
+  {
+    path: 'utilisateurs',
+    component: UsersComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { animation: 'root', roles: ['ADMIN'] },
   },
   {
     path: 'pointages/add',

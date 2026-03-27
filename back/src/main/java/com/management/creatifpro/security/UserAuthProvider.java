@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -43,6 +45,7 @@ public class UserAuthProvider {
                 .withExpiresAt(validity)
                 .withClaim("firstName", userDto.getFirstName())
                 .withClaim("lastName", userDto.getLastName())
+                .withClaim("role", userDto.getRole())
                 .sign(Algorithm.HMAC256(secretKey));
     }
 
@@ -52,13 +55,20 @@ public class UserAuthProvider {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decoded = verifier.verify(token);
 
+        String role = decoded.getClaim("role").asString();
+
         UserDto user = UserDto.builder()
                 .login(decoded.getIssuer())
                 .firstName(decoded.getClaim("firstName").asString())
                 .lastName(decoded.getClaim("lastName").asString())
+                .role(role)
                 .build();
 
-        return new UsernamePasswordAuthenticationToken(user,null, Collections.emptyList());
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_" + role)
+        );
+
+        return new UsernamePasswordAuthenticationToken(user, null, authorities);
     }
 
     public Authentication validateTokenStrongly(String token) {
@@ -69,6 +79,10 @@ public class UserAuthProvider {
         UserEntity user = userRepository.findByLogin(decoded.getIssuer())
                 .orElseThrow(() -> new AppException("User with login: " + decoded.getIssuer() + " not found", HttpStatus.NOT_FOUND));
 
-        return new UsernamePasswordAuthenticationToken(user,null, Collections.emptyList());
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
+        );
+
+        return new UsernamePasswordAuthenticationToken(user, null, authorities);
     }
 }

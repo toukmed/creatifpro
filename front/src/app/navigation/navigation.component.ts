@@ -1,5 +1,43 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SecurityService } from '../services/guards/security.service';
+
+export interface NavLink {
+  link: string;
+  icon: string;
+  libelle: string;
+  desc: string;
+  roles?: string[];
+}
+
+const allNavLinks: NavLink[] = [
+  {
+    link: '/accueil',
+    icon: 'home',
+    libelle: 'Accueil',
+    desc: "Page d'accueil",
+  },
+  {
+    link: '/pointages',
+    icon: 'edit_calendar',
+    libelle: 'Pointages',
+    desc: 'Pointages',
+  },
+  {
+    link: '/employees',
+    icon: 'work_history',
+    libelle: 'Employés',
+    desc: 'Employés',
+    roles: ['ADMIN'],
+  },
+  {
+    link: '/utilisateurs',
+    icon: 'group',
+    libelle: 'Utilisateurs',
+    desc: 'Gestion des utilisateurs',
+    roles: ['ADMIN'],
+  },
+];
 
 @Component({
   selector: 'app-navigation',
@@ -9,42 +47,26 @@ import { Router } from '@angular/router';
 export class NavigationComponent implements OnInit {
   @Input() collapsed = false;
 
-  navLinks = navLinks;
+  navLinks: NavLink[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private securityService: SecurityService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const userRole = this.securityService.getUserRole();
+    this.navLinks = allNavLinks.filter(
+      (link) => !link.roles || (userRole && link.roles.includes(userRole))
+    );
+  }
 
   onLogout(): void {
-    window.localStorage.removeItem('auth_token');
+    this.securityService.clearAuthToken();
     this.router.navigate(['login']);
   }
 
-  trackBy(index: number, el: any) {
+  trackBy(index: number, el: NavLink) {
     return el.link;
   }
 }
-
-export const navLinks = [
-  {
-    link: '/accueil',
-    icon: 'home',
-    libelle: 'Accueil',
-    desc: "Page d'accueil",
-    condition: true,
-  },
-  {
-    link: '/pointages',
-    icon: 'edit_calendar',
-    libelle: 'Pointages',
-    desc: 'Pointages',
-    condition: true,
-  },
-  {
-    link: '/employees',
-    icon: 'work_history',
-    libelle: 'Employés',
-    desc: 'Employés',
-    condition: true,
-  },
-].filter((l) => l.condition);

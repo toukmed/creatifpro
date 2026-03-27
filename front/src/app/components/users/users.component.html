@@ -1,0 +1,198 @@
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Utilisateurs</h1>
+      <span class="record-count">{{ dataSource.data.length }} utilisateurs</span>
+    </div>
+    <div class="header-right">
+      <button
+        (click)="toggleCreateForm()"
+        mat-flat-button
+        color="primary"
+        class="btn-create">
+        <mat-icon>{{ showCreateForm ? 'close' : 'person_add' }}</mat-icon>
+        {{ showCreateForm ? 'Annuler' : 'Ajouter un utilisateur' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Create User Form -->
+  @if (showCreateForm) {
+    <div class="create-form-card">
+      <h3 class="form-title">Nouveau utilisateur</h3>
+      <form [formGroup]="createForm" (ngSubmit)="onCreateUser()" class="create-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nom</mat-label>
+            <mat-icon matPrefix>badge</mat-icon>
+            <input matInput formControlName="nom" autocomplete="family-name" />
+            @if (createForm.get('nom')?.hasError('required') && createForm.get('nom')?.touched) {
+              <mat-error>Le nom est requis</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Prénom</mat-label>
+            <mat-icon matPrefix>badge</mat-icon>
+            <input matInput formControlName="prenom" autocomplete="given-name" />
+            @if (createForm.get('prenom')?.hasError('required') && createForm.get('prenom')?.touched) {
+              <mat-error>Le prénom est requis</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Email</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput formControlName="email" type="email" autocomplete="email" />
+            @if (createForm.get('email')?.hasError('required') && createForm.get('email')?.touched) {
+              <mat-error>L'email est requis</mat-error>
+            }
+            @if (createForm.get('email')?.hasError('email') && createForm.get('email')?.touched) {
+              <mat-error>Format d'email invalide</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Identifiant</mat-label>
+            <mat-icon matPrefix>person_outline</mat-icon>
+            <input matInput formControlName="login" autocomplete="username" />
+            @if (createForm.get('login')?.hasError('required') && createForm.get('login')?.touched) {
+              <mat-error>L'identifiant est requis</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Mot de passe</mat-label>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="new-password" />
+            <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword" tabindex="-1">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (createForm.get('password')?.hasError('required') && createForm.get('password')?.touched) {
+              <mat-error>Le mot de passe est requis</mat-error>
+            }
+            @if (createForm.get('password')?.hasError('minlength') && createForm.get('password')?.touched) {
+              <mat-error>Minimum 6 caractères</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Confirmer le mot de passe</mat-label>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" autocomplete="new-password" />
+            <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword" tabindex="-1">
+              <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (createForm.get('confirmPassword')?.hasError('required') && createForm.get('confirmPassword')?.touched) {
+              <mat-error>La confirmation est requise</mat-error>
+            }
+            @if (createForm.get('confirmPassword')?.hasError('passwordMismatch') && createForm.get('confirmPassword')?.touched) {
+              <mat-error>Les mots de passe ne correspondent pas</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (errorMessage) {
+          <div class="form-message error">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        @if (successMessage) {
+          <div class="form-message success">
+            <mat-icon>check_circle_outline</mat-icon>
+            <span>{{ successMessage }}</span>
+          </div>
+        }
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="toggleCreateForm()">Annuler</button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="createForm.invalid || isCreating">
+            @if (isCreating) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Créer l'utilisateur
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Users Table -->
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" class="users-table">
+        <ng-container matColumnDef="firstName">
+          <th mat-header-cell *matHeaderCellDef>Prénom</th>
+          <td mat-cell *matCellDef="let user">{{ user.firstName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastName">
+          <th mat-header-cell *matHeaderCellDef>Nom</th>
+          <td mat-cell *matCellDef="let user">{{ user.lastName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="login">
+          <th mat-header-cell *matHeaderCellDef>Identifiant</th>
+          <td mat-cell *matCellDef="let user">{{ user.login }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>Rôle</th>
+          <td mat-cell *matCellDef="let user">
+            <span class="role-badge" [class.admin]="user.role === 'ADMIN'" [class.pointeur]="user.role === 'POINTEUR'">
+              {{ getRoleLabel(user.role) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let user">
+            @if (user.role !== 'ADMIN') {
+              <button mat-icon-button color="warn" (click)="deleteUser(user)" matTooltip="Supprimer">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+            Aucun utilisateur trouvé
+          </td>
+        </tr>
+      </table>
+
+      <mat-paginator
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 25]"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  }
+</div>
+

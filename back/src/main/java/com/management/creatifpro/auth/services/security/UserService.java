@@ -5,6 +5,7 @@ import com.management.creatifpro.auth.models.dtos.CredentialDto;
 import com.management.creatifpro.auth.models.dtos.RegistrationDto;
 import com.management.creatifpro.auth.models.dtos.UserDto;
 import com.management.creatifpro.auth.models.entities.UserEntity;
+import com.management.creatifpro.auth.models.enums.Role;
 import com.management.creatifpro.auth.repository.UserRepository;
 import com.management.creatifpro.common.exceptions.AppException;
 import com.management.creatifpro.common.specifications.SecuritySpecificationsUtils;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.CharBuffer;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -25,6 +27,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+
+    public List<UserDto> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
 
     public UserDto login(CredentialDto credentialDto) {
         UserEntity user = userRepository
@@ -43,28 +52,37 @@ public class UserService {
 
             UserEntity userEntity = UserEntity
                     .builder()
-                    .firstName(registrationDto.firstName())
-                    .lastName(registrationDto.lastName())
+                    .firstName(registrationDto.prenom())
+                    .lastName(registrationDto.nom())
+                    .email(registrationDto.email())
                     .login(registrationDto.login())
                     .password(passwordEncoder.encode(CharBuffer.wrap(registrationDto.password())))
+                    .role(Role.POINTEUR)
                     .build();
 
             return userMapper.toDto(userRepository.save(userEntity));
         } else {
-            throw new AppException("User with login: " + registrationDto.login() + " exist already", HttpStatus.BAD_REQUEST);
+            throw new AppException("Un utilisateur avec cet identifiant ou cet email existe déjà", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public void deleteById(Long id) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException("Utilisateur non trouvé", HttpStatus.NOT_FOUND));
+        if (Role.ADMIN.equals(user.getRole())) {
+            throw new AppException("Impossible de supprimer un administrateur", HttpStatus.BAD_REQUEST);
+        }
+        userRepository.deleteById(id);
     }
 
     private Optional<UserEntity> findUser(RegistrationDto registrationDto) {
 
-        Optional<Specification<UserEntity>> firstNameSpec =
-                Optional.of(SecuritySpecificationsUtils.likeValue("firstName", registrationDto.firstName()));
-        Optional<Specification<UserEntity>> lastNameSpec =
-                Optional.of(SecuritySpecificationsUtils.likeValue("lastName", registrationDto.lastName()));
         Optional<Specification<UserEntity>> loginSpec =
                 Optional.of(SecuritySpecificationsUtils.likeValue("login", registrationDto.login()));
+        Optional<Specification<UserEntity>> emailSpec =
+                Optional.of(SecuritySpecificationsUtils.likeValue("email", registrationDto.email()));
 
-        Specification<UserEntity> specs = Stream.of(firstNameSpec, lastNameSpec, loginSpec)
+        Specification<UserEntity> specs = Stream.of(loginSpec, emailSpec)
                 .map(Optional::get)
                 .reduce(Specification::or)
                 .orElse(null);

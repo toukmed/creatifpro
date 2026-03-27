@@ -25,6 +25,10 @@ export class ResourceService<T extends Resource> {
     return this.httpClient.post<T>(`${this.baseUrl}/${endpoint}/create`, item);
   }
 
+  public getAll(endpoint: string): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}/${endpoint}`);
+  }
+
   public update(item: T, endpoint: string): Observable<T> {
     return this.httpClient.put<T>(`${this.baseUrl}/${endpoint}/update`, item);
   }

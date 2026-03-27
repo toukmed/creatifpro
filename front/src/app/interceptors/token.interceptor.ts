@@ -1,8 +1,6 @@
 import {
-  HttpClient,
   HttpHandler,
   HttpInterceptor,
-  HttpInterceptorFn,
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -11,9 +9,16 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class tokenInterceptor implements HttpInterceptor {
+  private readonly publicEndpoints = ['/api/login', '/api/register'];
+
   constructor(private router: Router) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler) {
+    // Skip token injection for public endpoints
+    if (this.publicEndpoints.some(url => request.url.includes(url))) {
+      return next.handle(request);
+    }
+
     let token = localStorage.getItem('auth_token');
     if (token) {
       let decodedToken = jwtDecode(token);
@@ -26,7 +31,7 @@ export class tokenInterceptor implements HttpInterceptor {
           headers: request.headers.set('Authorization', 'Bearer ' + token),
         });
       } else {
-        localStorage.removeItem('auth-token');
+        localStorage.removeItem('auth_token');
         this.router.navigate(['login']);
       }
     } else {
