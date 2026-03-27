@@ -42,6 +42,39 @@
           </mat-form-field>
         </div>
 
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Client</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="client" placeholder="Ex: Client SA" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>N° BC</mat-label>
+            <mat-icon matPrefix>receipt</mat-icon>
+            <input matInput formControlName="nBc" placeholder="Ex: BC-2024-001" />
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Désignation</mat-label>
+            <mat-icon matPrefix>description</mat-icon>
+            <input matInput formControlName="designation" placeholder="Ex: Construction d'un stade" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>État du projet</mat-label>
+            <mat-icon matPrefix>flag</mat-icon>
+            <mat-select formControlName="etatProjet">
+              <mat-option [value]="null">-- Aucun --</mat-option>
+              @for (option of etatProjetOptions; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
         @if (errorMessage) {
           <div class="form-message error">
             <mat-icon>error_outline</mat-icon>
@@ -97,6 +130,32 @@
         <ng-container matColumnDef="reference">
           <mat-header-cell *matHeaderCellDef>Référence</mat-header-cell>
           <mat-cell *matCellDef="let project">{{ project.reference }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="client">
+          <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+          <mat-cell *matCellDef="let project">{{ project.client }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="nBc">
+          <mat-header-cell *matHeaderCellDef>N° BC</mat-header-cell>
+          <mat-cell *matCellDef="let project">{{ project.nBc }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="designation">
+          <mat-header-cell *matHeaderCellDef>Désignation</mat-header-cell>
+          <mat-cell *matCellDef="let project">{{ project.designation }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="etatProjet">
+          <mat-header-cell *matHeaderCellDef>État</mat-header-cell>
+          <mat-cell *matCellDef="let project">
+            @if (project.etatProjet) {
+              <span class="etat-badge etat-{{ project.etatProjet | lowercase }}">
+                {{ getEtatProjetLabel(project.etatProjet) }}
+              </span>
+            }
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="actions">

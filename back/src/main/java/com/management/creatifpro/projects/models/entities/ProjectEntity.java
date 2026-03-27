@@ -1,8 +1,11 @@
 package com.management.creatifpro.projects.models.entities;
 
 import com.management.creatifpro.common.entities.BaseEntity;
+import com.management.creatifpro.projects.models.enums.EtatProjet;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,5 +30,14 @@ public class ProjectEntity extends BaseEntity {
     private String code;
     @Column(name = "REFERENCE")
     private String reference;
+    @Column(name = "CLIENT")
+    private String client;
+    @Column(name = "N_BC")
+    private String nBc;
+    @Column(name = "DESIGNATION")
+    private String designation;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ETAT_PROJET")
+    private EtatProjet etatProjet;
 
 }

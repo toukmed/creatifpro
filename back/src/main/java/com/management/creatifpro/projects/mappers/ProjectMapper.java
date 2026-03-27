@@ -19,6 +19,10 @@ public class ProjectMapper {
                 .id(entity.getId())
                 .code(entity.getCode())
                 .reference(entity.getReference())
+                .client(entity.getClient())
+                .nBc(entity.getNBc())
+                .designation(entity.getDesignation())
+                .etatProjet(entity.getEtatProjet())
                 .build();
     }
 
@@ -28,6 +32,10 @@ public class ProjectMapper {
                 .id(dto.id())
                 .code(dto.code())
                 .reference(dto.reference())
+                .client(dto.client())
+                .nBc(dto.nBc())
+                .designation(dto.designation())
+                .etatProjet(dto.etatProjet())
                 .build();
     }
 
