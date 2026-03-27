@@ -294,12 +294,6 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  opacity: 0;
-  transition: opacity $transition;
-}
-
-.mat-mdc-row:hover .row-actions {
-  opacity: 1;
 }
 
 .action-btn {
@@ -378,9 +372,6 @@
     align-items: flex-start;
   }
 
-  .row-actions {
-    opacity: 1;
-  }
 }
 
 .no-data {
