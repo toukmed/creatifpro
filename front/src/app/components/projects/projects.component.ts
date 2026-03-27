@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ResourceService } from '../../services/resource.service';
-import { Project } from '../../models/projet';
+import { ETAT_PROJET_OPTIONS, Project } from '../../models/projet';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '../../services/snack-bar.service';
 
@@ -17,7 +17,7 @@ export class ProjectsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dataSource = new MatTableDataSource<Project>();
-  displayedColumns: string[] = ['id', 'code', 'reference', 'actions'];
+  displayedColumns: string[] = ['id', 'code', 'reference', 'client', 'nBc', 'designation', 'etatProjet', 'actions'];
 
   loading = false;
   showForm = false;
@@ -27,6 +27,7 @@ export class ProjectsComponent implements OnInit {
   successMessage = '';
 
   projectForm: FormGroup;
+  etatProjetOptions = ETAT_PROJET_OPTIONS;
 
   constructor(
     private service: ResourceService<Project>,
@@ -45,6 +46,10 @@ export class ProjectsComponent implements OnInit {
       id: [null],
       code: ['', Validators.required],
       reference: ['', Validators.required],
+      client: [''],
+      nBc: [''],
+      designation: [''],
+      etatProjet: [null],
     });
   }
 
@@ -82,6 +87,10 @@ export class ProjectsComponent implements OnInit {
       id: project.id,
       code: project.code,
       reference: project.reference,
+      client: project.client,
+      nBc: project.nBc,
+      designation: project.designation,
+      etatProjet: project.etatProjet,
     });
   }
 
@@ -124,6 +133,10 @@ export class ProjectsComponent implements OnInit {
         },
       });
     }
+  }
+
+  getEtatProjetLabel(etatProjet: string): string {
+    return this.etatProjetOptions.find(o => o.value === etatProjet)?.label ?? etatProjet;
   }
 
   deleteProject(project: Project): void {

@@ -38,6 +38,10 @@ public class ProjectService {
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé avec l'id: " + dto.id()));
         entity.setCode(dto.code());
         entity.setReference(dto.reference());
+        entity.setClient(dto.client());
+        entity.setNBc(dto.nBc());
+        entity.setDesignation(dto.designation());
+        entity.setEtatProjet(dto.etatProjet());
         ProjectEntity saved = projectRepository.save(entity);
         return projectMapper.toDto(saved);
     }
