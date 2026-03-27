@@ -84,6 +84,9 @@ export class EmployeesComponent implements OnInit {
       dateIntegration: [null],
       hourlyRate: [null],
       salary: [null],
+      chantier: [''],
+      nCnss: [''],
+      rib: [''],
       projectId: [null, Validators.required],
     });
   }
@@ -150,6 +153,9 @@ export class EmployeesComponent implements OnInit {
       dateIntegration: employee.dateIntegration,
       hourlyRate: employee.hourlyRate,
       salary: employee.salary,
+      chantier: employee.chantier ?? '',
+      nCnss: employee.nCnss ?? '',
+      rib: employee.rib ?? '',
       projectId: employee.project?.id ?? null,
     });
   }

@@ -32,6 +32,9 @@ public class EmployeeMapper {
                 .hourlyRate(entity.getHourlyRate())
                 .jobRole(entity.getJobRole())
                 .salary(entity.getSalary())
+                .chantier(entity.getChantier())
+                .nCnss(entity.getNCnss())
+                .rib(entity.getRib())
                 .project(entity.getProject() != null ? projectMapper.toDto(entity.getProject()) : null)
                 .build();
     }
@@ -48,6 +51,9 @@ public class EmployeeMapper {
                 .hourlyRate(dto.hourlyRate())
                 .jobRole(dto.jobRole())
                 .salary(dto.salary())
+                .chantier(dto.chantier())
+                .nCnss(dto.nCnss())
+                .rib(dto.rib())
                 .project(project)
                 .build();
     }

@@ -99,6 +99,26 @@
           </mat-form-field>
         </div>
 
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Chantier</mat-label>
+            <mat-icon matPrefix>construction</mat-icon>
+            <input matInput formControlName="chantier" placeholder="Ex: Chantier A" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>N° CNSS</mat-label>
+            <mat-icon matPrefix>assignment_ind</mat-icon>
+            <input matInput formControlName="nCnss" placeholder="Ex: 123456789" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>RIB</mat-label>
+            <mat-icon matPrefix>account_balance</mat-icon>
+            <input matInput formControlName="rib" placeholder="Ex: 001234567890123456789012" />
+          </mat-form-field>
+        </div>
+
         <div class="form-actions">
           <button mat-stroked-button type="button" (click)="toggleForm()">Annuler</button>
           <button

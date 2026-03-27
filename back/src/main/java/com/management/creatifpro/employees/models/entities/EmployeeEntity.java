@@ -38,6 +38,9 @@ public class EmployeeEntity extends BaseEntity {
     private String jobRole;
     private Float hourlyRate;
     private Float salary;
+    private String chantier;
+    private String nCnss;
+    private String rib;
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID", nullable = false)
     private ProjectEntity project;

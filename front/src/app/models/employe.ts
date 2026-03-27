@@ -10,6 +10,9 @@ export class Employe extends Resource {
   jobRole: string;
   hourlyRate?: number;
   salary?: number;
+  chantier?: string;
+  nCnss?: string;
+  rib?: string;
   project?: Project;
   projectId?: number;
 }
