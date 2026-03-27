@@ -22,10 +22,10 @@ public class WebConfig {
         config.addAllowedOrigin("http://localhost:4200");
         config.addAllowedOrigin("http://195.35.25.62");
         config.addAllowedOrigin("https://195.35.25.62");
-        config.addAllowedOrigin("https://growthserved.com");
-        config.addAllowedOrigin("http://growthserved.com");
-        config.addAllowedOrigin("https://www.growthserved.com");
-        config.addAllowedOrigin("http://www.growthserved.com");
+        config.addAllowedOrigin("https://erp.creatif-pro.com");
+        config.addAllowedOrigin("http://erp.creatif-pro.com");
+        config.addAllowedOrigin("https://www.erp.creatif-pro.com");
+        config.addAllowedOrigin("http://www.erp.creatif-pro.com");
         config.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
                 "Accept", "Authorization", "Origin, Accept", "X-Requested-With",
                 "Access-Control-Request-Method", "Access-Control-Request-Headers"));

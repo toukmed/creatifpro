@@ -129,11 +129,11 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=creatif-network"
       # Route /api/* to this service (higher priority than the frontend catch-all)
-      - "traefik.http.routers.back.rule=Host(`growthserved.com`) && PathPrefix(`/api/`)"
+      - "traefik.http.routers.back.rule=Host(`erp.creatif-pro.com`) && PathPrefix(`/api/`)"
       - "traefik.http.routers.back.entrypoints=web"
       - "traefik.http.services.back.loadbalancer.server.port=8080"
       # ── Uncomment to expose /api/ over HTTPS (reuses the same 'back' service) ──
-      - "traefik.http.routers.back-secure.rule=Host(`growthserved.com`) && PathPrefix(`/api/`)"
+      - "traefik.http.routers.back-secure.rule=Host(`erp.creatif-pro.com`) && PathPrefix(`/api/`)"
       - "traefik.http.routers.back-secure.entrypoints=websecure"
       - "traefik.http.routers.back-secure.service=back"
       - "traefik.http.routers.back-secure.tls=true"
@@ -178,11 +178,11 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=creatif-network"
       # Catch-all route – lower priority than /api/ because it is less specific
-      - "traefik.http.routers.front.rule=Host(`growthserved.com`) && PathPrefix(`/`)"
+      - "traefik.http.routers.front.rule=Host(`erp.creatif-pro.com`) && PathPrefix(`/`)"
       - "traefik.http.routers.front.entrypoints=web"
       - "traefik.http.services.front.loadbalancer.server.port=80"
       # ── Uncomment to serve the frontend over HTTPS (reuses the same 'front' service) ──
-      - "traefik.http.routers.front-secure.rule=Host(`growthserved.com`) && PathPrefix(`/`)"
+      - "traefik.http.routers.front-secure.rule=Host(`erp.creatif-pro.com`) && PathPrefix(`/`)"
       - "traefik.http.routers.front-secure.entrypoints=websecure"
       - "traefik.http.routers.front-secure.service=front"
       - "traefik.http.routers.front-secure.tls=true"
