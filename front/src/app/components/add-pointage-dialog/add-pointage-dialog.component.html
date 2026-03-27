@@ -28,8 +28,8 @@
         <mat-form-field appearance="outline" class="dialog-field">
           <mat-select formControlName="project" placeholder="Sélectionner un projet">
             <mat-option *ngFor="let project of projects" [value]="project.code">
-              <span class="option-code">{{ project.code }}</span>
-              <span class="option-ref">{{ project.reference }}</span>
+              <span class="option-code">{{ project.code }}</span> -
+              <span class="option-ref"> {{ project.reference }}</span>
             </mat-option>
           </mat-select>
           <mat-error *ngIf="addPointageForm.get('project')?.hasError('required')">

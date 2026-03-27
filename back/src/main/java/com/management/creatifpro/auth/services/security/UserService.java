@@ -12,6 +12,8 @@ import com.management.creatifpro.common.specifications.SecuritySpecificationsUti
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +52,16 @@ public class UserService {
 
         if (findUser(registrationDto).isEmpty()) {
 
+            Role targetRole = parseRole(registrationDto.role());
+            Role currentUserRole = getCurrentUserRole();
+
+            if (currentUserRole != null && !currentUserRole.canAssign(targetRole)) {
+                throw new AppException(
+                        "Vous n'avez pas la permission d'assigner le rôle " + targetRole.name(),
+                        HttpStatus.FORBIDDEN
+                );
+            }
+
             UserEntity userEntity = UserEntity
                     .builder()
                     .firstName(registrationDto.prenom())
@@ -57,7 +69,7 @@ public class UserService {
                     .email(registrationDto.email())
                     .login(registrationDto.login())
                     .password(passwordEncoder.encode(CharBuffer.wrap(registrationDto.password())))
-                    .role(Role.POINTEUR)
+                    .role(targetRole)
                     .build();
 
             return userMapper.toDto(userRepository.save(userEntity));
@@ -66,13 +78,50 @@ public class UserService {
         }
     }
 
+    public List<String> getAssignableRoles() {
+        Role currentUserRole = getCurrentUserRole();
+        if (currentUserRole == null) {
+            return List.of();
+        }
+        return currentUserRole.getAssignableRoles()
+                .stream()
+                .map(Role::name)
+                .toList();
+    }
+
     public void deleteById(Long id) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException("Utilisateur non trouvé", HttpStatus.NOT_FOUND));
-        if (Role.ADMIN.equals(user.getRole())) {
-            throw new AppException("Impossible de supprimer un administrateur", HttpStatus.BAD_REQUEST);
+
+        Role currentUserRole = getCurrentUserRole();
+        if (currentUserRole == null || !currentUserRole.canDelete(user.getRole())) {
+            throw new AppException("Vous n'avez pas la permission de supprimer cet utilisateur", HttpStatus.FORBIDDEN);
         }
+
         userRepository.deleteById(id);
+    }
+
+    private Role getCurrentUserRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getPrincipal() == null) {
+            return null;
+        }
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDto userDto) {
+            return Role.valueOf(userDto.getRole());
+        }
+        if (principal instanceof UserEntity userEntity) {
+            return userEntity.getRole();
+        }
+        return null;
+    }
+
+    private Role parseRole(String roleName) {
+        try {
+            return Role.valueOf(roleName);
+        } catch (IllegalArgumentException e) {
+            throw new AppException("Rôle invalide : " + roleName, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private Optional<UserEntity> findUser(RegistrationDto registrationDto) {

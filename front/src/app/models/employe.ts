@@ -6,10 +6,11 @@ export class Employe extends Resource {
   lastName: string;
   cin?: string;
   phoneNumber?: string;
-  integrationDate?: Date;
+  dateIntegration?: Date;
   jobRole: string;
   hourlyRate?: number;
   salary?: number;
-  projet?: Project;
+  project?: Project;
+  projectId?: number;
 }
 

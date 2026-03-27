@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddPointageDialogComponent } from '../add-pointage-dialog/add-pointage-dialog.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { CalendarPointageDialogComponent } from '../calendar-pointage-dialog/calendar-pointage-dialog.component';
+import { SnackBarService } from '../../services/snack-bar.service';
 
 const monthStart = getStartOfMonth(new Date());
 
@@ -79,7 +80,8 @@ export class ListPointageComponent implements OnInit {
     private projectService: ResourceService<Project>,
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: SnackBarService
   ) {}
 
   ngOnInit(): void {
@@ -153,8 +155,13 @@ export class ListPointageComponent implements OnInit {
   }
 
   listProjects() {
-    this.projectService.list({}, 'projects').subscribe((resp) => {
-      this.projects = resp;
+    this.projectService.list({}, 'projects').subscribe({
+      next: (resp) => {
+        this.projects = resp;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des projets');
+      },
     });
   }
 
@@ -169,11 +176,16 @@ export class ListPointageComponent implements OnInit {
       params.pageSize = 10;
     }
 
-    this.service.list(params, this.endpoint).subscribe((resp) => {
-      this.dataSource.data = resp.content;
-      this.pointages = resp.content;
-      this.currentPage = resp.number || params.pageIndex || 0;
-      this.totalElements = resp.totalElements;
+    this.service.list(params, this.endpoint).subscribe({
+      next: (resp) => {
+        this.dataSource.data = resp.content;
+        this.pointages = resp.content;
+        this.currentPage = resp.number || params.pageIndex || 0;
+        this.totalElements = resp.totalElements;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des pointages');
+      },
     });
   }
 
@@ -233,11 +245,17 @@ export class ListPointageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
-        this.service.delete(event.id, this.endpoint).subscribe(() => {
-          this.listPointage({
-            pageIndex: this.paginator.pageIndex,
-            pageSize: this.paginator.pageSize,
-          });
+        this.service.delete(event.id, this.endpoint).subscribe({
+          next: () => {
+            this.snackBar.success('Pointage supprimé avec succès');
+            this.listPointage({
+              pageIndex: this.paginator.pageIndex,
+              pageSize: this.paginator.pageSize,
+            });
+          },
+          error: (err) => {
+            this.snackBar.error(err.error?.message || 'Erreur lors de la suppression du pointage');
+          },
         });
       }
     });

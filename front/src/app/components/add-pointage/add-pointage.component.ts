@@ -11,6 +11,7 @@ import { Project } from '../../models/projet';
 import { Employe } from '../../models/employe';
 import { ResourceService } from '../../services/resource.service';
 import { Pointage } from '../../models/pointage';
+import { SnackBarService } from '../../services/snack-bar.service';
 
 @Component({
   selector: 'app-add-pointage',
@@ -64,7 +65,8 @@ export class AddPointageComponent implements OnInit {
     private route: ActivatedRoute,
     private pointageService: ResourceService<Pointage>,
     private employeeService: ResourceService<Employe>,
-    private projectService: ResourceService<Project>
+    private projectService: ResourceService<Project>,
+    private snackBar: SnackBarService
   ) {}
 
   ngOnInit(): void {
@@ -126,16 +128,24 @@ export class AddPointageComponent implements OnInit {
     };
 
     this.pointageService.create(this.entity, this.endpoint).subscribe({
-      next: () => this.manageBack(),
+      next: () => {
+        this.snackBar.success('Pointage ajouté avec succès');
+        this.manageBack();
+      },
       error: (err) => {
-        console.error("Erreur lors de l'ajout du pointage", err);
+        this.snackBar.error(err.error?.message || "Erreur lors de l'ajout du pointage");
       },
     });
   }
 
   listProjects() {
-    this.projectService.list({}, 'projects').subscribe((resp) => {
-      this.projects = resp;
+    this.projectService.list({}, 'projects').subscribe({
+      next: (resp) => {
+        this.projects = resp;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des projets');
+      },
     });
   }
 
@@ -152,8 +162,13 @@ export class AddPointageComponent implements OnInit {
       params.sort = { property: 'id', direction: 'ASC' };
     }
 
-    this.employeeService.list(params, 'employees').subscribe((resp) => {
-      this.employees = resp.content;
+    this.employeeService.list(params, 'employees').subscribe({
+      next: (resp) => {
+        this.employees = resp.content;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des employés');
+      },
     });
   }
 

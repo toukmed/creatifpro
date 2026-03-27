@@ -22,6 +22,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
+    @GetMapping("/roles")
+    public ResponseEntity<List<String>> getAssignableRoles() {
+        return ResponseEntity.ok(userService.getAssignableRoles());
+    }
+
     @PostMapping("/create")
     public ResponseEntity<UserDto> create(@RequestBody @Valid RegistrationDto registrationDto) {
         return ResponseEntity.ok(userService.register(registrationDto));

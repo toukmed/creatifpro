@@ -63,6 +63,19 @@
               <mat-error>L'identifiant est requis</mat-error>
             }
           </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Rôle</mat-label>
+            <mat-icon matPrefix>admin_panel_settings</mat-icon>
+            <mat-select formControlName="role">
+              @for (role of assignableRoles; track role.value) {
+                <mat-option [value]="role.value">{{ role.label }}</mat-option>
+              }
+            </mat-select>
+            @if (createForm.get('role')?.hasError('required') && createForm.get('role')?.touched) {
+              <mat-error>Le rôle est requis</mat-error>
+            }
+          </mat-form-field>
         </div>
 
         <div class="form-row">
@@ -135,62 +148,70 @@
       <mat-spinner diameter="40"></mat-spinner>
     </div>
   } @else {
-    <div class="table-container">
-      <table mat-table [dataSource]="dataSource" class="users-table">
+    <div class="table-card">
+      <mat-table [dataSource]="dataSource" class="users-table">
         <ng-container matColumnDef="firstName">
-          <th mat-header-cell *matHeaderCellDef>Prénom</th>
-          <td mat-cell *matCellDef="let user">{{ user.firstName }}</td>
+          <mat-header-cell *matHeaderCellDef>Prénom</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.firstName }}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="lastName">
-          <th mat-header-cell *matHeaderCellDef>Nom</th>
-          <td mat-cell *matCellDef="let user">{{ user.lastName }}</td>
+          <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.lastName }}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef>Email</th>
-          <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+          <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.email }}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="login">
-          <th mat-header-cell *matHeaderCellDef>Identifiant</th>
-          <td mat-cell *matCellDef="let user">{{ user.login }}</td>
+          <mat-header-cell *matHeaderCellDef>Identifiant</mat-header-cell>
+          <mat-cell *matCellDef="let user">{{ user.login }}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="role">
-          <th mat-header-cell *matHeaderCellDef>Rôle</th>
-          <td mat-cell *matCellDef="let user">
-            <span class="role-badge" [class.admin]="user.role === 'ADMIN'" [class.pointeur]="user.role === 'POINTEUR'">
+          <mat-header-cell *matHeaderCellDef>Rôle</mat-header-cell>
+          <mat-cell *matCellDef="let user">
+            <span class="role-badge" [class.super-admin]="user.role === 'SUPER_ADMIN'" [class.admin]="user.role === 'ADMIN'" [class.pointeur]="user.role === 'POINTEUR'">
               {{ getRoleLabel(user.role) }}
             </span>
-          </td>
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let user">
-            @if (user.role !== 'ADMIN') {
-              <button mat-icon-button color="warn" (click)="deleteUser(user)" matTooltip="Supprimer">
-                <mat-icon>delete_outline</mat-icon>
-              </button>
-            }
-          </td>
+          <mat-header-cell *matHeaderCellDef class="col-actions">Actions</mat-header-cell>
+          <mat-cell *matCellDef="let user" class="col-actions">
+            <div class="row-actions">
+              @if (canDeleteUser(user)) {
+                <button
+                  mat-icon-button
+                  matTooltip="Supprimer"
+                  (click)="deleteUser(user)"
+                  class="action-btn action-delete"
+                  type="button">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              }
+            </div>
+          </mat-cell>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
             Aucun utilisateur trouvé
           </td>
         </tr>
-      </table>
+      </mat-table>
 
       <mat-paginator
         [pageSize]="10"
         [pageSizeOptions]="[5, 10, 25]"
-        showFirstLastButtons>
+        showFirstLastButtons
+        class="table-paginator">
       </mat-paginator>
     </div>
   }

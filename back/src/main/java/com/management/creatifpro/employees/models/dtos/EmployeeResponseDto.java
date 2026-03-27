@@ -1,5 +1,6 @@
 package com.management.creatifpro.employees.models.dtos;
 
+import com.management.creatifpro.projects.models.dtos.ProjectResponseDto;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -15,5 +16,6 @@ public record EmployeeResponseDto(
         String jobRole,
         LocalDate dateIntegration,
         Float hourlyRate,
-        Float salary
+        Float salary,
+        ProjectResponseDto project
         ) { }

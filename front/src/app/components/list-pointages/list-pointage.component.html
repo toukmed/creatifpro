@@ -127,6 +127,11 @@
         *matRowDef="let row; columns: columnsPath"
         [class.row-selected]="clickedRow?.id === row?.id"
       ></mat-row>
+      <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="columnsPath.length">
+            Aucun pointage trouvé
+          </td>
+        </tr>
     </mat-table>
 
     <mat-paginator

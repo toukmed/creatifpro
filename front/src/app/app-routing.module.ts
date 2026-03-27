@@ -10,6 +10,7 @@ import { EditPointageComponent } from './components/edit-pointage/edit-pointage.
 import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/visu-pointage.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { UsersComponent } from './components/users/users.component';
+import { ProjectsComponent } from './components/projects/projects.component';
 
 const routes: Routes = [
   {
@@ -31,21 +32,22 @@ const routes: Routes = [
     path: 'employees',
     component: EmployeesComponent,
     canActivate: [authGuard, roleGuard],
-    data: { animation: 'root', roles: ['ADMIN'] },
+    data: { animation: 'root', roles: ['SUPER_ADMIN', 'ADMIN'] },
   },
   {
     path: 'utilisateurs',
     component: UsersComponent,
     canActivate: [authGuard, roleGuard],
-    data: { animation: 'root', roles: ['ADMIN'] },
+    data: { animation: 'root', roles: ['SUPER_ADMIN', 'ADMIN'] },
+  },
+  {
+    path: 'projets',
+    component: ProjectsComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { animation: 'root', roles: ['SUPER_ADMIN', 'ADMIN'] },
   },
   {
     path: 'pointages/add',
-    component: AddPointageComponent,
-    data: { animation: 'edit' },
-  },
-  {
-    path: 'employees/add',
     component: AddPointageComponent,
     data: { animation: 'edit' },
   },
@@ -55,17 +57,7 @@ const routes: Routes = [
     data: { animation: 'edit' },
   },
   {
-    path: 'employees/:id',
-    component: EditPointageComponent,
-    data: { animation: 'edit' },
-  },
-  {
     path: 'pointages/horaires/:id/visu',
-    component: VisuPointageComponent,
-    data: { animation: 'edit' },
-  },
-  {
-    path: 'employees/:id/visu',
     component: VisuPointageComponent,
     data: { animation: 'edit' },
   },

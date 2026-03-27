@@ -382,3 +382,106 @@
     opacity: 1;
   }
 }
+
+.no-data {
+  text-align: center;
+  padding: 40px 0 40px 20px !important;
+  color: #999;
+  font-style: italic;
+}
+
+// ─── Create / Edit Form Card ───────────────────────────────────────────
+.create-form-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  .form-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: #333;
+  }
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+
+  .form-field {
+    flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.form-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+
+  &.error {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  &.success {
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+// ─── Loading Container ─────────────────────────────────────────────────
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0;
+}
+
+// ─── Role Badge ────────────────────────────────────────────────────────
+.role-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.super-admin {
+    background: #fef3c7;
+    color: #d97706;
+  }
+
+  &.admin {
+    background: #ede9fe;
+    color: #7c3aed;
+  }
+
+  &.pointeur {
+    background: #e0f2fe;
+    color: #0284c7;
+  }
+}

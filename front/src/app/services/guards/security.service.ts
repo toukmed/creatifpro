@@ -48,8 +48,17 @@ export class SecurityService {
     return decoded?.role ?? null;
   }
 
+  isSuperAdmin(): boolean {
+    return this.getUserRole() === 'SUPER_ADMIN';
+  }
+
   isAdmin(): boolean {
     return this.getUserRole() === 'ADMIN';
+  }
+
+  hasManagementAccess(): boolean {
+    const role = this.getUserRole();
+    return role === 'SUPER_ADMIN' || role === 'ADMIN';
   }
 
   getUserName(): string | null {

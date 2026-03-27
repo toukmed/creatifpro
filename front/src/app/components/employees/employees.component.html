@@ -2,22 +2,121 @@
   <!-- Page Header -->
   <div class="page-header">
     <div class="header-left">
-      <h1 class="page-title">Pointages</h1>
-      <span class="record-count">{{ totalElements }} enregistrements</span>
+      <h1 class="page-title">Employés</h1>
+      <span class="record-count">{{ totalElements }} employés</span>
     </div>
     <div class="header-right">
       <button
-        (click)="add()"
+        (click)="toggleForm()"
         mat-flat-button
         color="primary"
         class="btn-create"
-        aria-label="Ajouter un pointage"
       >
-        <mat-icon>add</mat-icon>
-        Ajouter un employé
+        <mat-icon>{{ showForm ? 'close' : 'add' }}</mat-icon>
+        {{ showForm ? 'Annuler' : 'Ajouter un employé' }}
       </button>
     </div>
   </div>
+
+  <!-- Create / Edit Employee Form -->
+  @if (showForm) {
+    <div class="create-form-card">
+      <h3 class="form-title">{{ isEditing ? 'Modifier l\'employé' : 'Nouvel employé' }}</h3>
+      <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="create-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Prénom</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="firstName" placeholder="Ex: Mohamed" />
+            @if (employeeForm.get('firstName')?.hasError('required') && employeeForm.get('firstName')?.touched) {
+              <mat-error>Le prénom est requis</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nom</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="lastName" placeholder="Ex: El Hachmi" />
+            @if (employeeForm.get('lastName')?.hasError('required') && employeeForm.get('lastName')?.touched) {
+              <mat-error>Le nom est requis</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>CIN</mat-label>
+            <mat-icon matPrefix>badge</mat-icon>
+            <input matInput formControlName="cin" placeholder="Ex: AB12345" />
+            @if (employeeForm.get('cin')?.hasError('required') && employeeForm.get('cin')?.touched) {
+              <mat-error>Le CIN est requis</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Téléphone</mat-label>
+            <mat-icon matPrefix>phone</mat-icon>
+            <input matInput formControlName="phoneNumber" placeholder="Ex: 0612345678" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Poste</mat-label>
+            <mat-icon matPrefix>work</mat-icon>
+            <input matInput formControlName="jobRole" placeholder="Ex: Développeur" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Date d'intégration</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dateIntegration" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Taux horaire</mat-label>
+            <mat-icon matPrefix>payments</mat-icon>
+            <input matInput type="number" formControlName="hourlyRate" placeholder="Ex: 50" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Salaire</mat-label>
+            <mat-icon matPrefix>account_balance_wallet</mat-icon>
+            <input matInput type="number" formControlName="salary" placeholder="Ex: 10000" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Projet</mat-label>
+            <mat-select formControlName="projectId">
+              @for (project of projects; track project.id) {
+                <mat-option [value]="project.id">{{ project.code }}</mat-option>
+              }
+            </mat-select>
+            @if (employeeForm.get('projectId')?.hasError('required') && employeeForm.get('projectId')?.touched) {
+              <mat-error>Le projet est requis</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="toggleForm()">Annuler</button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="employeeForm.invalid || isSubmitting"
+          >
+            @if (isSubmitting) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              {{ isEditing ? 'Mettre à jour' : 'Créer l\'employé' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
 
   <!-- Filter Bar -->
   <div class="filter-bar" [formGroup]="filterForm">
@@ -28,7 +127,7 @@
         class="filter-field search-input"
       >
         <mat-icon matPrefix class="filter-icon">search</mat-icon>
-        <input formControlName="label" matInput placeholder="Rechercher par nom..." />
+        <input formControlName="label" matInput placeholder="Rechercher par nom, prénom ou CIN..." />
       </mat-form-field>
 
       <mat-form-field
@@ -53,113 +152,82 @@
         </button>
       </mat-form-field>
     </div>
-
-    <div class="month-navigator">
-      <button
-        mat-icon-button
-        (click)="previousMonth()"
-        aria-label="Mois précédent"
-        type="button"
-        class="month-nav-btn"
-      >
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-      <span class="month-label">
-        {{ currentMonth | date : 'MMMM yyyy' : undefined : 'fr' }}
-      </span>
-      <button
-        mat-icon-button
-        (click)="nextMonth()"
-        aria-label="Mois suivant"
-        type="button"
-        class="month-nav-btn"
-      >
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-    </div>
   </div>
 
   <!-- Data Table Card -->
-  <div class="table-card" [class.is-loading]="loading">
-    <mat-table [dataSource]="dataSource" matSort class="employee-table">
-      <ng-container
-        *ngFor="let def of columnsAll; trackBy: trackBy"
-        [matColumnDef]="def.path"
-      >
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ def.libelle }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          @if (def.path === 'totalHours') {
-            @if (element.totalHours === 0) {
-              <span class="status-badge status-warning">
-                <mat-icon class="badge-icon">schedule</mat-icon>
-                Non pointé
-              </span>
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <div class="table-card">
+      <mat-table [dataSource]="dataSource" matSort class="employee-table">
+        <ng-container
+          *ngFor="let def of columnsAll; trackBy: trackBy"
+          [matColumnDef]="def.path"
+        >
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ def.libelle }}
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            @if (def.path === 'project.code') {
+              <span class="project-tag">{{ resolve(def.path, element) }}</span>
+            } @else if (def.path === 'salary') {
+              @if (element.salary) {
+                {{ resolve(def.path, element) | number:'1.0-0' }} MAD
+              }
             } @else {
-              <span class="status-badge status-success">
-                <mat-icon class="badge-icon">check_circle</mat-icon>
-                {{ resolve(def.path, element) }}h
-              </span>
+              {{ resolve(def.path, element) }}
             }
-          } @else if (def.path === 'projet') {
-            <span class="project-tag">{{ resolve(def.path, element) }}</span>
-          } @else {
-            {{ resolve(def.path, element) }}
-          }
-        </mat-cell>
-      </ng-container>
+          </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef class="col-actions"></mat-header-cell>
-        <mat-cell *matCellDef="let row" class="col-actions">
-          <div class="row-actions">
-            <button
-              (click)="edit(row, true)"
-              mat-icon-button
-              matTooltip="Voir les détails"
-              class="action-btn action-view"
-              type="button"
-            >
-              <mat-icon>visibility</mat-icon>
-            </button>
-            <button
-              (click)="edit(row, false)"
-              mat-icon-button
-              matTooltip="Modifier"
-              class="action-btn action-edit"
-              type="button"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              (click)="remove(row)"
-              mat-icon-button
-              matTooltip="Supprimer"
-              class="action-btn action-delete"
-              type="button"
-              aria-label="Supprimer ce pointage"
-            >
-              <mat-icon>delete_outline</mat-icon>
-            </button>
-          </div>
-        </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef class="col-actions">Actions</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="col-actions">
+            <div class="row-actions">
+              <button
+                (click)="editEmployee(row)"
+                mat-icon-button
+                matTooltip="Modifier"
+                class="action-btn action-edit"
+                type="button"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                (click)="deleteEmployee(row)"
+                mat-icon-button
+                matTooltip="Supprimer"
+                class="action-btn action-delete"
+                type="button"
+              >
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </mat-cell>
+        </ng-container>
 
-      <mat-header-row *matHeaderRowDef="columnsPath"></mat-header-row>
-      <mat-row
-        *matRowDef="let row; columns: columnsPath"
-        [class.row-selected]="clickedRow?.id === row?.id"
-      ></mat-row>
-    </mat-table>
+        <mat-header-row *matHeaderRowDef="columnsPath"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnsPath"></mat-row>
 
-    <mat-paginator
-      [pageSizeOptions]="[10, 25, 50]"
-      (page)="page_changed($event)"
-      [length]="totalElements"
-      [pageIndex]="currentPage"
-      aria-label="Taille de la page"
-      class="table-paginator"
-    ></mat-paginator>
-  </div>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="columnsPath.length">
+            Aucun employé trouvé
+          </td>
+        </tr>
+      </mat-table>
+
+      <mat-paginator
+        [pageSizeOptions]="[10, 25, 50]"
+        (page)="pageChanged($event)"
+        [length]="totalElements"
+        [pageIndex]="currentPage"
+        [pageSize]="pageSize"
+        showFirstLastButtons
+        aria-label="Taille de la page"
+        class="table-paginator"
+      ></mat-paginator>
+    </div>
+  }
 </div>

@@ -1,7 +1,10 @@
 package com.management.creatifpro.employees.mappers;
 
+import com.management.creatifpro.employees.models.dtos.EmployeeRequestDto;
 import com.management.creatifpro.employees.models.dtos.EmployeeResponseDto;
 import com.management.creatifpro.employees.models.entities.EmployeeEntity;
+import com.management.creatifpro.projects.mappers.ProjectMapper;
+import com.management.creatifpro.projects.models.entities.ProjectEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,6 +18,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeMapper {
 
+    private final ProjectMapper projectMapper;
+
     public EmployeeResponseDto toDto(EmployeeEntity entity) {
         return EmployeeResponseDto
                 .builder()
@@ -27,6 +32,23 @@ public class EmployeeMapper {
                 .hourlyRate(entity.getHourlyRate())
                 .jobRole(entity.getJobRole())
                 .salary(entity.getSalary())
+                .project(entity.getProject() != null ? projectMapper.toDto(entity.getProject()) : null)
+                .build();
+    }
+
+    public EmployeeEntity toEntity(EmployeeRequestDto dto, ProjectEntity project) {
+        return EmployeeEntity
+                .builder()
+                .id(dto.id())
+                .firstName(dto.firstName())
+                .lastName(dto.lastName())
+                .cin(dto.cin())
+                .phoneNumber(dto.phoneNumber())
+                .integrationDate(dto.dateIntegration())
+                .hourlyRate(dto.hourlyRate())
+                .jobRole(dto.jobRole())
+                .salary(dto.salary())
+                .project(project)
                 .build();
     }
 

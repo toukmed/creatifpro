@@ -30,9 +30,8 @@ public class SecurityConfig {
                         requests
                                 .requestMatchers("/api/login").permitAll()
                                 .requestMatchers("/health", "/actuator/**").permitAll()
-                                .requestMatchers("/api/register").hasRole("ADMIN")
-                                .requestMatchers("/api/employees/**").hasRole("ADMIN")
-                                .requestMatchers("/api/users/**").hasRole("ADMIN")
+                                .requestMatchers("/api/register").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                                .requestMatchers("/api/users/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
                                 .anyRequest().authenticated()
                 );
         return http.build();

@@ -16,10 +16,10 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> 
 
     Page<EmployeeEntity> findAll(Specification<EmployeeEntity> specs, Pageable pageable);
 
-    @Query(value = "SELECT EXISTS (SELECT 1 FROM employes WHERE cin = :cin)", nativeQuery = true)
+    @Query(value = "SELECT EXISTS (SELECT 1 FROM employees WHERE cin = :cin)", nativeQuery = true)
     boolean existsByCin(@Param("cin") String cin);
 
-    @Query(value = "SELECT EXISTS (SELECT 1 FROM employes WHERE cin = :cin and id <> :id)", nativeQuery = true)
+    @Query(value = "SELECT EXISTS (SELECT 1 FROM employees WHERE cin = :cin and id <> :id)", nativeQuery = true)
     boolean existsByCinAndNotTheSameEmploye(@Param("cin") String cin, @Param("id") Long id);
 
     @Query(value = "SELECT e FROM EmployeeEntity e WHERE e.cin LIKE CONCAT('%', :label, '%') OR e.firstName LIKE CONCAT('%', :label, '%') OR e.lastName LIKE CONCAT('%', :label, '%')")

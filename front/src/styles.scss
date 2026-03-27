@@ -165,6 +165,77 @@ h3:after {
   background-color: greenyellow;
 }
 
+// ─── Elegant Snackbar Styles ───────────────────────────────────────────
+@mixin snackbar-variant($bg, $border, $icon-color) {
+  .mdc-snackbar__surface {
+    background: $bg !important;
+    border-left: 4px solid $border !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: blur(8px);
+    min-width: 320px;
+    max-width: 480px;
+    padding: 4px 8px !important;
+  }
+  .mdc-snackbar__label {
+    color: #1a1a2e !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+    padding: 12px 16px !important;
+  }
+  .mat-mdc-snack-bar-action .mdc-button__label {
+    color: $border !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+  }
+}
+
+.snackbar-success {
+  @include snackbar-variant(
+    linear-gradient(135deg, #e6f9f0 0%, #f0fdf4 100%),
+    #00875a,
+    #00875a
+  );
+}
+
+.snackbar-error {
+  @include snackbar-variant(
+    linear-gradient(135deg, #fff0ed 0%, #fef2f2 100%),
+    #de350b,
+    #de350b
+  );
+}
+
+.snackbar-warning {
+  @include snackbar-variant(
+    linear-gradient(135deg, #fff8e6 0%, #fffbeb 100%),
+    #ff8b00,
+    #ff8b00
+  );
+}
+
+.snackbar-info {
+  @include snackbar-variant(
+    linear-gradient(135deg, #e8f0fe 0%, #eff6ff 100%),
+    #0052cc,
+    #0052cc
+  );
+}
+
+// Slide-in animation
+.mat-mdc-snack-bar-container {
+  &.snackbar-success,
+  &.snackbar-error,
+  &.snackbar-warning,
+  &.snackbar-info {
+    margin: 16px !important;
+  }
+}
+
 .button {
   display: flex;
   margin-bottom: 20px;

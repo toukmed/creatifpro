@@ -1,5 +1,6 @@
 package com.management.creatifpro.projects.mappers;
 
+import com.management.creatifpro.projects.models.dtos.ProjectRequestDto;
 import com.management.creatifpro.projects.models.dtos.ProjectResponseDto;
 import com.management.creatifpro.projects.models.entities.ProjectEntity;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,15 @@ public class ProjectMapper {
                 .id(entity.getId())
                 .code(entity.getCode())
                 .reference(entity.getReference())
+                .build();
+    }
+
+    public ProjectEntity toEntity(ProjectRequestDto dto) {
+        return ProjectEntity
+                .builder()
+                .id(dto.id())
+                .code(dto.code())
+                .reference(dto.reference())
                 .build();
     }
 

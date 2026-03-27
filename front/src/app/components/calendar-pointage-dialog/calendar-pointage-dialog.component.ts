@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ResourceService } from '../../services/resource.service';
 import { Pointage } from '../../models/pointage';
 import { formatDateToYMD } from '../../utils/date-utils';
+import { SnackBarService } from '../../services/snack-bar.service';
 
 export interface CalendarDialogData {
   entityName: string;
@@ -43,7 +44,8 @@ export class CalendarPointageDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<CalendarPointageDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CalendarDialogData,
-    private pointageService: ResourceService<Pointage>
+    private pointageService: ResourceService<Pointage>,
+    private snackBar: SnackBarService
   ) {
     this.endpoint = 'pointages';
     this.row = data.row;
@@ -164,6 +166,7 @@ export class CalendarPointageDialogComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
+        this.snackBar.error('Erreur lors du chargement des pointages');
         this.loading = false;
       },
     });
@@ -246,8 +249,10 @@ export class CalendarPointageDialogComponent implements OnInit {
           day.pointage = { ...day.pointage, ...resp, totalHours: day.editValue, comment: day.editComment };
           day.editing = false;
           this.saving = false;
+          this.snackBar.success('Pointage mis à jour');
         },
         error: () => {
+          this.snackBar.error('Erreur lors de la mise à jour du pointage');
           this.saving = false;
         },
       });
@@ -271,8 +276,10 @@ export class CalendarPointageDialogComponent implements OnInit {
             : { totalHours: day.editValue, comment: day.editComment, pointageDate: day.date };
           day.editing = false;
           this.saving = false;
+          this.snackBar.success('Pointage créé');
         },
         error: () => {
+          this.snackBar.error('Erreur lors de la création du pointage');
           this.saving = false;
         },
       });

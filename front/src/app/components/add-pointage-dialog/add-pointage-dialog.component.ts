@@ -6,6 +6,7 @@ import { Project } from '../../models/projet';
 import { Employe } from '../../models/employe';
 import { Pointage } from '../../models/pointage';
 import { ResourceService } from '../../services/resource.service';
+import { SnackBarService } from '../../services/snack-bar.service';
 
 export type DialogMode = 'create' | 'edit' | 'visu';
 
@@ -45,7 +46,8 @@ export class AddPointageDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AddPointageDialogData,
     private pointageService: ResourceService<Pointage>,
     private employeeService: ResourceService<Employe>,
-    private projectService: ResourceService<Project>
+    private projectService: ResourceService<Project>,
+    private snackBar: SnackBarService
   ) {
     this.entityName = data.entityName;
     this.endpoint = 'pointages' + this.entityName;
@@ -118,18 +120,25 @@ export class AddPointageDialogComponent implements OnInit {
 
     this.pointageService.create(entity, this.endpoint).subscribe({
       next: () => {
+        this.snackBar.success('Pointage créé avec succès');
         this.submitting = false;
         this.dialogRef.close(true);
       },
-      error: () => {
+      error: (err) => {
+        this.snackBar.error(err.error?.message || 'Erreur lors de la création du pointage');
         this.submitting = false;
       },
     });
   }
 
   listProjects() {
-    this.projectService.list({}, 'projects').subscribe((resp) => {
-      this.projects = resp;
+    this.projectService.list({}, 'projects').subscribe({
+      next: (resp) => {
+        this.projects = resp;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des projets');
+      },
     });
   }
 
@@ -141,8 +150,13 @@ export class AddPointageDialogComponent implements OnInit {
     }
     params.sort = { property: 'id', direction: 'ASC' };
 
-    this.employeeService.list(params, 'employees').subscribe((resp) => {
-      this.employees = resp.content;
+    this.employeeService.list(params, 'employees').subscribe({
+      next: (resp) => {
+        this.employees = resp.content;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des employés');
+      },
     });
   }
 

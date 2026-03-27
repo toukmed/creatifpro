@@ -1,8 +1,7 @@
 @use 'variables' as *;
 @use 'list-page';
 
-.employee-table {
+.projects-table {
   @extend %data-table;
 }
-
 

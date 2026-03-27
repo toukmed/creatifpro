@@ -1,275 +1,242 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../../models/projet';
-import { Pointage } from '../../models/pointage';
+import { Employe } from '../../models/employe';
 import { ResourceService } from '../../services/resource.service';
-import {
-  formatDateToDashedString,
-  formatDateToString,
-  getStartOfMonth,
-} from '../../utils/date-utils';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { columns } from './employees.variables';
 import { MatDialog } from '@angular/material/dialog';
-import { AddPointageDialogComponent } from '../add-pointage-dialog/add-pointage-dialog.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { CalendarPointageDialogComponent } from '../calendar-pointage-dialog/calendar-pointage-dialog.component';
-
-const monthStart = getStartOfMonth(new Date());
+import { SnackBarService } from '../../services/snack-bar.service';
 
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
-  styleUrl: './employees.component.scss'
+  styleUrl: './employees.component.scss',
 })
-export class EmployeesComponent {
+export class EmployeesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-  
-    readonly filterForm = new FormGroup({
-      start: new FormControl<Date | null>(null),
-      end: new FormControl<Date | null>(null),
-      project: new FormControl<string>(''),
-      label: new FormControl<string>(''),
+  @ViewChild(MatSort) sort: MatSort;
+
+  readonly filterForm = new FormGroup({
+    project: new FormControl<string>(''),
+    label: new FormControl<string>(''),
+  });
+
+  dataSource: MatTableDataSource<Employe> = new MatTableDataSource<Employe>();
+
+  readonly endpoint: string = 'employees';
+  columnsAll = columns;
+  columnsPath: string[] = [...columns.map((c) => c.path), 'actions'];
+
+  // State
+  loading = false;
+  showForm = false;
+  isSubmitting = false;
+  isEditing = false;
+
+  // Filters
+  project: string = '';
+  label: string = '';
+
+  // Lists
+  projects: Project[] = [];
+
+  // Pagination
+  currentPage = 0;
+  totalElements = 0;
+  pageSize = 10;
+
+  // Form
+  employeeForm: FormGroup;
+
+  constructor(
+    private service: ResourceService<Employe>,
+    private projectService: ResourceService<Project>,
+    private dialog: MatDialog,
+    private snackBar: SnackBarService,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm();
+    this.loadProjects();
+    this.loadEmployees();
+
+    this.filterForm.valueChanges.subscribe((formValues) => {
+      this.project = formValues.project || '';
+      this.label = formValues.label || '';
+      this.currentPage = 0;
+      this.loadEmployees();
     });
-  
-    dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  
-    readonly endpoint: string = 'pointages';
-    readonly routesItem = ['horaires', 'salaries'];
-    columnsAll = columns;
-    columnsPath: string[] = [...columns.map((c) => c.path), 'actions'];
-  
-    //BOOLEANS
-    selectAllChecked: boolean = false;
-    active = true;
-    showPagination = true;
-    loading = false;
-    showChartClicked = false;
-    exporting = false;
-  
-    //STRINGS
-    activeRoute: string = '';
-    project: string = '';
-    label: string = '';
-    searchedValue = '';
-    employeName: string = '';
-  
-    //DATES
-    startDate: Date = monthStart;
-    endDate: Date = new Date();
-    currentMonth: Date = new Date();
-  
-    //LISTS
-    selectedItems: Set<number> = new Set();
-    pointages: Pointage[];
-    projects: Project[] = [];
-  
-    //NUMBERS
-    currentPage = 0;
-    totalElements = 100;
-  
-    clickedRow: any;
-  
-    constructor(
-      private service: ResourceService<Pointage>,
-      private projectService: ResourceService<Project>,
-      private router: Router,
-      private route: ActivatedRoute,
-      private dialog: MatDialog
-    ) {}
-  
-    ngOnInit(): void {
-      this.activeRoute =
-        this.routesItem.find((item) =>
-          this.route.snapshot.url.map((u) => u.path).includes(item)
-        ) || '';
-  
-      const params: any = {};
-      params.startDate = this.startDate;
-      params.endDate = this.endDate;
-  
-      this.listProjects();
-      this.listPointage(params);
-  
-      this.filterForm.valueChanges.subscribe((formValues) => {
-        const params: any = {};
-  
-        this.project = formValues.project;
-        this.label = formValues.label;
-        this.startDate = formValues.start || monthStart;
-        this.endDate = formValues.end || new Date();
-  
-        if (formValues.project) {
-          params.project = this.project;
-        }
-        params.startDate = this.startDate;
-        params.endDate = this.endDate;
-        params.label = this.label;
-        params.pageIndex = 0;
-        params.pageSize = 10;
-  
-        this.listPointage(params);
-      });
-    }
-  
-    previousMonth() {
-      this.currentMonth = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth() - 1,
-        1
-      );
-      this.updateMonthFilter();
-    }
-  
-    nextMonth() {
-      this.currentMonth = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth() + 1,
-        1
-      );
-      this.updateMonthFilter();
-    }
-  
-    updateMonthFilter() {
-      // Set start to first day of month, end to last day of month
-      const start = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth(),
-        1
-      );
-      const end = new Date(
-        this.currentMonth.getFullYear(),
-        this.currentMonth.getMonth() + 1,
-        0
-      );
-      this.filterForm.patchValue({
-        start,
-        end,
-      });
-    }
-  
-    listProjects() {
-      this.projectService.list({}, 'projects').subscribe((resp) => {
+  }
+
+  private initForm(): void {
+    this.employeeForm = this.fb.group({
+      id: [null],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      cin: ['', Validators.required],
+      phoneNumber: [''],
+      jobRole: [''],
+      dateIntegration: [null],
+      hourlyRate: [null],
+      salary: [null],
+      projectId: [null, Validators.required],
+    });
+  }
+
+  loadProjects(): void {
+    this.projectService.list({}, 'projects').subscribe({
+      next: (resp) => {
         this.projects = resp;
-      });
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des projets');
+      },
+    });
+  }
+
+  loadEmployees(params: any = {}): void {
+    this.loading = true;
+
+    const body: any = {
+      sort: { property: 'id', direction: 'ASC' },
+      pageIndex: params.pageIndex ?? this.currentPage,
+      pageSize: params.pageSize ?? this.pageSize,
+    };
+
+    if (this.label) {
+      body.label = this.label;
     }
-  
-    listPointage(params: any = {}) {
-      if (!params.sort) {
-        params.sort = { property: 'id', direction: 'ASC' };
-      }
-      if (!params.pageIndex) {
-        params.pageIndex = 0;
-      }
-      if (!params.pageSize) {
-        params.pageSize = 10;
-      }
-  
-      this.service.list(params, this.endpoint).subscribe((resp) => {
-        this.dataSource.data = resp.content;
-        this.pointages = resp.content;
-        this.currentPage = resp.number || params.pageIndex || 0;
-        this.totalElements = resp.totalElements;
-      });
-    }
-  
-    edit(configuration: any, details: boolean) {
-      const dialogRef = this.dialog.open(CalendarPointageDialogComponent, {
-        width: '90vw',
-        height: '90vh',
-        maxWidth: '95vw',
-        maxHeight: '95vh',
-        panelClass: 'calendar-dialog-panel',
-        autoFocus: false,
-        data: {
-          entityName: this.activeRoute,
-          row: configuration,
-          currentMonth: this.currentMonth,
-        },
-      });
-  
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.listPointage({
-            pageIndex: this.paginator?.pageIndex || 0,
-            pageSize: this.paginator?.pageSize || 10,
-            startDate: this.startDate,
-            endDate: this.endDate,
-          });
-        }
-      });
-    }
-  
-    add() {
-      const dialogRef = this.dialog.open(AddPointageDialogComponent, {
-        width: '580px',
-        maxHeight: '90vh',
-        panelClass: 'jira-dialog-panel',
-        autoFocus: false,
-        data: { entityName: this.activeRoute },
-      });
-  
-      dialogRef.afterClosed().subscribe((created) => {
-        if (created) {
-          this.listPointage({
-            pageIndex: this.paginator?.pageIndex || 0,
-            pageSize: this.paginator?.pageSize || 10,
-            startDate: this.startDate,
-            endDate: this.endDate,
-          });
-        }
-      });
-    }
-  
-    remove(event: Pointage) {
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        width: '420px',
-        data: 'Êtes-vous sûr de vouloir supprimer ce pointage ?',
-      });
-  
-      dialogRef.afterClosed().subscribe((confirmed) => {
-        if (confirmed) {
-          this.service.delete(event.id, this.endpoint).subscribe(() => {
-            this.listPointage({
-              pageIndex: this.paginator.pageIndex,
-              pageSize: this.paginator.pageSize,
-            });
-          });
-        }
-      });
-    }
-  
-    page_changed(event: PageEvent) {
-      const params: any = {
-        pageIndex: event.pageIndex,
-        pageSize: event.pageSize,
-        sort: { property: 'id', direction: 'ASC' },
-        startDate: this.startDate,
-        endDate: this.endDate,
-        label: this.label,
-      };
-      if (this.project && this.project !== '') {
-        params.project = this.project;
-      }
-  
-      this.listPointage(params);
-    }
-  
-    trackBy(index: number, el: any) {
-      return el.path;
-    }
-  
-    resolve(path: string, obj: any): string {
-      const arr = path.split('.');
-      return arr.reduce((prev: any | any[], curr: string) => {
-        return prev instanceof Array
-          ? prev.map((p) => p[curr]).join(',')
-          : prev?.[curr];
-      }, obj);
+    if (this.project) {
+      body.project = this.project;
     }
 
+    this.service.list(body, this.endpoint).subscribe({
+      next: (resp) => {
+        this.dataSource.data = resp.content;
+        this.currentPage = resp.number ?? 0;
+        this.totalElements = resp.totalElements;
+        this.loading = false;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des employés');
+        this.loading = false;
+      },
+    });
+  }
+
+  toggleForm(): void {
+    this.showForm = !this.showForm;
+    if (!this.showForm) {
+      this.employeeForm.reset();
+      this.isEditing = false;
+    }
+  }
+
+  editEmployee(employee: any): void {
+    this.isEditing = true;
+    this.showForm = true;
+    this.employeeForm.patchValue({
+      id: employee.id,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      cin: employee.cin,
+      phoneNumber: employee.phoneNumber,
+      jobRole: employee.jobRole,
+      dateIntegration: employee.dateIntegration,
+      hourlyRate: employee.hourlyRate,
+      salary: employee.salary,
+      projectId: employee.project?.id ?? null,
+    });
+  }
+
+  onSubmit(): void {
+    if (this.employeeForm.invalid) return;
+
+    this.isSubmitting = true;
+    const payload = this.employeeForm.getRawValue();
+
+    if (this.isEditing) {
+      this.service.update(payload, this.endpoint).subscribe({
+        next: () => {
+          this.snackBar.success('Employé mis à jour avec succès');
+          this.isSubmitting = false;
+          this.employeeForm.reset();
+          this.isEditing = false;
+          this.showForm = false;
+          this.loadEmployees();
+        },
+        error: (err) => {
+          this.snackBar.error(
+            err.error?.message || 'Erreur lors de la mise à jour'
+          );
+          this.isSubmitting = false;
+        },
+      });
+    } else {
+      this.service.create(payload, this.endpoint).subscribe({
+        next: () => {
+          this.snackBar.success('Employé créé avec succès');
+          this.isSubmitting = false;
+          this.employeeForm.reset();
+          this.showForm = false;
+          this.loadEmployees();
+        },
+        error: (err) => {
+          this.snackBar.error(
+            err.error?.message || "Erreur lors de la création"
+          );
+          this.isSubmitting = false;
+        },
+      });
+    }
+  }
+
+  deleteEmployee(employee: Employe): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: `Voulez-vous vraiment supprimer l'employé <b>${employee.firstName} ${employee.lastName}</b> ?`,
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.service.delete(employee.id, this.endpoint).subscribe({
+          next: () => {
+            this.snackBar.success('Employé supprimé avec succès');
+            this.loadEmployees();
+          },
+          error: (err) => {
+            this.snackBar.error(
+              err.error?.message || "Erreur lors de la suppression"
+            );
+          },
+        });
+      }
+    });
+  }
+
+  pageChanged(event: PageEvent): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadEmployees({
+      pageIndex: event.pageIndex,
+      pageSize: event.pageSize,
+    });
+  }
+
+  trackBy(index: number, el: any): string {
+    return el.path;
+  }
+
+  resolve(path: string, obj: any): string {
+    const arr = path.split('.');
+    return arr.reduce((prev: any | any[], curr: string) => {
+      return prev instanceof Array
+        ? prev.map((p) => p[curr]).join(',')
+        : prev?.[curr];
+    }, obj);
+  }
 }

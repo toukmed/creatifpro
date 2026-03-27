@@ -10,7 +10,7 @@ export interface NavLink {
   roles?: string[];
 }
 
-const allNavLinks: NavLink[] = [
+export const navLinks: NavLink[] = [
   {
     link: '/accueil',
     icon: 'home',
@@ -28,14 +28,21 @@ const allNavLinks: NavLink[] = [
     icon: 'work_history',
     libelle: 'Employés',
     desc: 'Employés',
-    roles: ['ADMIN'],
+    roles: ['SUPER_ADMIN', 'ADMIN'],
+  },
+  {
+    link: '/projets',
+    icon: 'folder_open',
+    libelle: 'Projets',
+    desc: 'Gestion des projets',
+    roles: ['SUPER_ADMIN', 'ADMIN'],
   },
   {
     link: '/utilisateurs',
     icon: 'group',
     libelle: 'Utilisateurs',
     desc: 'Gestion des utilisateurs',
-    roles: ['ADMIN'],
+    roles: ['SUPER_ADMIN', 'ADMIN'],
   },
 ];
 
@@ -56,7 +63,7 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {
     const userRole = this.securityService.getUserRole();
-    this.navLinks = allNavLinks.filter(
+    this.navLinks = navLinks.filter(
       (link) => !link.roles || (userRole && link.roles.includes(userRole))
     );
   }

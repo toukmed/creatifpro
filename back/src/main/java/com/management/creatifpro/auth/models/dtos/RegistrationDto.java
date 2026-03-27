@@ -2,7 +2,7 @@ package com.management.creatifpro.auth.models.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 
 public record RegistrationDto(
         @NotBlank(message = "Le nom est requis")
@@ -14,8 +14,9 @@ public record RegistrationDto(
         String email,
         @NotBlank(message = "L'identifiant est requis")
         String login,
-        @NotBlank(message = "Le mot de passe est requis")
-        @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
-        char[] password
+        @NotNull(message = "Le mot de passe est requis")
+        char[] password,
+        @NotBlank(message = "Le rôle est requis")
+        String role
 ) {
 }

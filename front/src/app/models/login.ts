@@ -6,4 +6,5 @@ export class Login extends Resource {
   nom?: string;
   prenom?: string;
   email?: string;
+  role?: string;
 }

@@ -11,6 +11,7 @@ import { Project } from '../../models/projet';
 import { Employe } from '../../models/employe';
 import { ResourceService } from '../../services/resource.service';
 import { Pointage } from '../../models/pointage';
+import { SnackBarService } from '../../services/snack-bar.service';
 
 @Component({
   selector: 'app-edit-pointage',
@@ -60,7 +61,8 @@ export class EditPointageComponent implements OnInit {
     private route: ActivatedRoute,
     private pointageService: ResourceService<Pointage>,
     private employeeService: ResourceService<Employe>,
-    private projectService: ResourceService<Project>
+    private projectService: ResourceService<Project>,
+    private snackBar: SnackBarService
   ) {}
 
   ngOnInit(): void {
@@ -124,16 +126,24 @@ export class EditPointageComponent implements OnInit {
     };
 
     this.pointageService.update(this.entity, this.endpoint).subscribe({
-      next: () => this.manageBack(),
+      next: () => {
+        this.snackBar.success('Pointage modifié avec succès');
+        this.manageBack();
+      },
       error: (err) => {
-        console.error('Erreur lors de la modification du pointage', err);
+        this.snackBar.error(err.error?.message || 'Erreur lors de la modification du pointage');
       },
     });
   }
 
   listProjects() {
-    this.projectService.list({}, 'projects').subscribe((resp) => {
-      this.projects = resp;
+    this.projectService.list({}, 'projects').subscribe({
+      next: (resp) => {
+        this.projects = resp;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des projets');
+      },
     });
   }
 
@@ -148,24 +158,33 @@ export class EditPointageComponent implements OnInit {
     if (!params.sort) {
       params.sort = { property: 'id', direction: 'ASC' };
     }
-    this.employeeService.list(params, 'employees').subscribe((resp) => {
-      this.employees = resp.content;
+    this.employeeService.list(params, 'employees').subscribe({
+      next: (resp) => {
+        this.employees = resp.content;
+      },
+      error: () => {
+        this.snackBar.error('Erreur lors du chargement des employés');
+      },
     });
   }
 
   getPointage() {
     this.pointageService
       .getById(parseInt(this.id ?? ''), this.endpoint)
-      .subscribe((res) => {
-        this.entity = res;
-        console.log('Pointage fetched:', res);
-        this.addPointageForm.patchValue({
-          project: res.project.reference + ' - ' + res.project.code,
-          employee: res.employee.firstName + ' ' + res.employee.lastName,
-          pointageDate: res.pointageDate,
-          totalHours: res.totalHours,
-          comment: res.comment,
-        });
+      .subscribe({
+        next: (res) => {
+          this.entity = res;
+          this.addPointageForm.patchValue({
+            project: res.project.reference + ' - ' + res.project.code,
+            employee: res.employee.firstName + ' ' + res.employee.lastName,
+            pointageDate: res.pointageDate,
+            totalHours: res.totalHours,
+            comment: res.comment,
+          });
+        },
+        error: () => {
+          this.snackBar.error('Erreur lors du chargement du pointage');
+        },
       });
   }
 

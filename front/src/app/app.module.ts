@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
@@ -56,6 +57,7 @@ import { CalendarPointageDialogComponent } from './components/calendar-pointage-
 import { MatListModule } from '@angular/material/list';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { UsersComponent } from './components/users/users.component';
+import { ProjectsComponent } from './components/projects/projects.component';
 
 registerLocaleData(localeFr);
 
@@ -68,6 +70,7 @@ const materialModules = [
   MatButtonModule,
   MatPaginatorModule,
   MatTableModule,
+  MatSortModule,
   MatFormFieldModule,
   MatSlideToggleModule,
   MatInputModule,
@@ -110,6 +113,7 @@ const materialModules = [
     CalendarPointageDialogComponent,
     EmployeesComponent,
     UsersComponent,
+    ProjectsComponent,
   ],
   imports: [
     ...materialModules,

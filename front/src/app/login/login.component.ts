@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { SecurityService } from '../services/guards/security.service';
 import { ResourceService } from '../services/resource.service';
 import { Login } from '../models/login';
+import { SnackBarService } from '../services/snack-bar.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ export class LoginComponent implements OnInit {
     public securityService: SecurityService,
     public service: ResourceService<Login>,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private snackBar: SnackBarService
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Identifiants incorrects. Veuillez réessayer.';
+        this.snackBar.error(err.error?.message || 'Identifiants incorrects. Veuillez réessayer.');
         this.isLoading = false;
       },
     });
