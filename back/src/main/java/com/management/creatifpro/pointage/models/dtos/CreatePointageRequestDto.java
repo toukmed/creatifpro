@@ -16,9 +16,10 @@ public record CreatePointageRequestDto(
         ProjectRequestDto project,
         List<EmployeeRequestDto> employees,
         DateRangeDto pointageDateRange,
-        @Max(12)
-        Float totalHours,
+        @Max(1)
+        Float workedDays,
         @Length(max = 100)
-        String comment
+        String comment,
+        Boolean isPaid
 ) {
 }

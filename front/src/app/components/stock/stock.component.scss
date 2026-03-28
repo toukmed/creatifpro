@@ -27,3 +27,109 @@
   flex-wrap: wrap;
   gap: 12px;
 }
+
+// ─── KPI Cards ─────────────────────────────────────────────────────────
+.kpi-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: $surface;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  padding: 20px 24px;
+  flex: 1;
+  min-width: 200px;
+  box-shadow: $shadow-sm;
+  transition: box-shadow $transition;
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+}
+
+.kpi-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: white;
+  }
+
+  &.kpi-blue {
+    background: linear-gradient(135deg, #4a90d9, #357abd);
+  }
+
+  &.kpi-green {
+    background: linear-gradient(135deg, $success-green, #006644);
+  }
+
+  &.kpi-red {
+    background: linear-gradient(135deg, $danger-red, #bf2600);
+  }
+}
+
+.kpi-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: $text-primary;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.kpi-label {
+  font-size: 13px;
+  color: $text-muted;
+  font-weight: 400;
+}
+
+// ─── Text colors ───────────────────────────────────────────────────────
+.text-success {
+  color: $success-green;
+  font-weight: 600;
+}
+
+.text-danger {
+  color: $danger-red;
+  font-weight: 600;
+}
+
+// ─── Alert row ─────────────────────────────────────────────────────────
+.row-alert {
+  background: $danger-bg !important;
+
+  &:hover {
+    background: darken(#ffebe6, 2%) !important;
+  }
+}
+
+// ─── Responsive ────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .kpi-row {
+    flex-direction: column;
+  }
+
+  .kpi-card {
+    min-width: 100%;
+  }
+}

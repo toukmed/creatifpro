@@ -1,17 +1,22 @@
-// Jira-inspired CRM Sidebar
+// ─── Modern Elegant Sidebar ────────────────────────────────────────────
 
 // Design Tokens
-$sidebar-border: #EBECF0;
-$nav-text: #44546F;
-$nav-text-hover: #172B4D;
-$nav-active-bg: #E9F2FF;
-$nav-active-text: #0C66E4;
-$nav-active-border: #0C66E4;
-$nav-hover-bg: #F1F2F4;
-$logout-hover-bg: #FFEDEB;
-$logout-hover-text: #AE2A19;
-$section-label: #626F86;
-$transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+$sidebar-bg: #ffffff;
+$nav-text: #5f6d7e;
+$nav-text-hover: #272d37;
+$nav-active-accent: #ff6600;
+$nav-active-accent-light: rgba(255, 102, 0, 0.08);
+$nav-active-accent-glow: rgba(255, 102, 0, 0.15);
+$nav-hover-bg: #f6f7f9;
+$logout-hover-bg: #fff0f0;
+$logout-hover-text: #d93025;
+$section-label: #a0aec0;
+$divider: #f0f1f3;
+$icon-bg-active: rgba(255, 102, 0, 0.1);
+$icon-bg-hover: #eef0f3;
+$ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+$transition-fast: 0.18s $ease-smooth;
+$transition-med: 0.25s $ease-smooth;
 
 :host {
   display: flex;
@@ -24,18 +29,20 @@ $transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: $sidebar-bg;
 }
 
 // ── Navigation ─────────────────────────────
 
 .sidebar-nav {
   flex: 1;
-  padding: 12px 8px;
+  padding: 16px 10px 8px;
   overflow-y: auto;
   overflow-x: hidden;
 
+  // Invisible scrollbar that appears on hover
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 3px;
   }
 
   &::-webkit-scrollbar-track {
@@ -43,77 +50,117 @@ $transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: $sidebar-border;
-    border-radius: 4px;
+    background: transparent;
+    border-radius: 10px;
+    transition: background $transition-med;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
 
     &:hover {
-      background: #C1C7D0;
+      background: rgba(0, 0, 0, 0.2);
     }
   }
 }
 
 .nav-section-label {
   display: block;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 700;
   color: $section-label;
-  letter-spacing: 0.8px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  padding: 4px 12px 8px;
+  padding: 4px 14px 14px;
   user-select: none;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 7px 12px;
-  border-radius: 6px;
+  gap: 12px;
+  padding: 0 12px;
+  height: 42px;
+  border-radius: 10px;
   color: $nav-text;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
-  transition: all $transition;
+  transition:
+    background $transition-fast,
+    color $transition-fast,
+    box-shadow $transition-med,
+    transform 0.1s ease;
   position: relative;
-  margin-bottom: 1px;
   border: none;
   background: none;
   width: 100%;
   box-sizing: border-box;
-  line-height: 20px;
+  line-height: 1;
   -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
 
   &:hover {
     background: $nav-hover-bg;
     color: $nav-text-hover;
+
+    .nav-icon-wrapper {
+      background: $icon-bg-hover;
+    }
   }
 
-  &.active {
-    background: $nav-active-bg;
-    color: $nav-active-text;
-    font-weight: 600;
+  &:active {
+    transform: scale(0.985);
+  }
 
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 6px;
-      bottom: 6px;
-      width: 3px;
-      background: $nav-active-border;
-      border-radius: 0 3px 3px 0;
+  // ── Active state ──
+  &.active {
+    background: $nav-active-accent-light;
+    color: $nav-active-accent;
+    font-weight: 600;
+    box-shadow: inset 3px 0 0 $nav-active-accent;
+
+    .nav-icon-wrapper {
+      background: $icon-bg-active;
+      color: $nav-active-accent;
     }
 
     .nav-icon {
-      color: $nav-active-text;
+      color: $nav-active-accent;
+    }
+
+    .nav-indicator {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 
   &:focus-visible {
-    outline: 2px solid $nav-active-text;
+    outline: 2px solid $nav-active-accent;
     outline-offset: -2px;
+    border-radius: 10px;
   }
+}
+
+.nav-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition:
+    background $transition-fast,
+    color $transition-fast;
+  background: transparent;
 }
 
 .nav-icon {
@@ -125,6 +172,7 @@ $transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color $transition-fast;
 }
 
 .nav-label {
@@ -135,20 +183,48 @@ $transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
 }
 
+.nav-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $nav-active-accent;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: scale(0);
+  transition:
+    opacity $transition-med,
+    transform $transition-med;
+}
+
 // ── Footer ─────────────────────────────────
 
 .sidebar-footer {
-  padding: 8px;
-  border-top: 1px solid $sidebar-border;
+  padding: 4px 10px 12px;
   flex-shrink: 0;
+}
+
+.footer-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, $divider 15%, $divider 85%, transparent);
+  margin: 0 8px 8px;
 }
 
 .logout-item {
   font-family: inherit;
+  height: 40px;
+
+  .nav-icon-wrapper {
+    background: transparent;
+  }
 
   &:hover {
     background: $logout-hover-bg;
     color: $logout-hover-text;
+
+    .nav-icon-wrapper {
+      background: rgba(217, 48, 37, 0.08);
+      color: $logout-hover-text;
+    }
 
     .nav-icon {
       color: $logout-hover-text;
@@ -160,15 +236,50 @@ $transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
 .sidebar-inner.collapsed {
   .sidebar-nav {
-    padding: 12px 4px;
+    padding: 16px 6px 8px;
+  }
+
+  .nav-list {
+    gap: 4px;
   }
 
   .nav-item {
     justify-content: center;
-    padding: 8px;
+    padding: 0;
+    height: 42px;
+    width: 42px;
+    margin: 0 auto;
+    gap: 0;
+
+    &.active {
+      box-shadow: none;
+      background: $nav-active-accent-light;
+      border: 1.5px solid $nav-active-accent-glow;
+
+      .nav-icon-wrapper {
+        background: transparent;
+      }
+    }
+  }
+
+  .nav-icon-wrapper {
+    width: 34px;
+    height: 34px;
   }
 
   .sidebar-footer {
-    padding: 8px 4px;
+    padding: 4px 6px 12px;
+  }
+
+  .footer-divider {
+    margin: 0 4px 8px;
+  }
+
+  .logout-item {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto;
+    padding: 0;
+    justify-content: center;
   }
 }

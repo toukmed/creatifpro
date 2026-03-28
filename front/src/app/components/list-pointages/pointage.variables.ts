@@ -5,6 +5,6 @@ export const columns = [
   { path: 'employee.cin', libelle: 'Cin' },
   { path: 'employee.chantier', libelle: 'Chantier' },
   { path: 'project.code', libelle: 'Projet' },
-  { path: 'totalHours', libelle: 'Heures travaillées' },
+  { path: 'workedDays', libelle: 'Jours travaillés' },
   { path: 'pointageDate', libelle: 'Dernier pointage' }
 ];

@@ -36,7 +36,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, $accent-blue, #2684ff);
+  background: linear-gradient(135deg, $accent-blue, #ff7a1a);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -438,6 +438,35 @@
 
 .edit-comment {
   font-size: 11px;
+}
+
+.edit-paid-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  color: $text-muted;
+  padding: 2px 0;
+
+  input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: $success-green;
+  }
+
+  .paid-toggle-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+    color: $warning-orange;
+  }
+
+  .paid-toggle-label {
+    font-weight: 500;
+  }
 }
 
 .edit-actions {

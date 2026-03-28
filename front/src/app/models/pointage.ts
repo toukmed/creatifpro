@@ -6,7 +6,7 @@ export class Pointage extends Resource {
   employee: Employe;
   project: Project;
   pointageDate: Date;
-  totalHours: number;
+  workedDays: number;
   comment: string;
   isPaid: boolean;
 }

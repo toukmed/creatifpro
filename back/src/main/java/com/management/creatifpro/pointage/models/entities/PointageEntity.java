@@ -40,8 +40,8 @@ public class PointageEntity extends BaseEntity {
     private EmployeeEntity employee;
     @Column(name = "POINTAGE_DATE")
     private LocalDate pointageDate;
-    @Column(name = "TOTAL_HOURS")
-    private Float totalHours;
+    @Column(name = "WORKED_DAYS")
+    private Float workedDays;
     @Column(name = "IS_PAID")
     private boolean paid;
     @Column(name = "COMMENT")

@@ -201,8 +201,14 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
         <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
-            Aucun utilisateur trouvé
+          <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+            <div class="empty-state">
+              <div class="empty-state-icon-wrapper">
+                <mat-icon class="empty-state-icon">group</mat-icon>
+              </div>
+              <p class="empty-state-title">Aucun utilisateur trouvé</p>
+              <p class="empty-state-subtitle">Commencez par créer un utilisateur pour le voir apparaître ici.</p>
+            </div>
           </td>
         </tr>
       </mat-table>

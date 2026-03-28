@@ -22,6 +22,7 @@ interface CalendarDay {
   editing: boolean;
   editValue: number | null;
   editComment: string;
+  editIsPaid: boolean;
 }
 
 @Component({
@@ -144,6 +145,7 @@ export class CalendarPointageDialogComponent implements OnInit {
       editing: false,
       editValue: null,
       editComment: '',
+      editIsPaid: false,
     };
   }
 
@@ -222,8 +224,9 @@ export class CalendarPointageDialogComponent implements OnInit {
       }
     }
     day.editing = true;
-    day.editValue = day.pointage?.totalHours ?? null;
+    day.editValue = day.pointage?.workedDays ?? null;
     day.editComment = day.pointage?.comment ?? '';
+    day.editIsPaid = day.pointage?.isPaid ?? false;
   }
 
   cancelEdit(day: CalendarDay): void {
@@ -241,12 +244,13 @@ export class CalendarPointageDialogComponent implements OnInit {
       const updated = {
         ...day.pointage,
         pointageDate: pDate ? formatDateToYMD(pDate) : day.pointage.pointageDate,
-        totalHours: day.editValue,
+        workedDays: day.editValue,
         comment: day.editComment,
+        isPaid: day.editIsPaid,
       };
       this.pointageService.update(updated, this.endpoint).subscribe({
         next: (resp: any) => {
-          day.pointage = { ...day.pointage, ...resp, totalHours: day.editValue, comment: day.editComment };
+          day.pointage = { ...day.pointage, ...resp, workedDays: day.editValue, comment: day.editComment, isPaid: day.editIsPaid };
           day.editing = false;
           this.saving = false;
           this.snackBar.success('Pointage mis à jour');
@@ -265,15 +269,16 @@ export class CalendarPointageDialogComponent implements OnInit {
           start: formatDateToYMD(day.date),
           end: formatDateToYMD(day.date),
         },
-        totalHours: day.editValue,
+        workedDays: day.editValue,
         comment: day.editComment,
+        isPaid: day.editIsPaid,
       };
       this.pointageService.create(entity, this.endpoint).subscribe({
         next: (created: any) => {
           const result = Array.isArray(created) ? created[0] : created;
           day.pointage = result
-            ? { ...result, totalHours: day.editValue, comment: day.editComment }
-            : { totalHours: day.editValue, comment: day.editComment, pointageDate: day.date };
+            ? { ...result, workedDays: day.editValue, comment: day.editComment, isPaid: day.editIsPaid }
+            : { workedDays: day.editValue, comment: day.editComment, isPaid: day.editIsPaid, pointageDate: day.date };
           day.editing = false;
           this.saving = false;
           this.snackBar.success('Pointage créé');
@@ -290,12 +295,12 @@ export class CalendarPointageDialogComponent implements OnInit {
     this.dialogRef.close(true);
   }
 
-  getTotalHoursForMonth(): number {
+  getTotalDaysForMonth(): number {
     let total = 0;
     for (const week of this.calendarWeeks) {
       for (const day of week) {
-        if (day.isCurrentMonth && day.pointage?.totalHours) {
-          total += day.pointage.totalHours;
+        if (day.isCurrentMonth && day.pointage?.workedDays) {
+          total += day.pointage.workedDays;
         }
       }
     }
@@ -306,7 +311,7 @@ export class CalendarPointageDialogComponent implements OnInit {
     let count = 0;
     for (const week of this.calendarWeeks) {
       for (const day of week) {
-        if (day.isCurrentMonth && day.pointage?.totalHours > 0) {
+        if (day.isCurrentMonth && day.pointage?.workedDays > 0) {
           count++;
         }
       }

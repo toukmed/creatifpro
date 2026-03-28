@@ -45,10 +45,24 @@ export const navLinks: NavLink[] = [
     roles: ['SUPER_ADMIN', 'ADMIN'],
   },
   {
+    link: '/factures',
+    icon: 'receipt_long',
+    libelle: 'Factures',
+    desc: 'Gestion des factures',
+    roles: ['SUPER_ADMIN', 'ADMIN'],
+  },
+  {
     link: '/stock',
     icon: 'warehouse',
     libelle: 'Stock',
     desc: 'Gestion du stock',
+    roles: ['SUPER_ADMIN', 'ADMIN'],
+  },
+  {
+    link: '/fiche-paie',
+    icon: 'description',
+    libelle: 'Fiche de paie',
+    desc: 'Génération des fiches de paie',
     roles: ['SUPER_ADMIN', 'ADMIN'],
   },
   {

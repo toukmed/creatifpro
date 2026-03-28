@@ -1,12 +1,12 @@
 import { Resource } from './resource';
-import { UniteProduit } from './entree-stock';
+import { Produit } from './produit';
 
 export class SortieStock extends Resource {
-  nomComplet: string;
-  nomProduit: string;
-  typeProduit: string;
-  uniteProduit: UniteProduit;
-  poids: number;
+  produit: Produit;
   quantite: number;
-  chantier: string;
+  project: any;
+  dateSortie: string;
+  demandeur: string;
+  referenceDocument: string;
+  commentaire: string;
 }

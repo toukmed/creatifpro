@@ -1,5 +1,6 @@
 package com.management.creatifpro.pointage.controllers;
 
+import com.management.creatifpro.pointage.models.dtos.CheckExistingDatesRequestDto;
 import com.management.creatifpro.pointage.models.dtos.CreatePointageRequestDto;
 import com.management.creatifpro.pointage.models.dtos.PointageResponseDto;
 import com.management.creatifpro.pointage.models.dtos.SearchPointageRequestDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -48,6 +50,11 @@ public class PointageController {
     @PostMapping("/create")
     public ResponseEntity<List<PointageResponseDto>> createBulk(@RequestBody @Valid CreatePointageRequestDto request) {
         return ok(pointageService.create(request));
+    }
+
+    @PostMapping("/existing-dates")
+    public ResponseEntity<List<LocalDate>> findExistingDates(@RequestBody CheckExistingDatesRequestDto request) {
+        return ok(pointageService.findExistingDates(request.employeeIds(), request.start(), request.end()));
     }
 
     @PutMapping("/update")

@@ -1,9 +1,10 @@
 package com.management.creatifpro.stock.models.entities;
 
 import com.management.creatifpro.common.entities.BaseEntity;
-import com.management.creatifpro.stock.models.enums.UniteProduit;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,22 +18,25 @@ public class EntreeStockEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NOM_COMPLET")
-    private String nomComplet;
+    @ManyToOne
+    @JoinColumn(name = "PRODUIT_ID", nullable = false)
+    private ProduitEntity produit;
 
-    @Column(name = "NOM_PRODUIT")
-    private String nomProduit;
-
-    @Column(name = "TYPE_PRODUIT")
-    private String typeProduit;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "UNITE_PRODUIT")
-    private UniteProduit uniteProduit;
-
-    @Column(name = "POIDS")
-    private Double poids;
-
-    @Column(name = "QUANTITE")
+    @Column(name = "QUANTITE", nullable = false)
     private Double quantite;
+
+    @Column(name = "PRIX_UNITAIRE")
+    private Double prixUnitaire;
+
+    @Column(name = "FOURNISSEUR")
+    private String fournisseur;
+
+    @Column(name = "DATE_ENTREE")
+    private LocalDate dateEntree;
+
+    @Column(name = "REFERENCE_DOCUMENT")
+    private String referenceDocument;
+
+    @Column(name = "COMMENTAIRE")
+    private String commentaire;
 }

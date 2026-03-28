@@ -20,6 +20,8 @@ export const authGuard: CanActivateFn = (
     '/utilisateurs',
     '/materiels',
     '/stock',
+    '/factures',
+    '/fiche-paie',
   ];
   let token = localStorage.getItem('auth_token');
   if (token !== null) {

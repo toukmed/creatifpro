@@ -84,10 +84,10 @@ public class PointageService {
     @Transactional
     public List<PointageResponseDto> create(CreatePointageRequestDto request) {
         validateDateRange(request.pointageDateRange());
-        validateNoExistingPointages(request);
 
         return request.employees().stream()
                 .flatMap(employee -> getDateRange(request.pointageDateRange())
+                        .filter(date -> !pointageRepository.exist(employee.id(), date))
                         .map(date -> createPointage(request, employee, date)))
                 .toList();
     }
@@ -95,8 +95,11 @@ public class PointageService {
     @Transactional
     public PointageResponseDto update(UpdatePointageRequestDto request) {
         PointageEntity existingPointage = findPointageById(request.id());
-        existingPointage.setTotalHours(request.totalHours());
+        existingPointage.setWorkedDays(request.workedDays());
         existingPointage.setComment(request.comment());
+        if (request.isPaid() != null) {
+            existingPointage.setPaid(request.isPaid());
+        }
         return pointageMapper.toDto(pointageRepository.save(existingPointage));
     }
 
@@ -108,6 +111,10 @@ public class PointageService {
         pointageRepository.deleteById(id);
     }
 
+    public List<LocalDate> findExistingDates(List<Long> employeeIds, LocalDate start, LocalDate end) {
+        return pointageRepository.findExistingDates(employeeIds, start, end);
+    }
+
     private PointageEntity findPointageById(Long id) {
         return pointageRepository.findById(id)
                 .orElseThrow(() -> new AppException(
@@ -116,25 +123,11 @@ public class PointageService {
 
     private PointageResponseDto createPointage(CreatePointageRequestDto request, EmployeeRequestDto employee, LocalDate date) {
         PointageEntity entity = pointageMapper.toEntity(
-                request.project(), employee, date, request.totalHours(), request.comment()
+                request.project(), employee, date, request.workedDays(), request.comment(), request.isPaid()
         );
         return pointageMapper.toDto(pointageRepository.save(entity));
     }
 
-    private void validateNoExistingPointages(CreatePointageRequestDto request) {
-        List<String> existingPointages = request.employees().stream()
-                .flatMap(employee -> getDateRange(request.pointageDateRange())
-                        .filter(date -> pointageRepository.exist(employee.id(), date))
-                        .map(date -> String.format("[ %s %s - %s ]",
-                                employee.firstName(), employee.lastName(), date)))
-                .toList();
-
-        if (!existingPointages.isEmpty()) {
-            throw new AppException(
-                    "Les pointages suivants existent déjà : " + String.join(", ", existingPointages),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
 
     private void validateDateRange(DateRangeDto dateRange) {
         LocalDate today = LocalDate.now();

@@ -1,0 +1,230 @@
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Factures</h1>
+      <span class="record-count">{{ dataSource.data.length }} factures</span>
+    </div>
+    <div class="header-right">
+      <button
+        (click)="toggleForm()"
+        mat-flat-button
+        color="primary"
+        class="btn-create">
+        <mat-icon>{{ showForm ? 'close' : 'add' }}</mat-icon>
+        {{ showForm ? 'Annuler' : 'Ajouter une facture' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Create / Edit Facture Form -->
+  @if (showForm) {
+    <div class="create-form-card">
+      <h3 class="form-title">{{ isEditing ? 'Modifier la facture' : 'Nouvelle facture' }}</h3>
+      <form [formGroup]="factureForm" (ngSubmit)="onSubmit()" class="create-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>N° Facture</mat-label>
+            <mat-icon matPrefix>receipt_long</mat-icon>
+            <input matInput formControlName="numFacture" placeholder="Ex: FAC-2024-001" />
+            @if (factureForm.get('numFacture')?.hasError('required') && factureForm.get('numFacture')?.touched) {
+              <mat-error>Le numéro de facture est requis</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>N° B.C</mat-label>
+            <mat-icon matPrefix>receipt</mat-icon>
+            <input matInput formControlName="nBc" placeholder="Ex: BC-2024-001" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Montant TTC</mat-label>
+            <mat-icon matPrefix>payments</mat-icon>
+            <input matInput formControlName="montantTtc" placeholder="Ex: 15000.00" />
+            @if (factureForm.get('montantTtc')?.hasError('required') && factureForm.get('montantTtc')?.touched) {
+              <mat-error>Le montant TTC est requis</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Projet</mat-label>
+            <mat-icon matPrefix>folder_open</mat-icon>
+            <mat-select formControlName="projectId">
+              <mat-option [value]="null">-- Aucun --</mat-option>
+              @for (project of projects; track project.id) {
+                <mat-option [value]="project.id">{{ project.code }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Date Facture</mat-label>
+            <mat-icon matPrefix>calendar_today</mat-icon>
+            <input matInput [matDatepicker]="dateFacturePicker" formControlName="dateFacture" placeholder="JJ/MM/AAAA" />
+            <mat-datepicker-toggle matSuffix [for]="dateFacturePicker"></mat-datepicker-toggle>
+            <mat-datepicker #dateFacturePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>État de paiement</mat-label>
+            <mat-icon matPrefix>flag</mat-icon>
+            <mat-select formControlName="etatPaiement">
+              <mat-option [value]="null">-- Aucun --</mat-option>
+              @for (option of etatPaiementOptions; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Date Paiement</mat-label>
+            <mat-icon matPrefix>event_available</mat-icon>
+            <input matInput [matDatepicker]="datePaiementPicker" formControlName="datePaiement" placeholder="JJ/MM/AAAA" />
+            <mat-datepicker-toggle matSuffix [for]="datePaiementPicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePaiementPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        @if (errorMessage) {
+          <div class="form-message error">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        @if (successMessage) {
+          <div class="form-message success">
+            <mat-icon>check_circle_outline</mat-icon>
+            <span>{{ successMessage }}</span>
+          </div>
+        }
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="toggleForm()">Annuler</button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="factureForm.invalid || isSubmitting">
+            @if (isSubmitting) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              {{ isEditing ? 'Mettre à jour' : 'Créer la facture' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Factures Table -->
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <div class="table-card">
+      <mat-table [dataSource]="dataSource" class="factures-table">
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+          <mat-cell *matCellDef="let facture">{{ facture.id }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="numFacture">
+          <mat-header-cell *matHeaderCellDef>N° Facture</mat-header-cell>
+          <mat-cell *matCellDef="let facture">
+            <span class="facture-tag">{{ facture.numFacture }}</span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="nBc">
+          <mat-header-cell *matHeaderCellDef>N° B.C</mat-header-cell>
+          <mat-cell *matCellDef="let facture">{{ facture.nBc }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="montantTtc">
+          <mat-header-cell *matHeaderCellDef>Montant TTC</mat-header-cell>
+          <mat-cell *matCellDef="let facture">{{ facture.montantTtc }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="projectCode">
+          <mat-header-cell *matHeaderCellDef>Projet</mat-header-cell>
+          <mat-cell *matCellDef="let facture">{{ facture.projectCode }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="dateFacture">
+          <mat-header-cell *matHeaderCellDef>Date Facture</mat-header-cell>
+          <mat-cell *matCellDef="let facture">{{ facture.dateFacture | date:'dd/MM/yyyy' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="etatPaiement">
+          <mat-header-cell *matHeaderCellDef>État Paiement</mat-header-cell>
+          <mat-cell *matCellDef="let facture">
+            @if (facture.etatPaiement) {
+              <span class="etat-badge etat-{{ facture.etatPaiement | lowercase }}">
+                {{ getEtatPaiementLabel(facture.etatPaiement) }}
+              </span>
+            }
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="datePaiement">
+          <mat-header-cell *matHeaderCellDef>Date Paiement</mat-header-cell>
+          <mat-cell *matCellDef="let facture">{{ facture.datePaiement | date:'dd/MM/yyyy' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef class="col-actions">Actions</mat-header-cell>
+          <mat-cell *matCellDef="let facture" class="col-actions">
+            <div class="row-actions">
+              <button
+                mat-icon-button
+                matTooltip="Modifier"
+                (click)="editFacture(facture)"
+                class="action-btn action-edit"
+                type="button">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                matTooltip="Supprimer"
+                (click)="deleteFacture(facture)"
+                class="action-btn action-delete"
+                type="button">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+            <div class="empty-state">
+              <div class="empty-state-icon-wrapper">
+                <mat-icon class="empty-state-icon">receipt_long</mat-icon>
+              </div>
+              <p class="empty-state-title">Aucune facture trouvée</p>
+              <p class="empty-state-subtitle">Commencez par ajouter une facture pour la voir apparaître ici.</p>
+            </div>
+          </td>
+        </tr>
+      </mat-table>
+
+      <mat-paginator
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 25]"
+        showFirstLastButtons
+        class="table-paginator">
+      </mat-paginator>
+    </div>
+  }
+</div>
+

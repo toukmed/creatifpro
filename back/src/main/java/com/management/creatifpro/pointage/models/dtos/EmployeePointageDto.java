@@ -5,6 +5,6 @@ public record EmployeePointageDto(
         String firstName,
         String lastName,
         String cin,
-        Double totalHours,
+        Double workedDays,
         String projet
 ) {}

@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 @Builder
 public class DashboardKpiResult {
-    private Double totalHeures;
-    private Double totalHeuresPayees;
-    private Double totalHeuresNonPayees;
+    private Double totalJours;
+    private Double totalJoursPayes;
+    private Double totalJoursNonPayes;
     private Long nombrePointages;
     private Long nombreEmployesActifs;
-    private Double moyenneHeuresParEmploye;
-    private Double tauxHeuresPayees;
+    private Double moyenneJoursParEmploye;
+    private Double tauxJoursPayes;
 }
 

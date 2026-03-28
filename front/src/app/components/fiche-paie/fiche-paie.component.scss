@@ -1,0 +1,63 @@
+@use 'variables' as *;
+@use 'list-page';
+
+.fiche-paie-card {
+  max-width: 800px;
+
+  .form-subtitle {
+    font-size: 14px;
+    color: $text-secondary;
+    margin: -12px 0 20px 0;
+    line-height: 1.5;
+  }
+}
+
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background: $accent-light;
+  border: 1px solid rgba($accent, 0.15);
+  border-radius: $radius-md;
+  font-size: 13px;
+  color: $text-secondary;
+  line-height: 1.5;
+  margin-bottom: 8px;
+
+  .info-icon {
+    color: $accent;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}
+
+.btn-download {
+  border-radius: $radius-sm !important;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0;
+  padding: 0 24px !important;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn-spinner {
+    display: inline-block;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
+}
+
