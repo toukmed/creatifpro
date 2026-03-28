@@ -1,0 +1,6 @@
+@use 'variables' as *;
+@use 'list-page';
+
+.materiels-table {
+  @extend %data-table;
+}

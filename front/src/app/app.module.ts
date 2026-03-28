@@ -58,6 +58,7 @@ import { MatListModule } from '@angular/material/list';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { UsersComponent } from './components/users/users.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { MaterielsComponent } from './components/materiels/materiels.component';
 
 registerLocaleData(localeFr);
 
@@ -114,6 +115,7 @@ const materialModules = [
     EmployeesComponent,
     UsersComponent,
     ProjectsComponent,
+    MaterielsComponent,
   ],
   imports: [
     ...materialModules,

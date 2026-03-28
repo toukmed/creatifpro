@@ -1,0 +1,158 @@
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Matériels</h1>
+      <span class="record-count">{{ dataSource.data.length }} matériels</span>
+    </div>
+    <div class="header-right">
+      <button
+        (click)="toggleForm()"
+        mat-flat-button
+        color="primary"
+        class="btn-create">
+        <mat-icon>{{ showForm ? 'close' : 'add' }}</mat-icon>
+        {{ showForm ? 'Annuler' : 'Ajouter un matériel' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Create / Edit Materiel Form -->
+  @if (showForm) {
+    <div class="create-form-card">
+      <h3 class="form-title">{{ isEditing ? 'Modifier le matériel' : 'Nouveau matériel' }}</h3>
+      <form [formGroup]="materielForm" (ngSubmit)="onSubmit()" class="create-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nom</mat-label>
+            <mat-icon matPrefix>inventory_2</mat-icon>
+            <input matInput formControlName="nom" placeholder="Ex: Bétonneuse" />
+            @if (materielForm.get('nom')?.hasError('required') && materielForm.get('nom')?.touched) {
+              <mat-error>Le nom est requis</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Référence</mat-label>
+            <mat-icon matPrefix>tag</mat-icon>
+            <input matInput formControlName="reference" placeholder="Ex: MAT-001" />
+            @if (materielForm.get('reference')?.hasError('required') && materielForm.get('reference')?.touched) {
+              <mat-error>La référence est requise</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Chantier</mat-label>
+            <mat-icon matPrefix>construction</mat-icon>
+            <input matInput formControlName="chantier" placeholder="Ex: STADE RABAT" />
+            @if (materielForm.get('chantier')?.hasError('required') && materielForm.get('chantier')?.touched) {
+              <mat-error>Le chantier est requis</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (errorMessage) {
+          <div class="form-message error">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        @if (successMessage) {
+          <div class="form-message success">
+            <mat-icon>check_circle_outline</mat-icon>
+            <span>{{ successMessage }}</span>
+          </div>
+        }
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="toggleForm()">Annuler</button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="materielForm.invalid || isSubmitting">
+            @if (isSubmitting) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              {{ isEditing ? 'Mettre à jour' : 'Créer le matériel' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Materiels Table -->
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <div class="table-card">
+      <mat-table [dataSource]="dataSource" class="materiels-table">
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+          <mat-cell *matCellDef="let materiel">{{ materiel.id }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="nom">
+          <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
+          <mat-cell *matCellDef="let materiel">
+            <span class="materiel-tag">{{ materiel.nom }}</span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="reference">
+          <mat-header-cell *matHeaderCellDef>Référence</mat-header-cell>
+          <mat-cell *matCellDef="let materiel">{{ materiel.reference }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="chantier">
+          <mat-header-cell *matHeaderCellDef>Chantier</mat-header-cell>
+          <mat-cell *matCellDef="let materiel">{{ materiel.chantier }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef class="col-actions">Actions</mat-header-cell>
+          <mat-cell *matCellDef="let materiel" class="col-actions">
+            <div class="row-actions">
+              <button
+                mat-icon-button
+                matTooltip="Modifier"
+                (click)="editMateriel(materiel)"
+                class="action-btn action-edit"
+                type="button">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                matTooltip="Supprimer"
+                (click)="deleteMateriel(materiel)"
+                class="action-btn action-delete"
+                type="button">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+            Aucun matériel trouvé
+          </td>
+        </tr>
+      </mat-table>
+
+      <mat-paginator
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 25]"
+        showFirstLastButtons
+        class="table-paginator">
+      </mat-paginator>
+    </div>
+  }
+</div>
