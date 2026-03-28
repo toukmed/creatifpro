@@ -41,17 +41,18 @@ public class PointageMapper {
                 .project(projectMapper.toDto(entity.getProject()))
                 .pointageDate(entity.getPointageDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.FRANCE) + " " + entity.getPointageDate().format(DATE_FORMATTER))
                 .comment(entity.getComment())
-                .totalHours(entity.getTotalHours())
+                .workedDays(entity.getWorkedDays())
                 .isPaid(entity.isPaid())
                 .build();
     }
 
-    public PointageEntity toEntity(ProjectRequestDto project, EmployeeRequestDto employee, LocalDate pointageDate, Float pointageTime, String comment) {
+    public PointageEntity toEntity(ProjectRequestDto project, EmployeeRequestDto employee, LocalDate pointageDate, Float workedDays, String comment, Boolean isPaid) {
         return PointageEntity
                 .builder()
                 .pointageDate(pointageDate)
-                .totalHours(pointageTime)
+                .workedDays(workedDays)
                 .comment(comment)
+                .paid(isPaid != null && isPaid)
                 .employee(employeeRepository
                         .findById(employee.id())
                         .orElseThrow(() -> new AppException("Employe with id: " + employee.id() + " not found", HttpStatus.NOT_FOUND)))

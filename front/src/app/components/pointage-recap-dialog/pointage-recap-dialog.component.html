@@ -1,0 +1,150 @@
+<div class="recap-dialog">
+  <!-- Header -->
+  <div class="recap-header">
+    <div class="header-icon-wrapper">
+      <mat-icon class="header-icon">fact_check</mat-icon>
+    </div>
+    <h2 class="header-title">Récapitulatif du pointage</h2>
+    <p class="header-subtitle">Veuillez vérifier les informations avant de confirmer</p>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Loading State -->
+  <div class="recap-loading" *ngIf="loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p class="loading-text">Vérification des pointages existants…</p>
+  </div>
+
+  <!-- Content -->
+  <div class="recap-content" *ngIf="!loading">
+
+    <!-- Project Section -->
+    <div class="recap-section">
+      <div class="section-label">
+        <mat-icon>folder_open</mat-icon>
+        <span>Projet</span>
+      </div>
+      <div class="section-value project-tag">
+        {{ data.projectCode }}
+        <span class="project-ref" *ngIf="data.projectReference"> — {{ data.projectReference }}</span>
+      </div>
+    </div>
+
+    <!-- Employees Section -->
+    <div class="recap-section">
+      <div class="section-label">
+        <mat-icon>group</mat-icon>
+        <span>Employés ({{ data.employees.length }})</span>
+      </div>
+      <div class="employee-list">
+        <div class="employee-tag" *ngFor="let emp of data.employees">
+          <mat-icon class="emp-icon">person</mat-icon>
+          {{ emp.firstName }} {{ emp.lastName }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Days & Payment -->
+    <div class="recap-row">
+      <div class="recap-section compact">
+        <div class="section-label">
+          <mat-icon>today</mat-icon>
+          <span>Jours / pointage</span>
+        </div>
+        <div class="section-value highlight">{{ data.workedDays === 0.5 ? '½' : data.workedDays }}j</div>
+      </div>
+      <div class="recap-section compact">
+        <div class="section-label">
+          <mat-icon>attach_money</mat-icon>
+          <span>Statut</span>
+        </div>
+        <div class="section-value">
+          <span class="payment-badge" [class.paid]="data.isPaid" [class.unpaid]="!data.isPaid">
+            <mat-icon class="payment-icon">{{ data.isPaid ? 'check_circle' : 'schedule' }}</mat-icon>
+            {{ data.isPaid ? 'Payé' : 'Impayé' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <div class="recap-section" *ngIf="data.comment">
+      <div class="section-label">
+        <mat-icon>notes</mat-icon>
+        <span>Commentaire</span>
+      </div>
+      <div class="section-value comment-text">{{ data.comment }}</div>
+    </div>
+
+    <!-- Days Timeline: New + Skipped together for context -->
+    <div class="recap-section">
+      <div class="section-label">
+        <mat-icon>date_range</mat-icon>
+        <span>Période sélectionnée ({{ data.allDays.length }} jours)</span>
+      </div>
+      <div class="days-grid">
+        <ng-container *ngFor="let day of data.allDays">
+          <div class="day-chip new-day" *ngIf="newDays.includes(day)">
+            <mat-icon class="day-icon">check_circle</mat-icon>
+            {{ formatDate(day) }}
+          </div>
+          <div class="day-chip skipped-day" *ngIf="skippedDays.includes(day)">
+            <mat-icon class="day-icon">event_busy</mat-icon>
+            {{ formatDate(day) }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Skipped days info banner -->
+    <div class="skipped-banner" *ngIf="skippedDays.length > 0">
+      <mat-icon class="skipped-banner-icon">info_outline</mat-icon>
+      <div class="skipped-banner-text">
+        <strong>{{ skippedDays.length }} jour(s) existant(s)</strong>
+        <span> — Ces dates existent déjà et ne seront pas ajoutées.</span>
+      </div>
+    </div>
+
+    <!-- All days already exist -->
+    <div class="all-exist-banner" *ngIf="hasNoDaysToCreate">
+      <mat-icon class="all-exist-icon">warning</mat-icon>
+      <div class="all-exist-text">
+        Tous les jours sélectionnés ont déjà un pointage. Aucun nouveau pointage ne sera créé.
+      </div>
+    </div>
+
+    <mat-divider *ngIf="!hasNoDaysToCreate"></mat-divider>
+
+    <!-- Summary -->
+    <div class="recap-summary" *ngIf="!hasNoDaysToCreate">
+      <div class="summary-item">
+        <span class="summary-label">Pointages à créer</span>
+        <span class="summary-value">{{ totalPointages }}</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Total jours</span>
+        <span class="summary-value">{{ totalDaysAll }}j</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="recap-actions">
+    <button mat-stroked-button class="btn-cancel" (click)="cancel()">
+      <mat-icon>arrow_back</mat-icon>
+      Retour
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      class="btn-confirm"
+      (click)="confirm()"
+      [disabled]="loading || hasNoDaysToCreate"
+    >
+      <mat-icon>check</mat-icon>
+      Confirmer et créer
+    </button>
+  </div>
+</div>
+

@@ -1,12 +1,12 @@
 import { Resource } from './resource';
-
-export type UniteProduit = 'LITRE' | 'KG' | 'METRE';
+import { Produit } from './produit';
 
 export class EntreeStock extends Resource {
-  nomComplet: string;
-  nomProduit: string;
-  typeProduit: string;
-  uniteProduit: UniteProduit;
-  poids: number;
+  produit: Produit;
   quantite: number;
+  prixUnitaire: number;
+  fournisseur: string;
+  dateEntree: string;
+  referenceDocument: string;
+  commentaire: string;
 }

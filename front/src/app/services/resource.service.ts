@@ -95,4 +95,10 @@ export class ResourceService<T extends Resource> {
       `${this.baseUrl}/${endpoint}/stats?pointageId=${id}`
     );
   }
+
+  public downloadPdf(endpoint: string): Observable<Blob> {
+    return this.httpClient.get(`${this.baseUrl}/${endpoint}`, {
+      responseType: 'blob',
+    });
+  }
 }

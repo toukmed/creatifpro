@@ -22,13 +22,13 @@ public class KpiService {
         DashboardKpiResult kpis = kpiQueryBuilder.getDashboardKpis(request);
 
         return KpiResponseDto.builder()
-                .getTotalHeures(kpis.getTotalHeures())
+                .getTotalJours(kpis.getTotalJours())
                 .getNombrePointages(kpis.getNombrePointages())
-                .getTauxHeuresPayees(kpis.getTauxHeuresPayees())
-                .getTotalHeuresPayees(kpis.getTotalHeuresPayees())
-                .getTotalHeuresNonPayees(kpis.getTotalHeuresNonPayees())
+                .getTauxJoursPayes(kpis.getTauxJoursPayes())
+                .getTotalJoursPayes(kpis.getTotalJoursPayes())
+                .getTotalJoursNonPayes(kpis.getTotalJoursNonPayes())
                 .getNombreEmployesActifs(kpis.getNombreEmployesActifs())
-                .getMoyenneHeuresParEmploye(kpis.getMoyenneHeuresParEmploye())
+                .getMoyenneJoursParEmploye(kpis.getMoyenneJoursParEmploye())
                 .build();
     }
 }

@@ -11,7 +11,7 @@ public record PointageResponseDto(
         ProjectResponseDto project,
         EmployeeResponseDto employee,
         String pointageDate,
-        Float totalHours,
+        Float workedDays,
         String comment,
         Boolean isPaid
 

@@ -220,9 +220,9 @@ h3:after {
 
 .snackbar-info {
   @include snackbar-variant(
-    linear-gradient(135deg, #e8f0fe 0%, #eff6ff 100%),
-    #0052cc,
-    #0052cc
+    linear-gradient(135deg, #fff4eb 0%, #fff8f2 100%),
+    #ff6600,
+    #ff6600
   );
 }
 
@@ -301,10 +301,10 @@ button[matMiniFab] {
   height: 30px !important;
   min-width: 30px !important;
   min-height: 30px !important;
-  border: 1px solid #E0E0E0; 
+  border: 1px solid #E0E0E0;
   background-color: white;
   border-radius: 10%;
-  
+
   .mat-icon {
     font-size: 15px;
     width: 15px;
@@ -326,6 +326,7 @@ button[matMiniFab] {
       padding: 0 !important;
     }
   }
+}
 
 // ─── Calendar Dialog Panel ─────────────────────────────────────────────
 .calendar-dialog-panel {
@@ -341,4 +342,18 @@ button[matMiniFab] {
     }
   }
 }
+
+// ─── Recap Dialog Panel ────────────────────────────────────────────────
+.recap-dialog-panel {
+  .mat-mdc-dialog-container {
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 16px 56px rgba(9, 30, 66, 0.22), 0 0 1px rgba(9, 30, 66, 0.14);
+
+    .mdc-dialog__surface {
+      border-radius: 16px !important;
+      padding: 0 !important;
+    }
+  }
 }

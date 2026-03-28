@@ -1,16 +1,17 @@
 package com.management.creatifpro.stock.models.dtos;
 
-import com.management.creatifpro.stock.models.enums.UniteProduit;
 import lombok.Builder;
+
+import java.time.LocalDate;
 
 @Builder
 public record SortieStockRequestDto(
         Long id,
-        String nomComplet,
-        String nomProduit,
-        String typeProduit,
-        UniteProduit uniteProduit,
-        Double poids,
+        Long produitId,
         Double quantite,
-        String chantier
+        Long projectId,
+        LocalDate dateSortie,
+        String demandeur,
+        String referenceDocument,
+        String commentaire
 ) {}

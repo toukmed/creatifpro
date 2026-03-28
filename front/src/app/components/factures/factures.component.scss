@@ -1,0 +1,7 @@
+@use 'variables' as *;
+@use 'list-page';
+
+.factures-table {
+  @extend %data-table;
+}
+

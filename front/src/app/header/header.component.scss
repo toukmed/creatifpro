@@ -1,20 +1,42 @@
+// ─── Modern Elegant Header ─────────────────────────────────────────────
+
+// Design Tokens (aligned with sidebar)
+$topbar-bg: #ffffff;
+$text-primary: #272d37;
+$text-secondary: #5f6d7e;
+$text-muted: #a0aec0;
+$accent: #ff6600;
+$accent-light: rgba(255, 102, 0, 0.08);
+$accent-glow: rgba(255, 102, 0, 0.15);
+$hover-bg: #f6f7f9;
+$divider: #f0f1f3;
+$ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+$transition-fast: 0.18s $ease-smooth;
+$transition-med: 0.25s $ease-smooth;
+
+// ── Topbar ─────────────────────────────────
+
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  height: 56px;
-  min-height: 56px;
-  background: #fff;
-  border-bottom: 1px solid #EBECF0;
+  padding: 0 20px;
+  height: 58px;
+  min-height: 58px;
+  background: $topbar-bg;
+  border-bottom: 1px solid $divider;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.025);
   flex-shrink: 0;
   z-index: 20;
+  -webkit-font-smoothing: antialiased;
 }
+
+// ── Left Section ───────────────────────────
 
 .topbar-start {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -22,19 +44,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border: none;
   background: none;
-  border-radius: 6px;
-  color: #44546F;
+  border-radius: 8px;
+  color: $text-secondary;
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.15s ease;
+  transition:
+    background $transition-fast,
+    color $transition-fast,
+    transform 0.1s ease;
 
   &:hover {
-    background: #F1F2F4;
-    color: #172B4D;
+    background: $hover-bg;
+    color: $text-primary;
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: -2px;
   }
 
   mat-icon {
@@ -44,48 +78,81 @@
   }
 }
 
+// ── Brand ──────────────────────────────────
+
 .brand-link {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
   cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 8px;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $hover-bg;
+  }
 }
 
 .brand-logo {
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, #0C66E4, #0052CC);
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #ff7a1a, $accent);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(12, 102, 228, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.25);
+  transition: box-shadow $transition-med;
+
+  .brand-link:hover & {
+    box-shadow: 0 3px 12px rgba(255, 102, 0, 0.35);
+  }
 
   span {
     color: #fff;
-    font-weight: 700;
-    font-size: 14px;
+    font-weight: 800;
+    font-size: 12px;
     line-height: 1;
+    letter-spacing: 0.5px;
   }
 }
 
-.brand-name {
-  font-weight: 600;
-  font-size: 15px;
-  color: #172B4D;
-  white-space: nowrap;
-  letter-spacing: -0.2px;
+.brand-text {
+  display: flex;
+  flex-direction: column;
 }
+
+.brand-name {
+  font-weight: 700;
+  font-size: 15.5px;
+  color: $text-primary;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+
+// ── Divider ────────────────────────────────
 
 .topbar-divider {
   width: 1px;
-  height: 20px;
-  background: #DFE1E6;
+  height: 22px;
+  background: linear-gradient(180deg, transparent, $divider 20%, $divider 80%, transparent);
   flex-shrink: 0;
   margin: 0 4px;
 }
+
+.topbar-divider-sm {
+  width: 1px;
+  height: 18px;
+  background: $divider;
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+
+// ── Breadcrumbs ────────────────────────────
 
 .breadcrumb-trail {
   display: flex;
@@ -97,12 +164,13 @@
 .crumb {
   font-size: 13px;
   font-weight: 500;
-  color: #626F86;
+  color: $text-muted;
   letter-spacing: 0.01em;
   white-space: nowrap;
+  transition: color $transition-fast;
 
   &.crumb-active {
-    color: #172B4D;
+    color: $text-primary;
     font-weight: 600;
   }
 }
@@ -111,27 +179,137 @@
   font-size: 16px;
   width: 16px;
   height: 16px;
-  color: #B3BAC5;
+  color: #d0d5dd;
 }
+
+// ── Right Section ──────────────────────────
 
 .topbar-end {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-shrink: 0;
 }
 
-.version-tag {
-  font-size: 11px;
-  font-weight: 600;
-  color: #626F86;
-  background: #F1F2F4;
-  padding: 2px 8px;
-  border-radius: 3px;
-  letter-spacing: 0.5px;
+// ── Status Badge ───────────────────────────
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: $accent-light;
+  border: 1px solid $accent-glow;
+  border-radius: 20px;
   user-select: none;
 }
 
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $accent;
+  flex-shrink: 0;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
 
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.4);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 0 4px rgba(255, 102, 0, 0);
+  }
+}
 
+.status-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: $accent;
+  letter-spacing: 1px;
+  line-height: 1;
+}
 
+// ── User Area ──────────────────────────────
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px 4px 4px;
+  border-radius: 10px;
+  cursor: default;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $hover-bg;
+  }
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff7a1a, $accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(255, 102, 0, 0.2);
+
+  span {
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.3px;
+  }
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-primary;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.user-role {
+  font-size: 11px;
+  font-weight: 500;
+  color: $text-muted;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+// ── Responsive ─────────────────────────────
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 12px;
+    height: 52px;
+    min-height: 52px;
+  }
+
+  .brand-text,
+  .topbar-divider,
+  .breadcrumb-trail {
+    display: none;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+  .topbar-end {
+    gap: 8px;
+  }
+}

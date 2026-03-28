@@ -41,7 +41,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CustomDateAdapter } from './services/custom-date-adapter';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { EditHeaderComponent } from './components/edit-pointage/edit-header/edit-header.component';
 import { MatChipsModule } from '@angular/material/chips';
 import localeFr from '@angular/common/locales/fr';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -49,17 +48,17 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ValidationButtonsComponent } from './validation-buttons/validation-buttons.component';
 import { ListPointageComponent } from './components/list-pointages/list-pointage.component';
-import { AddPointageComponent } from './components/add-pointage/add-pointage.component';
-import { AddPointageDialogComponent } from './components/add-pointage-dialog/add-pointage-dialog.component';
-import { EditPointageComponent } from './components/edit-pointage/edit-pointage.component';
-import { VisuPointageComponent } from './components/edit-pointage/visu-pointage/visu-pointage.component';
 import { CalendarPointageDialogComponent } from './components/calendar-pointage-dialog/calendar-pointage-dialog.component';
 import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { UsersComponent } from './components/users/users.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { MaterielsComponent } from './components/materiels/materiels.component';
+import { FacturesComponent } from './components/factures/factures.component';
 import { StockComponent } from './components/stock/stock.component';
+import { PointageRecapDialogComponent } from './components/pointage-recap-dialog/pointage-recap-dialog.component';
+import { FichePaieComponent } from './components/fiche-paie/fiche-paie.component';
 
 registerLocaleData(localeFr);
 
@@ -108,16 +107,15 @@ const materialModules = [
     ConfirmDialogComponent,
     ValidationButtonsComponent,
     ListPointageComponent,
-    AddPointageComponent,
-    AddPointageDialogComponent,
-    EditPointageComponent,
-    VisuPointageComponent,
     CalendarPointageDialogComponent,
     EmployeesComponent,
     UsersComponent,
     ProjectsComponent,
     MaterielsComponent,
+    FacturesComponent,
     StockComponent,
+    PointageRecapDialogComponent,
+    FichePaieComponent,
   ],
   imports: [
     ...materialModules,
@@ -131,11 +129,11 @@ const materialModules = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatListModule,
+    MatDividerModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
-    EditHeaderComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: tokenInterceptor, multi: true },

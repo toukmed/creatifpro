@@ -1,0 +1,96 @@
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Fiche de paie</h1>
+      <span class="record-count">Génération PDF</span>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="create-form-card fiche-paie-card">
+    <h3 class="form-title">Générer une fiche de paie</h3>
+    <p class="form-subtitle">
+      Sélectionnez un employé et une période pour télécharger le bulletin de paie au format PDF.
+    </p>
+
+    <form [formGroup]="ficheForm" (ngSubmit)="onDownload()" class="create-form">
+      <div class="form-row">
+        <!-- Employee Select -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Employé</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-select formControlName="employeeId" placeholder="Sélectionner un employé">
+            @for (emp of employees; track emp.id) {
+              <mat-option [value]="emp.id">{{ getEmployeeLabel(emp) }}</mat-option>
+            }
+          </mat-select>
+          @if (loadingEmployees) {
+            <mat-hint>Chargement des employés...</mat-hint>
+          }
+          @if (ficheForm.get('employeeId')?.hasError('required') && ficheForm.get('employeeId')?.touched) {
+            <mat-error>L'employé est requis</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Year Select -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Année</mat-label>
+          <mat-icon matPrefix>calendar_today</mat-icon>
+          <mat-select formControlName="year">
+            @for (year of availableYears; track year) {
+              <mat-option [value]="year">{{ year }}</mat-option>
+            }
+          </mat-select>
+          @if (ficheForm.get('year')?.hasError('required') && ficheForm.get('year')?.touched) {
+            <mat-error>L'année est requise</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Month Select -->
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Mois</mat-label>
+          <mat-icon matPrefix>date_range</mat-icon>
+          <mat-select formControlName="month">
+            @for (m of availableMonths; track m.value) {
+              <mat-option [value]="m.value" [disabled]="isMonthDisabled(m.value)">
+                {{ m.label }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (ficheForm.get('month')?.hasError('required') && ficheForm.get('month')?.touched) {
+            <mat-error>Le mois est requis</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Info Box -->
+      <div class="info-box">
+        <mat-icon class="info-icon">info</mat-icon>
+        <span>
+          La fiche de paie est générée en fonction des pointages enregistrés pour la période sélectionnée.
+          Seuls les mois clôturés (antérieurs au mois en cours) sont disponibles.
+        </span>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="btn-download"
+          [disabled]="ficheForm.invalid || loading">
+          @if (loading) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+            Génération en cours...
+          } @else {
+            <mat-icon>picture_as_pdf</mat-icon>
+            Télécharger la fiche de paie
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

@@ -15,9 +15,10 @@ public record UpdatePointageRequestDto(
         ProjectRequestDto project,
         EmployeeRequestDto employee,
         LocalDate pointageDate,
-        @Max(12)
-        Float totalHours,
+        @Max(1)
+        Float workedDays,
         @Length(max = 100)
-        String comment
+        String comment,
+        Boolean isPaid
 ) {
 }

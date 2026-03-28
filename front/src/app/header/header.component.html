@@ -1,25 +1,51 @@
-<div class="topbar">
+<header class="topbar">
+  <!-- Left section -->
   <div class="topbar-start">
     <button
       class="sidebar-toggle"
       (click)="toggleSidebar.emit()"
-      [attr.aria-label]="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+      [attr.aria-label]="sidebarCollapsed ? 'Ouvrir le menu' : 'Fermer le menu'"
+      matTooltip="{{ sidebarCollapsed ? 'Ouvrir le menu' : 'Fermer le menu' }}"
+      matTooltipPosition="below">
       <mat-icon>{{ sidebarCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
     </button>
+
     <div class="brand-link" routerLink="/accueil">
-      <div class="brand-logo"><span>C</span></div>
-      <span class="brand-name">CreatifPro</span>
+      <div class="brand-logo">
+        <span>CP</span>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">CreatifPro</span>
+      </div>
     </div>
+
     <span class="topbar-divider"></span>
-    <div class="breadcrumb-trail">
+
+    <nav class="breadcrumb-trail" aria-label="Fil d'Ariane">
       <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
         <span class="crumb" [class.crumb-active]="last">{{ crumb }}</span>
         <mat-icon class="crumb-separator" *ngIf="!last">chevron_right</mat-icon>
       </ng-container>
+    </nav>
+  </div>
+
+  <!-- Right section -->
+  <div class="topbar-end">
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      <span class="status-label">BETA</span>
+    </div>
+
+    <span class="topbar-divider-sm"></span>
+
+    <div class="user-area" *ngIf="userName">
+      <div class="user-avatar">
+        <span>{{ userInitials }}</span>
+      </div>
+      <div class="user-info">
+        <span class="user-name">{{ userName }}</span>
+        <span class="user-role">{{ userRole }}</span>
+      </div>
     </div>
   </div>
-  <div class="topbar-end">
-    <span class="version-tag">BETA 0.0.1</span>
-  </div>
-</div>
-
+</header>

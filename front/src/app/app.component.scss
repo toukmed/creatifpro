@@ -24,8 +24,10 @@ $sidebar-border: #EBECF0;
   flex-shrink: 0;
   transition: width $transition;
   background: #fff;
-  border-right: 1px solid $sidebar-border;
+  border-right: 1px solid #f0f1f3;
+  box-shadow: 1px 0 8px rgba(0, 0, 0, 0.03);
   overflow: hidden;
+  z-index: 10;
 }
 
 .sidebar-collapsed .app-sidebar {

@@ -4,11 +4,11 @@ import lombok.Builder;
 
 @Builder
 public record KpiResponseDto(
-        Double getTotalHeures,
-        Double getTotalHeuresPayees,
-        Double getTotalHeuresNonPayees,
+        Double getTotalJours,
+        Double getTotalJoursPayes,
+        Double getTotalJoursNonPayes,
         Long getNombrePointages,
         Long getNombreEmployesActifs,
-        Double getMoyenneHeuresParEmploye,
-        Double getTauxHeuresPayees) {
+        Double getMoyenneJoursParEmploye,
+        Double getTauxJoursPayes) {
 }

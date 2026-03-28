@@ -1,4 +1,208 @@
 <div class="page-container">
+  <!-- Dashboard Section -->
+  <div class="dashboard-section">
+    <button class="dashboard-toggle" (click)="toggleDashboard()" type="button">
+      <div class="toggle-left">
+        <mat-icon class="toggle-icon">insights</mat-icon>
+        <span class="toggle-title">Tableau de bord</span>
+        <span class="toggle-badge">{{ stats.totalPointages }} pointages</span>
+      </div>
+      <mat-icon class="toggle-chevron" [class.rotated]="dashboardOpen">expand_more</mat-icon>
+    </button>
+
+    @if (dashboardOpen) {
+      <div class="dashboard-body">
+        @if (statsLoading) {
+          <div class="dashboard-loading">
+            <mat-spinner diameter="32"></mat-spinner>
+            <span>Chargement des statistiques...</span>
+          </div>
+        } @else {
+          <!-- KPI Cards Row -->
+          <div class="kpi-row">
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper kpi-blue">
+                <mat-icon>today</mat-icon>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-value">{{ stats.totalDays | number:'1.0-1' }}j</span>
+                <span class="kpi-label">Jours totaux</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper kpi-green">
+                <mat-icon>trending_up</mat-icon>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-value">{{ stats.avgDaysPerEmployee }}j</span>
+                <span class="kpi-label">Moy. / employé pointé</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper kpi-orange">
+                <mat-icon>people</mat-icon>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-value">{{ stats.uniqueEmployees }}</span>
+                <span class="kpi-label">Employés actifs</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper kpi-purple">
+                <mat-icon>folder_open</mat-icon>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-value">{{ stats.uniqueProjects }}</span>
+                <span class="kpi-label">Projets</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper kpi-teal">
+                <mat-icon>payments</mat-icon>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-value">{{ stats.totalCost | number:'1.0-0' }} DH</span>
+                <span class="kpi-label">Coût total estimé</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Detail Row -->
+          <div class="stats-detail-row">
+            <!-- Payment Status -->
+            <div class="stats-card">
+              <div class="stats-card-header">
+                <mat-icon class="stats-card-icon">account_balance_wallet</mat-icon>
+                <h4 class="stats-card-title">Statut de paiement</h4>
+              </div>
+              <div class="payment-stats">
+                <div class="payment-bar-wrapper">
+                  <div class="payment-bar">
+                    <div class="payment-bar-fill paid" [style.width.%]="stats.paidPercentage"></div>
+                  </div>
+                  <div class="payment-bar-labels">
+                    <span class="payment-label paid-label">
+                      <span class="payment-dot paid-dot"></span>
+                      Payé: {{ stats.totalPaid }}
+                    </span>
+                    <span class="payment-label unpaid-label">
+                      <span class="payment-dot unpaid-dot"></span>
+                      Non payé: {{ stats.totalUnpaid }}
+                    </span>
+                  </div>
+                </div>
+                <div class="payment-percentage">
+                  <span class="percentage-value">{{ stats.paidPercentage }}%</span>
+                  <span class="percentage-label">payé</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pointage Status -->
+            <div class="stats-card">
+              <div class="stats-card-header">
+                <mat-icon class="stats-card-icon">event_available</mat-icon>
+                <h4 class="stats-card-title">Statut des pointages</h4>
+              </div>
+              <div class="pointage-status-grid">
+                <div class="status-item status-pointed">
+                  <mat-icon>check_circle</mat-icon>
+                  <div class="status-info">
+                    <span class="status-value">{{ stats.daysWithPointage }}</span>
+                    <span class="status-label">Jours pointés</span>
+                  </div>
+                </div>
+                <div class="status-item status-not-pointed">
+                  <mat-icon>cancel</mat-icon>
+                  <div class="status-info">
+                    <span class="status-value">{{ stats.daysWithoutPointage }}</span>
+                    <span class="status-label">Non pointés</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Employees -->
+            <div class="stats-card stats-card-wide">
+              <div class="stats-card-header">
+                <mat-icon class="stats-card-icon">emoji_events</mat-icon>
+                <h4 class="stats-card-title">Top employés</h4>
+              </div>
+              <div class="top-employees-list">
+                @for (emp of stats.topEmployees; track emp.name; let i = $index) {
+                  <div class="top-employee-row">
+                    <div class="rank-badge" [class]="'rank-' + (i + 1)">{{ i + 1 }}</div>
+                    <span class="emp-name">{{ emp.name }}</span>
+                    <div class="emp-stats">
+                      <span class="emp-hours">{{ emp.days }}j</span>
+                      <span class="emp-days">{{ emp.pointages }} pointages</span>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="no-data-message">Aucune donnée disponible</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Row: Project Breakdown & Job Roles -->
+          <div class="stats-detail-row">
+            <!-- Project Breakdown -->
+            <div class="stats-card stats-card-wide">
+              <div class="stats-card-header">
+                <mat-icon class="stats-card-icon">donut_large</mat-icon>
+                <h4 class="stats-card-title">Répartition par projet</h4>
+              </div>
+              <div class="project-breakdown-list">
+                @for (proj of stats.projectBreakdown; track proj.code) {
+                  <div class="project-breakdown-row">
+                    <div class="project-breakdown-info">
+                      <span class="project-tag">{{ proj.code }}</span>
+                      <span class="project-breakdown-meta">{{ proj.days }} jours · {{ proj.pointages }} pointages</span>
+                    </div>
+                    <div class="project-bar-wrapper">
+                      <div class="project-bar">
+                        <div class="project-bar-fill" [style.width.%]="proj.percentage"></div>
+                      </div>
+                      <span class="project-bar-pct">{{ proj.percentage | number:'1.0-0' }}%</span>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="no-data-message">Aucune donnée disponible</div>
+                }
+              </div>
+            </div>
+
+            <!-- Job Roles -->
+            <div class="stats-card">
+              <div class="stats-card-header">
+                <mat-icon class="stats-card-icon">engineering</mat-icon>
+                <h4 class="stats-card-title">Par métier</h4>
+              </div>
+              <div class="role-breakdown-list">
+                @for (role of stats.jobRoleBreakdown; track role.role) {
+                  <div class="role-breakdown-row">
+                    <div class="role-info">
+                      <span class="role-name">{{ role.role }}</span>
+                      <span class="role-count">{{ role.count }} employé(s)</span>
+                    </div>
+                    <span class="role-hours">{{ role.days }}j</span>
+                  </div>
+                } @empty {
+                  <div class="no-data-message">Aucune donnée disponible</div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
   <!-- Page Header -->
   <div class="page-header">
     <div class="header-left">
@@ -7,17 +211,160 @@
     </div>
     <div class="header-right">
       <button
-        (click)="add()"
+        (click)="toggleForm()"
         mat-flat-button
         color="primary"
         class="btn-create"
         aria-label="Ajouter un pointage"
       >
-        <mat-icon>add</mat-icon>
-        Créer un pointage
+        <mat-icon>{{ showForm ? 'close' : 'add' }}</mat-icon>
+        {{ showForm ? 'Annuler' : 'Créer un pointage' }}
       </button>
     </div>
   </div>
+
+  <!-- Inline Create Pointage Form -->
+  @if (showForm) {
+    <div class="create-form-card">
+      <h3 class="form-title">
+        <mat-icon class="form-title-icon">{{ prefillRow ? 'post_add' : 'add_task' }}</mat-icon>
+        {{ prefillRow ? 'Ajouter des jours' : 'Nouveau pointage' }}
+      </h3>
+      @if (prefillRow) {
+        <div class="prefill-info">
+          <mat-icon>info</mat-icon>
+          <span>
+            Ajout de jours pour <strong>{{ prefillRow.employee?.firstName }} {{ prefillRow.employee?.lastName }}</strong>
+            sur le projet <strong>{{ prefillRow.project?.code }}</strong>.
+            Sélectionnez une période et le nombre de jours.
+          </span>
+        </div>
+      }
+      <form [formGroup]="addPointageForm" class="create-form">
+        <div class="form-row">
+          <!-- Project -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Projet</mat-label>
+            <mat-icon matPrefix>folder_open</mat-icon>
+            <mat-select formControlName="project" placeholder="Sélectionner un projet">
+              <mat-option *ngFor="let p of formProjects" [value]="p.code">
+                <span class="option-code">{{ p.code }}</span> — {{ p.reference }}
+              </mat-option>
+            </mat-select>
+            @if (addPointageForm.get('project')?.hasError('required') && addPointageForm.get('project')?.touched) {
+              <mat-error>Le projet est requis</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Employees -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Employés</mat-label>
+            <mat-icon matPrefix>group</mat-icon>
+            <mat-select formControlName="employees" multiple placeholder="Sélectionner les employés">
+              <mat-option *ngFor="let emp of formEmployees" [value]="emp.id">
+                {{ emp.firstName }} {{ emp.lastName }}
+              </mat-option>
+            </mat-select>
+            @if (addPointageForm.get('employees')?.hasError('required') && addPointageForm.get('employees')?.touched) {
+              <mat-error>Au moins un employé est requis</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Chips for selected employees -->
+        <div class="chips-area" *ngIf="addPointageForm.get('employees')?.value?.length">
+          <mat-chip-grid #employeeChipGrid aria-label="Employés sélectionnés">
+            <mat-chip-row
+              *ngFor="let empId of addPointageForm.get('employees')?.value"
+              (removed)="removeSelectedEmployee(empId)"
+              class="employee-chip"
+            >
+              <mat-icon matChipAvatar class="chip-avatar">person</mat-icon>
+              {{ resolveEmployeeName(empId) }}
+              <button matChipRemove aria-label="Retirer">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          </mat-chip-grid>
+        </div>
+
+        <div class="form-row">
+          <!-- Date Range -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Période</mat-label>
+            <mat-date-range-input
+              [rangePicker]="picker"
+              formGroupName="pointageDateRange"
+              [dateFilter]="disableFutureDates"
+            >
+              <input matStartDate placeholder="Début" formControlName="start" [max]="today" />
+              <input matEndDate placeholder="Fin" formControlName="end" [max]="today" />
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+            <mat-error>La période est requise</mat-error>
+          </mat-form-field>
+
+          <!-- Days -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Jours</mat-label>
+            <mat-icon matPrefix>today</mat-icon>
+            <mat-select formControlName="workedDays" placeholder="0, ½ ou 1">
+              <mat-option [value]="0">0</mat-option>
+              <mat-option [value]="0.5">½</mat-option>
+              <mat-option [value]="1">1</mat-option>
+            </mat-select>
+            @if (addPointageForm.get('workedDays')?.hasError('required') && addPointageForm.get('workedDays')?.touched) {
+              <mat-error>Le pointage est requis</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <!-- Comment -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Commentaire</mat-label>
+            <mat-icon matPrefix>notes</mat-icon>
+            <textarea matInput formControlName="comment" rows="2" placeholder="Optionnel..."></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-checkbox formControlName="isPaid" color="primary">
+            <mat-icon class="checkbox-icon">attach_money</mat-icon>
+            Marquer comme payé
+          </mat-checkbox>
+        </div>
+
+        <div class="form-row" *ngIf="existingDatesInRange.length > 0">
+          <div class="existing-dates-info">
+            <mat-icon>info</mat-icon>
+            <span>
+              {{ existingDatesInRange.length }} jour(s) déjà pointé(s) seront ignorés :
+              <strong *ngFor="let d of existingDatesInRange; let last = last">{{ formatDateDisplay(d) }}<span *ngIf="!last">, </span></strong>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="toggleForm()">Annuler</button>
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="submitPointage()"
+            [disabled]="addPointageForm.invalid || submitting"
+          >
+            @if (submitting) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Créer le pointage
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
 
   <!-- Filter Bar -->
   <div class="filter-bar" [formGroup]="filterForm">
@@ -66,8 +413,8 @@
           {{ def.libelle }}
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          @if (def.path === 'totalHours') {
-            @if (!element.totalHours) {
+          @if (def.path === 'workedDays') {
+            @if (!element.workedDays && element.workedDays !== 0) {
               <span class="status-badge status-warning">
                 <mat-icon class="badge-icon">schedule</mat-icon>
                 Non pointé
@@ -75,7 +422,7 @@
             } @else {
               <span class="status-badge status-success">
                 <mat-icon class="badge-icon">check_circle</mat-icon>
-                {{ element.totalHours }}h
+                {{ element.workedDays === 0.5 ? '½' : element.workedDays }}j
               </span>
             }
           } @else if (def.path === 'project.code') {
@@ -90,15 +437,15 @@
         <mat-header-cell *matHeaderCellDef class="col-actions"></mat-header-cell>
         <mat-cell *matCellDef="let row" class="col-actions">
           <div class="row-actions">
-            <!--button
-              (click)="edit(row, true)"
+            <button
+              (click)="addDaysForRow(row)"
               mat-icon-button
-              matTooltip="Voir les détails"
-              class="action-btn action-view"
+              matTooltip="Ajouter des jours"
+              class="action-btn action-add-days"
               type="button"
             >
-              <mat-icon>visibility</mat-icon>
-            </button-->
+              <mat-icon>post_add</mat-icon>
+            </button>
             <button
               (click)="edit(row, false)"
               mat-icon-button
@@ -108,16 +455,6 @@
             >
               <mat-icon>edit</mat-icon>
             </button>
-            <!--button
-              (click)="remove(row)"
-              mat-icon-button
-              matTooltip="Supprimer"
-              class="action-btn action-delete"
-              type="button"
-              aria-label="Supprimer ce pointage"
-            >
-              <mat-icon>delete_outline</mat-icon>
-            </button-->
           </div>
         </mat-cell>
       </ng-container>
@@ -128,8 +465,14 @@
         [class.row-selected]="clickedRow?.id === row?.id"
       ></mat-row>
       <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell no-data" [attr.colspan]="columnsPath.length">
-            Aucun pointage trouvé
+          <td class="mat-cell no-data-cell" [attr.colspan]="columnsPath.length">
+            <div class="empty-state">
+              <div class="empty-state-icon-wrapper">
+                <mat-icon class="empty-state-icon">edit_calendar</mat-icon>
+              </div>
+              <p class="empty-state-title">Aucun pointage trouvé</p>
+              <p class="empty-state-subtitle">Aucun pointage ne correspond à vos critères de recherche.</p>
+            </div>
           </td>
         </tr>
     </mat-table>

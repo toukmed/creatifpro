@@ -1,4 +1,4 @@
-// ─── Jira-inspired Design Tokens ───────────────────────────────────────
+// ─── Design Tokens ─────────────────────────────────────────────────────
 $surface: #ffffff;
 $background: #f4f5f7;
 $border-color: #dfe1e6;
@@ -6,12 +6,17 @@ $border-light: #ebecf0;
 $text-primary: #172b4d;
 $text-secondary: #5e6c84;
 $text-muted: #97a0af;
-$accent-blue: #0052cc;
-$accent-blue-hover: #0747a6;
-$accent-blue-light: #deebff;
-$accent-blue-subtle: #e9f2ff;
+$accent: #ff6600;
+$accent-hover: #e55b00;
+$accent-light: #fff4eb;
+$accent-subtle: rgba(255, 102, 0, 0.08);
+// Keep old aliases for backward compat during migration
+$accent-blue: $accent;
+$accent-blue-hover: $accent-hover;
+$accent-blue-light: $accent-light;
+$accent-blue-subtle: $accent-subtle;
 $hover-bg: #f4f5f7;
-$selected-bg: #e9f2ff;
+$selected-bg: #fff4eb;
 $success-green: #00875a;
 $success-bg: #e3fcef;
 $warning-orange: #ff8b00;

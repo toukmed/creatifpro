@@ -27,12 +27,12 @@
       <div class="stats">
         <div class="stat-item">
           <span class="stat-value">{{ getWorkedDaysCount() }}</span>
-          <span class="stat-label">jours</span>
+          <span class="stat-label">pointages</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-          <span class="stat-value">{{ getTotalHoursForMonth() }}</span>
-          <span class="stat-label">heures</span>
+          <span class="stat-value">{{ getTotalDaysForMonth() }}</span>
+          <span class="stat-label">jours</span>
         </div>
       </div>
       <button mat-icon-button (click)="close()" class="close-btn">
@@ -76,8 +76,8 @@
 
           <!-- Pointage display (not editing) -->
           <div class="day-content" *ngIf="!day.editing && day.isCurrentMonth">
-            <div *ngIf="day.pointage?.totalHours > 0" class="pointage-value">
-              <span class="hours">{{ day.pointage.totalHours }} h</span>
+            <div *ngIf="day.pointage?.workedDays > 0" class="pointage-value">
+              <span class="hours">{{ day.pointage.workedDays === 0.5 ? '½' : day.pointage.workedDays }}j</span>
             </div>
             <div *ngIf="!day.pointage" class="empty-slot">
               <mat-icon class="add-hint">add_circle_outline</mat-icon>
@@ -93,22 +93,25 @@
 
           <!-- Inline edit form -->
           <div class="edit-form" *ngIf="day.editing" (click)="$event.stopPropagation()">
-            <input
-              type="number"
+            <select
               class="edit-input"
               [(ngModel)]="day.editValue"
-              [min]="0"
-              [max]="12"
-              [step]="0.5"
-              [placeholder]="'Heures'"
-              autofocus
-            />
+            >
+              <option [ngValue]="0">0</option>
+              <option [ngValue]="0.5">½</option>
+              <option [ngValue]="1">1</option>
+            </select>
             <input
               type="text"
               class="edit-comment"
               [(ngModel)]="day.editComment"
               placeholder="Note..."
             />
+            <label class="edit-paid-toggle">
+              <input type="checkbox" [(ngModel)]="day.editIsPaid" />
+              <mat-icon class="paid-toggle-icon">attach_money</mat-icon>
+              <span class="paid-toggle-label">{{ day.editIsPaid ? 'Payé' : 'Impayé' }}</span>
+            </label>
             <div class="edit-actions">
               <button
                 mat-icon-button

@@ -20,14 +20,14 @@ public class KpiQueryBuilder {
         StringBuilder sql = new StringBuilder();
         sql.append("""
             SELECT
-                COALESCE(SUM(p.total_hours), 0) AS totalHeures,
-                COALESCE(SUM(CASE WHEN p.is_paid = true THEN p.total_hours ELSE 0 END), 0) AS totalHeuresPayees,
-                COALESCE(SUM(CASE WHEN p.is_paid = false THEN p.total_hours ELSE 0 END), 0) AS totalHeuresNonPayees,
+                COALESCE(SUM(p.worked_days), 0) AS totalJours,
+                COALESCE(SUM(CASE WHEN p.is_paid = true THEN p.worked_days ELSE 0 END), 0) AS totalJoursPayes,
+                COALESCE(SUM(CASE WHEN p.is_paid = false THEN p.worked_days ELSE 0 END), 0) AS totalJoursNonPayes,
                 COUNT(p.id) AS nombrePointages,
                 COUNT(DISTINCT p.employee_id) AS nombreEmployesActifs,
-                COALESCE(SUM(p.total_hours) / NULLIF(COUNT(DISTINCT p.employee_id), 0), 0) AS moyenneHeuresParEmploye,
-                COALESCE((SUM(CASE WHEN p.is_paid = true THEN p.total_hours ELSE 0 END)
-                    / NULLIF(SUM(p.total_hours), 0)) * 100, 0) AS tauxHeuresPayees
+                COALESCE(SUM(p.worked_days) / NULLIF(COUNT(DISTINCT p.employee_id), 0), 0) AS moyenneJoursParEmploye,
+                COALESCE((SUM(CASE WHEN p.is_paid = true THEN p.worked_days ELSE 0 END)
+                    / NULLIF(SUM(p.worked_days), 0)) * 100, 0) AS tauxJoursPayes
             FROM pointages p
             WHERE p.pointage_date BETWEEN :startDate AND :endDate
             """);
@@ -65,13 +65,13 @@ public class KpiQueryBuilder {
 
     private DashboardKpiResult mapToResult(Object[] row) {
         return DashboardKpiResult.builder()
-                .totalHeures(toDouble(row[0]))
-                .totalHeuresPayees(toDouble(row[1]))
-                .totalHeuresNonPayees(toDouble(row[2]))
+                .totalJours(toDouble(row[0]))
+                .totalJoursPayes(toDouble(row[1]))
+                .totalJoursNonPayes(toDouble(row[2]))
                 .nombrePointages(toLong(row[3]))
                 .nombreEmployesActifs(toLong(row[4]))
-                .moyenneHeuresParEmploye(toDouble(row[5]))
-                .tauxHeuresPayees(toDouble(row[6]))
+                .moyenneJoursParEmploye(toDouble(row[5]))
+                .tauxJoursPayes(toDouble(row[6]))
                 .build();
     }
 
