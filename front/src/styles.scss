@@ -1,4 +1,6 @@
 @use "@angular/material" as mat;
+@use 'list-page-global';
+@use 'pointage-dashboard';
 
 @include mat.core();
 
