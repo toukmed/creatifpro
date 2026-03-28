@@ -448,7 +448,14 @@
 
               <ng-container matColumnDef="dateEntree">
                 <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
-                <mat-cell *matCellDef="let row">{{ row.dateEntree }}</mat-cell>
+                <mat-cell *matCellDef="let row">
+                  @if (row.dateEntree) {
+                    <span class="date-cell">
+                      <mat-icon class="date-icon">calendar_today</mat-icon>
+                      {{ row.dateEntree | formatDateFr }}
+                    </span>
+                  }
+                </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="referenceDocument">
@@ -641,7 +648,14 @@
 
               <ng-container matColumnDef="dateSortie">
                 <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
-                <mat-cell *matCellDef="let row">{{ row.dateSortie }}</mat-cell>
+                <mat-cell *matCellDef="let row">
+                  @if (row.dateSortie) {
+                    <span class="date-cell">
+                      <mat-icon class="date-icon">calendar_today</mat-icon>
+                      {{ row.dateSortie | formatDateFr }}
+                    </span>
+                  }
+                </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="demandeur">

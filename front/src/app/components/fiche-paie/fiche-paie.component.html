@@ -1,96 +1,213 @@
-<div class="page-container">
-  <!-- Page Header -->
-  <div class="page-header">
-    <div class="header-left">
-      <h1 class="page-title">Fiche de paie</h1>
-      <span class="record-count">Génération PDF</span>
+<div class="fiche-paie-page">
+
+  <!-- ─── Hero Banner ─────────────────────────────────────────────── -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="hero-icon-wrapper">
+        <mat-icon class="hero-icon">description</mat-icon>
+      </div>
+      <div class="hero-text">
+        <h1 class="hero-title">Bulletin de paie</h1>
+        <p class="hero-subtitle">Générez et téléchargez les fiches de paie de vos employés au format PDF.</p>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Form Card -->
-  <div class="create-form-card fiche-paie-card">
-    <h3 class="form-title">Générer une fiche de paie</h3>
-    <p class="form-subtitle">
-      Sélectionnez un employé et une période pour télécharger le bulletin de paie au format PDF.
-    </p>
+  <!-- ─── Main Content ────────────────────────────────────────────── -->
+  <div class="content-layout">
 
-    <form [formGroup]="ficheForm" (ngSubmit)="onDownload()" class="create-form">
-      <div class="form-row">
-        <!-- Employee Select -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Employé</mat-label>
-          <mat-icon matPrefix>person</mat-icon>
-          <mat-select formControlName="employeeId" placeholder="Sélectionner un employé">
-            @for (emp of employees; track emp.id) {
-              <mat-option [value]="emp.id">{{ getEmployeeLabel(emp) }}</mat-option>
+    <!-- ─── Left Column: Form ──────────────────────────────────────── -->
+    <div class="form-column">
+      <form [formGroup]="ficheForm" (ngSubmit)="onDownload()">
+
+        <!-- Step 1: Employé -->
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-number">1</span>
+            <div class="step-label">
+              <h3 class="step-title">Sélectionner l'employé</h3>
+              <p class="step-desc">Choisissez le collaborateur concerné</p>
+            </div>
+          </div>
+          <div class="step-body">
+            <mat-form-field appearance="outline" class="field-full">
+              <mat-label>Employé</mat-label>
+              <mat-icon matPrefix>person_search</mat-icon>
+              <mat-select formControlName="employeeId" placeholder="Rechercher un employé...">
+                @for (emp of employees; track emp.id) {
+                  <mat-option [value]="emp.id">{{ getEmployeeLabel(emp) }}</mat-option>
+                }
+              </mat-select>
+              @if (loadingEmployees) {
+                <mat-hint>Chargement en cours...</mat-hint>
+              }
+              @if (ficheForm.get('employeeId')?.hasError('required') && ficheForm.get('employeeId')?.touched) {
+                <mat-error>Veuillez sélectionner un employé</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Step 2: Période -->
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-number">2</span>
+            <div class="step-label">
+              <h3 class="step-title">Définir la période</h3>
+              <p class="step-desc">Mois et année du bulletin à générer</p>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="period-row">
+              <mat-form-field appearance="outline" class="field-half">
+                <mat-label>Mois</mat-label>
+                <mat-icon matPrefix>date_range</mat-icon>
+                <mat-select formControlName="month">
+                  @for (m of availableMonths; track m.value) {
+                    <mat-option [value]="m.value" [disabled]="isMonthDisabled(m.value)">
+                      {{ m.label }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="field-half">
+                <mat-label>Année</mat-label>
+                <mat-icon matPrefix>calendar_today</mat-icon>
+                <mat-select formControlName="year">
+                  @for (year of availableYears; track year) {
+                    <mat-option [value]="year">{{ year }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Télécharger -->
+        <div class="step-card step-action">
+          <div class="step-header">
+            <span class="step-number" [class.step-ready]="isFormReady">3</span>
+            <div class="step-label">
+              <h3 class="step-title">Télécharger</h3>
+              <p class="step-desc">Le bulletin sera généré en PDF</p>
+            </div>
+          </div>
+          <div class="step-body">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="btn-generate"
+              [disabled]="!isFormReady || loading">
+              @if (loading) {
+                <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+                <span>Génération en cours...</span>
+              } @else {
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>Générer et télécharger</span>
+              }
+            </button>
+
+            @if (downloadSuccess) {
+              <div class="success-feedback">
+                <mat-icon>check_circle</mat-icon>
+                <span>Bulletin téléchargé avec succès</span>
+              </div>
             }
-          </mat-select>
-          @if (loadingEmployees) {
-            <mat-hint>Chargement des employés...</mat-hint>
-          }
-          @if (ficheForm.get('employeeId')?.hasError('required') && ficheForm.get('employeeId')?.touched) {
-            <mat-error>L'employé est requis</mat-error>
-          }
-        </mat-form-field>
+          </div>
+        </div>
 
-        <!-- Year Select -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Année</mat-label>
-          <mat-icon matPrefix>calendar_today</mat-icon>
-          <mat-select formControlName="year">
-            @for (year of availableYears; track year) {
-              <mat-option [value]="year">{{ year }}</mat-option>
+      </form>
+    </div>
+
+    <!-- ─── Right Column: Preview & Info ───────────────────────────── -->
+    <div class="preview-column">
+
+      <!-- Employee Preview Card -->
+      @if (selectedEmployee) {
+        <div class="preview-card employee-preview">
+          <div class="preview-card-header">
+            <mat-icon class="preview-header-icon">badge</mat-icon>
+            <span>Employé sélectionné</span>
+          </div>
+          <div class="preview-card-body">
+            <div class="employee-avatar">
+              {{ selectedEmployee.firstName?.charAt(0) }}{{ selectedEmployee.lastName?.charAt(0) }}
+            </div>
+            <h4 class="employee-name">{{ selectedEmployee.firstName }} {{ selectedEmployee.lastName }}</h4>
+            @if (selectedEmployee.jobRole) {
+              <span class="employee-role">{{ selectedEmployee.jobRole }}</span>
             }
-          </mat-select>
-          @if (ficheForm.get('year')?.hasError('required') && ficheForm.get('year')?.touched) {
-            <mat-error>L'année est requise</mat-error>
-          }
-        </mat-form-field>
+            <div class="employee-details">
+              @if (selectedEmployee.cin) {
+                <div class="detail-row">
+                  <mat-icon>badge</mat-icon>
+                  <span class="detail-label">CIN</span>
+                  <span class="detail-value">{{ selectedEmployee.cin }}</span>
+                </div>
+              }
+              @if (selectedEmployee.nCnss) {
+                <div class="detail-row">
+                  <mat-icon>verified_user</mat-icon>
+                  <span class="detail-label">CNSS</span>
+                  <span class="detail-value">{{ selectedEmployee.nCnss }}</span>
+                </div>
+              }
+              @if (selectedEmployee.salary) {
+                <div class="detail-row">
+                  <mat-icon>payments</mat-icon>
+                  <span class="detail-label">Salaire</span>
+                  <span class="detail-value">{{ selectedEmployee.salary | number:'1.2-2' }} DH</span>
+                </div>
+              }
+              @if (selectedEmployee.dailyRate) {
+                <div class="detail-row">
+                  <mat-icon>schedule</mat-icon>
+                  <span class="detail-label">Taux journalier</span>
+                  <span class="detail-value">{{ selectedEmployee.dailyRate | number:'1.2-2' }} DH</span>
+                </div>
+              }
+              @if (selectedEmployee.project) {
+                <div class="detail-row">
+                  <mat-icon>folder_open</mat-icon>
+                  <span class="detail-label">Projet</span>
+                  <span class="detail-value">{{ selectedEmployee.project.code }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
 
-        <!-- Month Select -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Mois</mat-label>
-          <mat-icon matPrefix>date_range</mat-icon>
-          <mat-select formControlName="month">
-            @for (m of availableMonths; track m.value) {
-              <mat-option [value]="m.value" [disabled]="isMonthDisabled(m.value)">
-                {{ m.label }}
-              </mat-option>
-            }
-          </mat-select>
-          @if (ficheForm.get('month')?.hasError('required') && ficheForm.get('month')?.touched) {
-            <mat-error>Le mois est requis</mat-error>
-          }
-        </mat-form-field>
-      </div>
+      <!-- Period Preview -->
+      @if (periodLabel) {
+        <div class="preview-card period-preview">
+          <div class="preview-card-header">
+            <mat-icon class="preview-header-icon">event_note</mat-icon>
+            <span>Période sélectionnée</span>
+          </div>
+          <div class="preview-card-body period-body">
+            <span class="period-display">{{ periodLabel }}</span>
+          </div>
+        </div>
+      }
 
-      <!-- Info Box -->
-      <div class="info-box">
-        <mat-icon class="info-icon">info</mat-icon>
-        <span>
-          La fiche de paie est générée en fonction des pointages enregistrés pour la période sélectionnée.
-          Seuls les mois clôturés (antérieurs au mois en cours) sont disponibles.
-        </span>
+      <!-- Info Card -->
+      <div class="preview-card info-card">
+        <div class="preview-card-header">
+          <mat-icon class="preview-header-icon">info</mat-icon>
+          <span>Informations</span>
+        </div>
+        <div class="preview-card-body">
+          <ul class="info-list">
+            <li>Le bulletin est calculé à partir des pointages enregistrés pour la période.</li>
+            <li>Seuls les mois clôturés (antérieurs au mois en cours) sont disponibles.</li>
+            <li>Le document est conforme à la législation marocaine (CNSS, AMO, IR).</li>
+          </ul>
+        </div>
       </div>
+    </div>
 
-      <!-- Actions -->
-      <div class="form-actions">
-        <button
-          mat-flat-button
-          color="primary"
-          type="submit"
-          class="btn-download"
-          [disabled]="ficheForm.invalid || loading">
-          @if (loading) {
-            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
-            Génération en cours...
-          } @else {
-            <mat-icon>picture_as_pdf</mat-icon>
-            Télécharger la fiche de paie
-          }
-        </button>
-      </div>
-    </form>
   </div>
 </div>
 

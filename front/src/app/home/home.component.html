@@ -1,11 +1,42 @@
-<h3>Accueil</h3>
-<div id="home">
-  <mat-card
-    *ngFor="let item of navLinks; trackBy: trackBy"
-    [routerLink]="item.link"
-    class="clickable-card"
-  >
-    <mat-icon class="big" color="primary">{{ item.icon }}</mat-icon>
-    <h4>{{ item.desc }}</h4>
-  </mat-card>
+<div class="home-page">
+  <!-- Welcome Banner -->
+  <section class="welcome-banner">
+    <div class="welcome-content">
+      <div class="welcome-text">
+        <h1 class="welcome-title">{{ greeting }}, <span class="user-highlight">{{ userName }}</span></h1>
+        <p class="welcome-subtitle">
+          Bienvenue sur votre espace de gestion. Que souhaitez-vous faire aujourd'hui ?
+        </p>
+      </div>
+      <div class="welcome-date">
+        <mat-icon class="date-icon">calendar_today</mat-icon>
+        <span>{{ todayDate | date:'EEEE d MMMM yyyy':'':'fr' }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Access Section -->
+  <section class="quick-access-section">
+    <div class="section-header">
+      <h2 class="section-title">Accès rapide</h2>
+      <span class="section-badge">{{ navLinks.length }} modules</span>
+    </div>
+
+    <div class="cards-grid">
+      @for (item of navLinks; track trackBy($index, item)) {
+        <a [routerLink]="item.link" class="module-card">
+          <div class="card-icon-wrapper">
+            <mat-icon class="card-icon">{{ item.icon }}</mat-icon>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">{{ item.libelle }}</h3>
+            <p class="card-desc">{{ item.desc }}</p>
+          </div>
+          <div class="card-arrow">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </a>
+      }
+    </div>
+  </section>
 </div>

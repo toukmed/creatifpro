@@ -198,6 +198,13 @@
               @if (element.salary) {
                 {{ resolve(def.path, element) | number:'1.0-0' }} MAD
               }
+            } @else if (def.path === 'dateIntegration') {
+              @if (element.dateIntegration) {
+                <span class="date-cell">
+                  <mat-icon class="date-icon">calendar_today</mat-icon>
+                  {{ element.dateIntegration | formatDateFr }}
+                </span>
+              }
             } @else {
               {{ resolve(def.path, element) }}
             }

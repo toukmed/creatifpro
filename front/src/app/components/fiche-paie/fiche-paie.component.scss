@@ -1,50 +1,201 @@
 @use 'variables' as *;
-@use 'list-page';
 
-.fiche-paie-card {
-  max-width: 800px;
-
-  .form-subtitle {
-    font-size: 14px;
-    color: $text-secondary;
-    margin: -12px 0 20px 0;
-    line-height: 1.5;
-  }
-}
-
-.info-box {
+// ─── Page Layout ───────────────────────────────────────────────────────
+.fiche-paie-page {
+  padding: 24px 32px;
+  background: $background;
+  min-height: 100%;
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px 16px;
-  background: $accent-light;
-  border: 1px solid rgba($accent, 0.15);
-  border-radius: $radius-md;
-  font-size: 13px;
-  color: $text-secondary;
-  line-height: 1.5;
-  margin-bottom: 8px;
+  flex-direction: column;
+  gap: 24px;
+}
 
-  .info-icon {
-    color: $accent;
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    margin-top: 1px;
+// ─── Hero Banner ───────────────────────────────────────────────────────
+.hero-banner {
+  background: linear-gradient(135deg, $accent 0%, darken($accent, 14%) 100%);
+  border-radius: $radius-lg;
+  padding: 28px 32px;
+  position: relative;
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &::before {
+    width: 180px;
+    height: 180px;
+    top: -50px;
+    right: -30px;
+  }
+
+  &::after {
+    width: 100px;
+    height: 100px;
+    bottom: -20px;
+    right: 100px;
   }
 }
 
-.btn-download {
-  border-radius: $radius-sm !important;
-  font-weight: 500;
-  font-size: 14px;
-  letter-spacing: 0;
-  padding: 0 24px !important;
-  height: 40px;
+.hero-content {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .hero-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+    color: #ffffff;
+  }
+}
+
+.hero-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.hero-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+  line-height: 1.5;
+}
+
+// ─── Content Layout (two columns) ─────────────────────────────────────
+.content-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+// ─── Form Column ───────────────────────────────────────────────────────
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+// ─── Step Cards ────────────────────────────────────────────────────────
+.step-card {
+  background: $surface;
+  border: 1px solid $border-light;
+  border-radius: $radius-md;
+  padding: 20px 24px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: $border-color;
+  }
+
+  &:focus-within {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px $accent-subtle;
+  }
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: $border-light;
+  color: $text-secondary;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+
+  &.step-ready {
+    background: $accent;
+    color: #ffffff;
+  }
+}
+
+.step-label {
+  flex: 1;
+}
+
+.step-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.step-desc {
+  font-size: 12px;
+  color: $text-muted;
+  margin: 2px 0 0;
+}
+
+.step-body {
+  padding-left: 46px;
+}
+
+.field-full {
+  width: 100%;
+}
+
+.period-row {
+  display: flex;
+  gap: 16px;
+
+  .field-half {
+    flex: 1;
+  }
+}
+
+// ─── Generate Button ──────────────────────────────────────────────────
+.btn-generate {
+  width: 100%;
+  height: 46px;
+  border-radius: $radius-md !important;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   .mat-icon {
     font-size: 20px;
@@ -57,7 +208,271 @@
   }
 
   &:disabled {
-    opacity: 0.7;
+    opacity: 0.55;
+  }
+}
+
+.success-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: $success-bg;
+  border-radius: $radius-sm;
+  font-size: 13px;
+  font-weight: 500;
+  color: $success-green;
+  animation: feedbackIn 0.3s ease-out;
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@keyframes feedbackIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Preview Column ───────────────────────────────────────────────────
+.preview-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+}
+
+// ─── Preview Cards ────────────────────────────────────────────────────
+.preview-card {
+  background: $surface;
+  border: 1px solid $border-light;
+  border-radius: $radius-md;
+  overflow: hidden;
+  animation: cardIn 0.3s ease-out;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.preview-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #fafbfc;
+  border-bottom: 1px solid $border-light;
+  font-size: 12px;
+  font-weight: 600;
+  color: $text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+
+  .preview-header-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: $accent;
+  }
+}
+
+.preview-card-body {
+  padding: 20px 16px;
+}
+
+// ─── Employee Preview ─────────────────────────────────────────────────
+.employee-preview .preview-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.employee-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $accent-light 0%, rgba($accent, 0.15) 100%);
+  color: $accent;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.employee-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0 0 4px;
+}
+
+.employee-role {
+  font-size: 12px;
+  color: $accent;
+  background: $accent-light;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.employee-details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid $border-light;
+  padding-top: 12px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid $border-light;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: $text-muted;
+    flex-shrink: 0;
+  }
+
+  .detail-label {
+    font-size: 12px;
+    color: $text-muted;
+    min-width: 90px;
+  }
+
+  .detail-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-primary;
+    margin-left: auto;
+    text-align: right;
+  }
+}
+
+// ─── Period Preview ───────────────────────────────────────────────────
+.period-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px !important;
+}
+
+.period-display {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-primary;
+  text-transform: capitalize;
+  letter-spacing: -0.2px;
+}
+
+// ─── Info Card ────────────────────────────────────────────────────────
+.info-list {
+  margin: 0;
+  padding: 0 0 0 16px;
+  list-style: none;
+
+  li {
+    position: relative;
+    font-size: 12px;
+    color: $text-secondary;
+    line-height: 1.6;
+    padding: 4px 0;
+    padding-left: 8px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 11px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: $accent;
+      opacity: 0.5;
+    }
+  }
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────
+@media (max-width: 960px) {
+  .content-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-column {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .preview-card {
+      flex: 1;
+      min-width: 220px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .fiche-paie-page {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .hero-banner {
+    padding: 20px;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-title {
+    font-size: 18px;
+  }
+
+  .step-body {
+    padding-left: 0;
+  }
+
+  .period-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .preview-column {
+    flex-direction: column;
   }
 }
 

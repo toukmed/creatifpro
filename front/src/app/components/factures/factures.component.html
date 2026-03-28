@@ -159,7 +159,14 @@
 
         <ng-container matColumnDef="dateFacture">
           <mat-header-cell *matHeaderCellDef>Date Facture</mat-header-cell>
-          <mat-cell *matCellDef="let facture">{{ facture.dateFacture | date:'dd/MM/yyyy' }}</mat-cell>
+          <mat-cell *matCellDef="let facture">
+            @if (facture.dateFacture) {
+              <span class="date-cell">
+                <mat-icon class="date-icon">calendar_today</mat-icon>
+                {{ facture.dateFacture | formatDateFr }}
+              </span>
+            }
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="etatPaiement">
@@ -175,7 +182,14 @@
 
         <ng-container matColumnDef="datePaiement">
           <mat-header-cell *matHeaderCellDef>Date Paiement</mat-header-cell>
-          <mat-cell *matCellDef="let facture">{{ facture.datePaiement | date:'dd/MM/yyyy' }}</mat-cell>
+          <mat-cell *matCellDef="let facture">
+            @if (facture.datePaiement) {
+              <span class="date-cell">
+                <mat-icon class="date-icon">calendar_today</mat-icon>
+                {{ facture.datePaiement | formatDateFr }}
+              </span>
+            }
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="actions">

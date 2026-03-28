@@ -15,8 +15,9 @@ export class FichePaieComponent implements OnInit {
   employees: Employe[] = [];
   loading = false;
   loadingEmployees = false;
+  selectedEmployee: Employe | null = null;
+  downloadSuccess = false;
 
-  // Available months for selection (all months up to last month)
   availableMonths: { value: number; label: string }[] = [
     { value: 1, label: 'Janvier' },
     { value: 2, label: 'Février' },
@@ -49,8 +50,7 @@ export class FichePaieComponent implements OnInit {
 
   private initForm(): void {
     const now = new Date();
-    // Default to previous month
-    let defaultMonth = now.getMonth(); // getMonth() is 0-based, so this gives last month's 1-based value
+    let defaultMonth = now.getMonth();
     let defaultYear = now.getFullYear();
     if (defaultMonth === 0) {
       defaultMonth = 12;
@@ -62,14 +62,38 @@ export class FichePaieComponent implements OnInit {
       year: [defaultYear, Validators.required],
       month: [defaultMonth, Validators.required],
     });
+
+    this.ficheForm.get('employeeId')!.valueChanges.subscribe((id) => {
+      this.selectedEmployee = this.employees.find((e) => e.id === id) ?? null;
+      this.downloadSuccess = false;
+    });
+
+    this.ficheForm.get('year')!.valueChanges.subscribe(() => {
+      this.downloadSuccess = false;
+    });
+
+    this.ficheForm.get('month')!.valueChanges.subscribe(() => {
+      this.downloadSuccess = false;
+    });
   }
 
   private buildAvailableYears(): void {
     const currentYear = new Date().getFullYear();
-    // From 2020 to current year
     for (let y = currentYear; y >= 2020; y--) {
       this.availableYears.push(y);
     }
+  }
+
+  get periodLabel(): string {
+    const month = this.ficheForm?.get('month')?.value;
+    const year = this.ficheForm?.get('year')?.value;
+    if (!month || !year) return '';
+    const m = this.availableMonths.find((am) => am.value === month);
+    return m ? `${m.label} ${year}` : '';
+  }
+
+  get isFormReady(): boolean {
+    return this.ficheForm?.valid && !this.isMonthDisabled(this.ficheForm.get('month')?.value);
   }
 
   loadEmployees(): void {
@@ -96,7 +120,7 @@ export class FichePaieComponent implements OnInit {
     const selectedYear = this.ficheForm?.get('year')?.value;
     const now = new Date();
     const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth() + 1; // 1-based
+    const currentMonth = now.getMonth() + 1;
 
     if (selectedYear > currentYear) return true;
     if (selectedYear === currentYear && monthValue >= currentMonth) return true;
@@ -108,7 +132,6 @@ export class FichePaieComponent implements OnInit {
 
     const { employeeId, year, month } = this.ficheForm.value;
 
-    // Validate not current or future month
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
@@ -120,6 +143,7 @@ export class FichePaieComponent implements OnInit {
     }
 
     this.loading = true;
+    this.downloadSuccess = false;
 
     this.http
       .get(`/api/fiche-paie/employee/${employeeId}?year=${year}&month=${month}`, {
@@ -128,7 +152,7 @@ export class FichePaieComponent implements OnInit {
       .subscribe({
         next: (blob: Blob) => {
           this.loading = false;
-          // Trigger download
+          this.downloadSuccess = true;
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
@@ -146,7 +170,7 @@ export class FichePaieComponent implements OnInit {
         },
         error: (err) => {
           this.loading = false;
-          // Try to read error message from blob
+          this.downloadSuccess = false;
           if (err.error instanceof Blob) {
             const reader = new FileReader();
             reader.onload = () => {
