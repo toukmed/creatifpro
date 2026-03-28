@@ -59,6 +59,7 @@ import { FacturesComponent } from './components/factures/factures.component';
 import { StockComponent } from './components/stock/stock.component';
 import { PointageRecapDialogComponent } from './components/pointage-recap-dialog/pointage-recap-dialog.component';
 import { FichePaieComponent } from './components/fiche-paie/fiche-paie.component';
+import { FormatDateFrPipe } from './pipes/format-date-fr.pipe';
 
 registerLocaleData(localeFr);
 
@@ -116,6 +117,7 @@ const materialModules = [
     StockComponent,
     PointageRecapDialogComponent,
     FichePaieComponent,
+    FormatDateFrPipe,
   ],
   imports: [
     ...materialModules,

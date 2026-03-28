@@ -496,3 +496,22 @@
     color: #00875a;
   }
 }
+
+// ─── Date Cell ─────────────────────────────────────────────────────────
+.date-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: $text-primary;
+  white-space: nowrap;
+
+  .date-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: $accent;
+    opacity: 0.85;
+  }
+}
+

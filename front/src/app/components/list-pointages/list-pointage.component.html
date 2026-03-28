@@ -427,6 +427,13 @@
             }
           } @else if (def.path === 'project.code') {
              <span class="project-tag">{{ resolve(def.path, element) }}</span>
+          } @else if (def.path === 'pointageDate') {
+            @if (element.pointageDate) {
+              <span class="date-cell">
+                <mat-icon class="date-icon">calendar_today</mat-icon>
+                {{ element.pointageDate | formatDateFr }}
+              </span>
+            }
           } @else {
             {{ resolve(def.path, element) }}
           }
