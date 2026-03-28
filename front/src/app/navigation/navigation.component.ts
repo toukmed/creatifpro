@@ -42,6 +42,9 @@ export const navLinks: NavLink[] = [
     icon: 'construction',
     libelle: 'Matériels',
     desc: 'Gestion des matériels',
+    roles: ['SUPER_ADMIN', 'ADMIN'],
+  },
+  {
     link: '/stock',
     icon: 'warehouse',
     libelle: 'Stock',

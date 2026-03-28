@@ -51,6 +51,10 @@ const routes: Routes = [
   {
     path: 'materiels',
     component: MaterielsComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { animation: 'root', roles: ['SUPER_ADMIN', 'ADMIN'] },
+  },
+  {
     path: 'stock',
     component: StockComponent,
     canActivate: [authGuard, roleGuard],
