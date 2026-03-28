@@ -9,6 +9,7 @@ import com.management.creatifpro.projects.mappers.ProjectMapper;
 import com.management.creatifpro.employees.repositories.EmployeeRepository;
 import com.management.creatifpro.projects.repositories.ProjectRepository;
 import com.management.creatifpro.pointage.models.dtos.PointageResponseDto;
+import com.management.creatifpro.pointage.repositories.PointageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,8 +33,10 @@ public class PointageMapper {
     private final ProjectMapper projectMapper;
     private final EmployeeRepository employeeRepository;
     private final ProjectRepository projectRepository;
+    private final PointageRepository pointageRepository;
 
     public PointageResponseDto toDto(PointageEntity entity) {
+        Float totalWorkedDays = pointageRepository.sumWorkedDaysByEmployeeId(entity.getEmployee().getId());
         return PointageResponseDto
                 .builder()
                 .id(entity.getId())
@@ -41,7 +44,7 @@ public class PointageMapper {
                 .project(projectMapper.toDto(entity.getProject()))
                 .pointageDate(entity.getPointageDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.FRANCE) + " " + entity.getPointageDate().format(DATE_FORMATTER))
                 .comment(entity.getComment())
-                .workedDays(entity.getWorkedDays())
+                .workedDays(totalWorkedDays)
                 .isPaid(entity.isPaid())
                 .build();
     }

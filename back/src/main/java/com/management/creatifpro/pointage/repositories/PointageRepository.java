@@ -22,6 +22,9 @@ public interface PointageRepository extends JpaRepository<PointageEntity, Long>,
     @Query("SELECT COALESCE(SUM(p.workedDays), 0) FROM PointageEntity p WHERE p.employee.id = :employeeId AND p.pointageDate BETWEEN :start AND :end")
     Float sumWorkedDaysByEmployeeAndDateRange(@Param("employeeId") Long employeeId, @Param("start") LocalDate start, @Param("end") LocalDate end);
 
+    @Query("SELECT COALESCE(SUM(p.workedDays), 0) FROM PointageEntity p WHERE p.employee.id = :employeeId")
+    Float sumWorkedDaysByEmployeeId(@Param("employeeId") Long employeeId);
+
     @Query("SELECT p FROM PointageEntity p WHERE p.employee.id = :employeeId AND p.pointageDate BETWEEN :start AND :end ORDER BY p.pointageDate ASC")
     List<PointageEntity> findByEmployeeIdAndDateRange(@Param("employeeId") Long employeeId, @Param("start") LocalDate start, @Param("end") LocalDate end);
 }
