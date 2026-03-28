@@ -59,6 +59,7 @@ import { EmployeesComponent } from './components/employees/employees.component';
 import { UsersComponent } from './components/users/users.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { MaterielsComponent } from './components/materiels/materiels.component';
+import { StockComponent } from './components/stock/stock.component';
 
 registerLocaleData(localeFr);
 
@@ -116,6 +117,7 @@ const materialModules = [
     UsersComponent,
     ProjectsComponent,
     MaterielsComponent,
+    StockComponent,
   ],
   imports: [
     ...materialModules,

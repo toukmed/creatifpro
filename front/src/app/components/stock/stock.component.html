@@ -1,0 +1,411 @@
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Stock</h1>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <mat-tab-group animationDuration="200ms" class="stock-tabs">
+
+    <!-- ─── Entrées Tab ──────────────────────────────────────────────────── -->
+    <mat-tab label="Entrées">
+      <div class="tab-content">
+        <div class="tab-header">
+          <span class="record-count">{{ entreesDataSource.data.length }} entrées</span>
+          <button
+            (click)="toggleEntreeForm()"
+            mat-flat-button
+            color="primary"
+            class="btn-create">
+            <mat-icon>{{ showEntreeForm ? 'close' : 'add' }}</mat-icon>
+            {{ showEntreeForm ? 'Annuler' : 'Ajouter une entrée' }}
+          </button>
+        </div>
+
+        @if (showEntreeForm) {
+          <div class="create-form-card">
+            <h3 class="form-title">{{ isEditingEntree ? "Modifier l'entrée" : 'Nouvelle entrée' }}</h3>
+            <form [formGroup]="entreeForm" (ngSubmit)="onSubmitEntree()" class="create-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Nom complet</mat-label>
+                  <mat-icon matPrefix>person</mat-icon>
+                  <input matInput formControlName="nomComplet" placeholder="Ex: Mohamed Ali" />
+                  @if (entreeForm.get('nomComplet')?.hasError('required') && entreeForm.get('nomComplet')?.touched) {
+                    <mat-error>Le nom complet est requis</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Nom produit</mat-label>
+                  <mat-icon matPrefix>inventory_2</mat-icon>
+                  <input matInput formControlName="nomProduit" placeholder="Ex: Ciment" />
+                  @if (entreeForm.get('nomProduit')?.hasError('required') && entreeForm.get('nomProduit')?.touched) {
+                    <mat-error>Le nom du produit est requis</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Type produit</mat-label>
+                  <mat-icon matPrefix>category</mat-icon>
+                  <input matInput formControlName="typeProduit" placeholder="Ex: Matériau" />
+                  @if (entreeForm.get('typeProduit')?.hasError('required') && entreeForm.get('typeProduit')?.touched) {
+                    <mat-error>Le type de produit est requis</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Unité</mat-label>
+                  <mat-icon matPrefix>straighten</mat-icon>
+                  <mat-select formControlName="uniteProduit">
+                    @for (unite of unitesProduit; track unite) {
+                      <mat-option [value]="unite">{{ unite }}</mat-option>
+                    }
+                  </mat-select>
+                  @if (entreeForm.get('uniteProduit')?.hasError('required') && entreeForm.get('uniteProduit')?.touched) {
+                    <mat-error>L'unité est requise</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Poids</mat-label>
+                  <mat-icon matPrefix>scale</mat-icon>
+                  <input matInput type="number" formControlName="poids" placeholder="Ex: 50" />
+                  @if (entreeForm.get('poids')?.hasError('required') && entreeForm.get('poids')?.touched) {
+                    <mat-error>Le poids est requis</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Quantité</mat-label>
+                  <mat-icon matPrefix>numbers</mat-icon>
+                  <input matInput type="number" formControlName="quantite" placeholder="Ex: 100" />
+                  @if (entreeForm.get('quantite')?.hasError('required') && entreeForm.get('quantite')?.touched) {
+                    <mat-error>La quantité est requise</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-actions">
+                <button mat-stroked-button type="button" (click)="toggleEntreeForm()">Annuler</button>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="entreeForm.invalid || isSubmittingEntree">
+                  @if (isSubmittingEntree) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                  } @else {
+                    {{ isEditingEntree ? "Mettre à jour" : "Créer l'entrée" }}
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+
+        @if (loadingEntrees) {
+          <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        } @else {
+          <div class="table-card">
+            <mat-table [dataSource]="entreesDataSource" class="stock-table">
+              <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.id }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="nomComplet">
+                <mat-header-cell *matHeaderCellDef>Nom complet</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.nomComplet }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="nomProduit">
+                <mat-header-cell *matHeaderCellDef>Produit</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <span class="project-tag">{{ row.nomProduit }}</span>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="typeProduit">
+                <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.typeProduit }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="uniteProduit">
+                <mat-header-cell *matHeaderCellDef>Unité</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.uniteProduit }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="poids">
+                <mat-header-cell *matHeaderCellDef>Poids</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.poids }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="quantite">
+                <mat-header-cell *matHeaderCellDef>Quantité</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.quantite }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef class="col-actions">Actions</mat-header-cell>
+                <mat-cell *matCellDef="let row" class="col-actions">
+                  <div class="row-actions">
+                    <button
+                      mat-icon-button
+                      matTooltip="Modifier"
+                      (click)="editEntree(row)"
+                      class="action-btn action-edit"
+                      type="button">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      matTooltip="Supprimer"
+                      (click)="deleteEntree(row)"
+                      class="action-btn action-delete"
+                      type="button">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="entreesDisplayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: entreesDisplayedColumns;"></mat-row>
+
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell no-data" [attr.colspan]="entreesDisplayedColumns.length">
+                  Aucune entrée trouvée
+                </td>
+              </tr>
+            </mat-table>
+
+            <mat-paginator
+              #entreesPaginator
+              [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 25]"
+              showFirstLastButtons
+              class="table-paginator">
+            </mat-paginator>
+          </div>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- ─── Sorties Tab ───────────────────────────────────────────────────── -->
+    <mat-tab label="Sorties">
+      <div class="tab-content">
+        <div class="tab-header">
+          <span class="record-count">{{ sortiesDataSource.data.length }} sorties</span>
+          <button
+            (click)="toggleSortieForm()"
+            mat-flat-button
+            color="primary"
+            class="btn-create">
+            <mat-icon>{{ showSortieForm ? 'close' : 'add' }}</mat-icon>
+            {{ showSortieForm ? 'Annuler' : 'Ajouter une sortie' }}
+          </button>
+        </div>
+
+        @if (showSortieForm) {
+          <div class="create-form-card">
+            <h3 class="form-title">{{ isEditingSortie ? 'Modifier la sortie' : 'Nouvelle sortie' }}</h3>
+            <form [formGroup]="sortieForm" (ngSubmit)="onSubmitSortie()" class="create-form">
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Nom complet</mat-label>
+                  <mat-icon matPrefix>person</mat-icon>
+                  <input matInput formControlName="nomComplet" placeholder="Ex: Mohamed Ali" />
+                  @if (sortieForm.get('nomComplet')?.hasError('required') && sortieForm.get('nomComplet')?.touched) {
+                    <mat-error>Le nom complet est requis</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Nom produit</mat-label>
+                  <mat-icon matPrefix>inventory_2</mat-icon>
+                  <input matInput formControlName="nomProduit" placeholder="Ex: Ciment" />
+                  @if (sortieForm.get('nomProduit')?.hasError('required') && sortieForm.get('nomProduit')?.touched) {
+                    <mat-error>Le nom du produit est requis</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Type produit</mat-label>
+                  <mat-icon matPrefix>category</mat-icon>
+                  <input matInput formControlName="typeProduit" placeholder="Ex: Matériau" />
+                  @if (sortieForm.get('typeProduit')?.hasError('required') && sortieForm.get('typeProduit')?.touched) {
+                    <mat-error>Le type de produit est requis</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Unité</mat-label>
+                  <mat-icon matPrefix>straighten</mat-icon>
+                  <mat-select formControlName="uniteProduit">
+                    @for (unite of unitesProduit; track unite) {
+                      <mat-option [value]="unite">{{ unite }}</mat-option>
+                    }
+                  </mat-select>
+                  @if (sortieForm.get('uniteProduit')?.hasError('required') && sortieForm.get('uniteProduit')?.touched) {
+                    <mat-error>L'unité est requise</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Poids</mat-label>
+                  <mat-icon matPrefix>scale</mat-icon>
+                  <input matInput type="number" formControlName="poids" placeholder="Ex: 50" />
+                  @if (sortieForm.get('poids')?.hasError('required') && sortieForm.get('poids')?.touched) {
+                    <mat-error>Le poids est requis</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Quantité</mat-label>
+                  <mat-icon matPrefix>numbers</mat-icon>
+                  <input matInput type="number" formControlName="quantite" placeholder="Ex: 100" />
+                  @if (sortieForm.get('quantite')?.hasError('required') && sortieForm.get('quantite')?.touched) {
+                    <mat-error>La quantité est requise</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Chantier</mat-label>
+                  <mat-icon matPrefix>construction</mat-icon>
+                  <input matInput formControlName="chantier" placeholder="Ex: Chantier Rabat" />
+                  @if (sortieForm.get('chantier')?.hasError('required') && sortieForm.get('chantier')?.touched) {
+                    <mat-error>Le chantier est requis</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-actions">
+                <button mat-stroked-button type="button" (click)="toggleSortieForm()">Annuler</button>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="sortieForm.invalid || isSubmittingSortie">
+                  @if (isSubmittingSortie) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                  } @else {
+                    {{ isEditingSortie ? 'Mettre à jour' : 'Créer la sortie' }}
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+
+        @if (loadingSorties) {
+          <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        } @else {
+          <div class="table-card">
+            <mat-table [dataSource]="sortiesDataSource" class="stock-table">
+              <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.id }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="nomComplet">
+                <mat-header-cell *matHeaderCellDef>Nom complet</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.nomComplet }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="nomProduit">
+                <mat-header-cell *matHeaderCellDef>Produit</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <span class="project-tag">{{ row.nomProduit }}</span>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="typeProduit">
+                <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.typeProduit }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="uniteProduit">
+                <mat-header-cell *matHeaderCellDef>Unité</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.uniteProduit }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="poids">
+                <mat-header-cell *matHeaderCellDef>Poids</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.poids }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="quantite">
+                <mat-header-cell *matHeaderCellDef>Quantité</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.quantite }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="chantier">
+                <mat-header-cell *matHeaderCellDef>Chantier</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.chantier }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef class="col-actions">Actions</mat-header-cell>
+                <mat-cell *matCellDef="let row" class="col-actions">
+                  <div class="row-actions">
+                    <button
+                      mat-icon-button
+                      matTooltip="Modifier"
+                      (click)="editSortie(row)"
+                      class="action-btn action-edit"
+                      type="button">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      matTooltip="Supprimer"
+                      (click)="deleteSortie(row)"
+                      class="action-btn action-delete"
+                      type="button">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="sortiesDisplayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: sortiesDisplayedColumns;"></mat-row>
+
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell no-data" [attr.colspan]="sortiesDisplayedColumns.length">
+                  Aucune sortie trouvée
+                </td>
+              </tr>
+            </mat-table>
+
+            <mat-paginator
+              #sortiesPaginator
+              [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 25]"
+              showFirstLastButtons
+              class="table-paginator">
+            </mat-paginator>
+          </div>
+        }
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

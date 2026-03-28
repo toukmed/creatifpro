@@ -1,0 +1,29 @@
+@use 'variables' as *;
+@use 'list-page';
+
+.stock-table {
+  @extend %data-table;
+}
+
+.stock-tabs {
+  background: transparent;
+
+  ::ng-deep .mat-mdc-tab-header {
+    background: $surface;
+    border: 1px solid $border-color;
+    border-radius: $radius-md $radius-md 0 0;
+  }
+}
+
+.tab-content {
+  padding-top: 20px;
+}
+
+.tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
